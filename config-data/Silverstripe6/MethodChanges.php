@@ -20,9 +20,21 @@ class MethodChanges
         return self::get_list_of_unique_values('c');
     }
 
+    /**
+     * provides a list like this
+     * ```php
+     *    'MethodOne' => true,
+     *    'MethodTwo' => false,
+     * ```
+     * Where true means unique and false means not unique
+     */
     public static function get_list_of_methods() : array
     {
-        return self::get_list_of_unique_values('m');
+        $list = self::get_list_of_unique_values('m');
+        foreach($list as $key => $item) {
+            $list[$key] = self::METHODS_AND_UNIQUENESS[$values['m']] ?? false;
+        }
+        return $list;
     }
 
     public static function get_list_of_unique_values(string $fieldName) : array
