@@ -186,3 +186,24 @@ Change new Object to static call for classes that use Injectable trait
 ```
 
 <br>
+
+### FindUniqueMethodsThatMayNeedUpdating
+
+Finds methods that are hopefully unique enough in name to produce limited false positives, and 
+marks them in need of upgrade with a small upgrade note
+
+- class: [`Netwerkstatt\SilverstripeRector\Rector\Methods\UseCreateRector`](../src/Rector/ORM/UseCreateRector.php)
+
+```diff
+ class SomeClass
+ {
++    /** @TODO UPGRADE TASK: someMethod has changed in this or that way
+     public function someMethod()
+     {
++        
+         $this->anotherMethod($fooBar)    
+     }
+ }
+```
+
+<br>
