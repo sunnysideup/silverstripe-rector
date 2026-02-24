@@ -3,7 +3,11 @@
 
 declare(strict_types=1);
 
-class MethodChanges
+namespace Netwerkstatt\SilverstripeRector\ChangeLists\Silverstripe6;
+
+use Netwerkstatt\SilverstripeRector\Interfaces\ChangeListInterface;
+
+class MethodChanges implements ChangeListInterface
 {
 
     public static function get_constant_cleaned(string $constantName)
@@ -11,7 +15,7 @@ class MethodChanges
         $list = self::{$constantName};
         foreach ($list as $key => $values) {
             $list[$key]['c'] = self::SHORT_TO_LONG_CLASS_NAME[$values['c']] ?? $values['c'];
-            $list[$key]['MethodIsUnique'] = self::METHODS_AND_UNIQUENESS[$values['m']] ?? false;
+            $list[$key]['u'] = self::METHODS_AND_UNIQUENESS[$values['m']] ?? false;
         }
     }
 
@@ -64,7 +68,7 @@ class MethodChanges
         return $out;
     }
 
-    public const OTHER =
+    private const OTHER =
     [
         [
             'c' => 'DNADesign\\Elemental\\Controllers\\ElementalAreaController',
@@ -98,7 +102,7 @@ class MethodChanges
         ['c' => 'MigrationTask', 'm' => 'up', 'n' => 'Method MigrationTask::up() is now abstract'],
     ];
 
-    public const NO_REPLACEMENT_AVAILABLE =
+    private const NO_REPLACEMENT_AVAILABLE =
     [
 
         [
@@ -344,7 +348,7 @@ class MethodChanges
             'n' => 'removed without equivalent functionality',
         ],
     ];
-    public const RENAME_TO =
+    private const RENAME_TO =
     [
 
         [
@@ -413,7 +417,7 @@ class MethodChanges
             'n' => 'renamed to onFlushCache()',
         ],
     ];
-    public const USE_INSTEAD =
+    private const USE_INSTEAD =
     [
         [
             'c' => 'DNADesign\\Elemental\\Models\\BaseElement',
@@ -589,7 +593,7 @@ class MethodChanges
             'n' => 'use AbstractQueuedJob::getQueue() instead',
         ],
     ];
-    public const REPLACE_WITH =
+    private const REPLACE_WITH =
     [
         [
             'c' => 'DNADesign\\Elemental\\Models\\BaseElement',
@@ -879,7 +883,7 @@ class MethodChanges
             'n' => 'replaced with functionality in silverstripe/admin',
         ],
     ];
-    public const MOVED_TO_EXTENSION =
+    private const MOVED_TO_EXTENSION =
     [
         [
             'c' => 'SilverStripe\\AssetAdmin\\Controller\\AssetAdmin',
@@ -912,7 +916,7 @@ class MethodChanges
             'n' => 'moved to AddToCampaignExtension',
         ],
     ];
-    public const REMOVE_PARAMETER =
+    private const REMOVE_PARAMETER =
     [
         [
             'c' => 'DNADesign\\Elemental\\Controllers\\ElementalAreaController',
@@ -964,7 +968,7 @@ class MethodChanges
         ],
 
     ];
-    public const CHANGE_VISIBILITY =
+    private const CHANGE_VISIBILITY =
     [
 
         [
@@ -1845,7 +1849,7 @@ class MethodChanges
 
     ];
 
-    public const CHANGE_RETURN_TYPE = [
+    private const CHANGE_RETURN_TYPE = [
         ['c' => 'BaseElement', 'm' => 'Top', 'n' => 'Changed return type for method BaseElement::Top() from dynamic to Controller|null'],
         ['c' => 'BaseElement', 'm' => 'forTemplate', 'n' => 'Changed return type for method BaseElement::forTemplate() from dynamic to string'],
         ['c' => 'BaseElement', 'm' => 'isCMSPreview', 'n' => 'Changed return type for method BaseElement::isCMSPreview() from dynamic to bool'],
@@ -2274,7 +2278,7 @@ class MethodChanges
 
     ];
 
-    public const ADD_NEW_PARAMETER = [
+    private const ADD_NEW_PARAMETER = [
         ['c' => 'ReorderElements', 'm' => '__construct', 'n' => 'Added new parameter $elementIsNew in ReorderElements::__construct()'],
 
         ['c' => 'Image_Backend', 'm' => 'crop', 'n' => 'Added new parameter $backgroundColour in Image_Backend::crop()'],
@@ -2304,7 +2308,7 @@ class MethodChanges
         ['c' => 'DataObject', 'm' => 'validateWrite', 'n' => 'Added new parameter $skipValidation in DataObject::validateWrite()'],
 
     ];
-    public const CHANGE_PARAMETER_TYPE = [
+    private const CHANGE_PARAMETER_TYPE = [
         ['c' => 'AdminRootController', 'm' => 'add_rule_for_controller', 'n' => 'Changed type of parameter $controllerClass in AdminRootController::add_rule_for_controller() from dynamic to string'],
         ['c' => 'LeftAndMain', 'm' => 'jsonError', 'n' => 'Changed type of parameter $errorCode in LeftAndMain::jsonError() from dynamic to int'],
         ['c' => 'LeftAndMain', 'm' => 'jsonError', 'n' => 'Changed type of parameter $errorMessage in LeftAndMain::jsonError() from dynamic to string'],
@@ -2720,7 +2724,7 @@ class MethodChanges
 
     ];
 
-    public const CHANGE_DEFAULT_PARAMETER_VALUE = [
+    private const CHANGE_DEFAULT_PARAMETER_VALUE = [
         ['c' => 'LeftAndMain', 'm' => 'jsonSuccess', 'n' => 'Changed default value for parameter $data in LeftAndMain::jsonSuccess() from [] to null'],
         ['c' => 'LeftAndMain', 'm' => 'jsonError', 'n' => 'Changed default value for parameter $errorMessage in LeftAndMain::jsonError() from null to \'\''],
 
@@ -2758,7 +2762,7 @@ class MethodChanges
 
     ];
 
-    public const RENAMED_PARAMETER = [
+    private const RENAMED_PARAMETER = [
         ['c' => 'Image_Backend', 'm' => 'paddedResize', 'n' => 'Renamed parameter $backgroundColor in Image_Backend::paddedResize() to $backgroundColour'],
         ['c' => 'VirtualPage', 'm' => 'hasField', 'n' => 'Renamed parameter $field in VirtualPage::hasField() to $fieldName'],
         ['c' => 'SSViewer', 'm' => 'process', 'n' => 'Renamed parameter $arguments in SSViewer::process() to $overlay'],
