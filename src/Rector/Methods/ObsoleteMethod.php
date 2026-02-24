@@ -4,36 +4,28 @@ declare(strict_types=1);
 
 namespace Netwerkstatt\SilverstripeRector\Rector\Methods;
 
-use Netwerkstatt\SilverstripeRector\Traits\MethodHelper;
+
+use PhpParser\Comment;
 use PhpParser\Comment\Doc;
 use PhpParser\Node;
 use PhpParser\Node\Expr\MethodCall;
 use PhpParser\Node\Expr\NullsafeMethodCall;
-use PhpParser\Node\Expr\StaticCall;
 use PhpParser\Node\Identifier;
-use PhpParser\Node\Name;
 use PhpParser\Node\Stmt\ClassMethod;
 use PhpParser\Node\Stmt\Expression;
-use Rector\PHPStan\ScopeFetcher;
 use PHPStan\Reflection\ReflectionProvider;
-use PHPStan\Type\ErrorType;
-use PHPStan\Type\MixedType;
 use PHPStan\Type\ObjectType;
-use PHPStan\Type\ObjectWithoutClassType;
-use PHPStan\Type\Type;
-use PHPStan\Type\UnionType;
 use Rector\Contract\Rector\ConfigurableRectorInterface;
+use Rector\NodeTypeResolver\Node\AttributeKey;
 use Rector\Rector\AbstractRector;
-use Symplify\RuleDocGenerator\ValueObject\CodeSample\ConfiguredCodeSample;
 use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 
 final class ObsoleteMethod extends AbstractRector implements ConfigurableRectorInterface
 {
-    use MethodHelper;
     /**
-     * @var array<int, array{c: string, m: string, n: string, u?: bool}>
+     * @var array<int, array{c: string, m: string, n: string, u: bool}>
      */
-    private array $changes = [];
+    private array $rules = [];
 
     public function __construct(
         private readonly ReflectionProvider $reflectionProvider
@@ -42,214 +34,275 @@ final class ObsoleteMethod extends AbstractRector implements ConfigurableRectorI
     public function getRuleDefinition(): RuleDefinition
     {
         return new RuleDefinition(
-            'Adds TODO upgrade comments for method calls/overrides of methods that have been removed.',
-            [
-                new ConfiguredCodeSample(
-                    <<<'CODE_SAMPLE'
-$controller->formAction();
-CODE_SAMPLE,
-                    <<<'CODE_SAMPLE'
-/** @TODO SSU RECTOR UPGRADE TASK - DNADesign\Elemental\Controllers\ElementalAreaController::formAction: removed without equivalent functionality to replace it */
-$controller->formAction();
-CODE_SAMPLE,
-                    [['c' => 'DNADesign\Elemental\Controllers\ElementalAreaController', 'm' => 'formAction', 'n' => 'removed without equivalent functionality to replace it', 'u' => false]]
-                ),
-            ]
+            'Adds TODO upgrade comments for calls/overrides of removed methods on known classes'
         );
     }
 
+    /**
+     * @param array<int, array{c: string, m: string, n: string, u?: bool}> $configuration
+     */
     public function configure(array $configuration): void
     {
-        $this->changes = [];
+        $normalisedRules = [];
+
         foreach ($configuration as $item) {
-            if (!isset($item['c'], $item['m'], $item['n'])) {
+            if (! isset($item['c'], $item['m'], $item['n'])) {
                 continue;
             }
 
-            $this->changes[] = [
+            $normalisedRules[] = [
                 'c' => (string) $item['c'],
                 'm' => (string) $item['m'],
                 'n' => (string) $item['n'],
                 'u' => (bool) ($item['u'] ?? false),
             ];
         }
+
+        $this->rules = $normalisedRules;
     }
 
+    /**
+     * @return array<class-string<Node>>
+     */
     public function getNodeTypes(): array
     {
         return [
-            Expression::class,
+            MethodCall::class,
+            NullsafeMethodCall::class,
             ClassMethod::class,
         ];
     }
 
-    /**
-     * @param Expression|ClassMethod $node
-     */
-    public function refactor(Node $node): ?Node
+    public function refactor(Node $node): Node|null
     {
-        if ($node instanceof Expression) {
-            return $this->refactorExpression($node);
+        if ($node instanceof MethodCall || $node instanceof NullsafeMethodCall) {
+            return $this->refactorMethodLikeCall($node);
         }
-        return $this->refactorClassMethod($node);
+
+        if ($node instanceof ClassMethod) {
+            return $this->refactorClassMethod($node);
+        }
+
+        return null;
     }
 
-    private function refactorExpression(Expression $expression): ?Node
+    private function refactorMethodLikeCall(MethodCall|NullsafeMethodCall $node): Node|null
     {
-        $expr = $expression->expr;
-
-        if (!$expr instanceof MethodCall && !$expr instanceof NullsafeMethodCall && !$expr instanceof StaticCall) {
-            return null;
-        }
-
-        $methodName = $this->resolveCalledMethodName($expr);
+        $methodName = $this->getCalledMethodName($node);
         if ($methodName === null) {
             return null;
         }
 
-        $changed = false;
-
-        foreach ($this->changes as $change) {
-            if (strcasecmp($change['m'], $methodName) !== 0) {
+        foreach ($this->rules as $rule) {
+            if ($rule['m'] !== $methodName) {
                 continue;
             }
 
-            if (!$this->matchesCallTarget($expr, $change)) {
+            $matchesKnownType = $this->isObjectType($node->var, new ObjectType($rule['c']));
+            $typeCouldBeResolved = $this->canResolveObjectType($node->var);
+
+            if (! $matchesKnownType) {
+                if ($typeCouldBeResolved) {
+                    continue;
+                }
+
+                if ($rule['u'] !== true) {
+                    continue;
+                }
+            }
+
+            $todoLine = $this->buildTodoLine($rule);
+
+            $commentTarget = $this->resolveCommentTargetForCall($node);
+
+            if ($this->hasTodoAlready($commentTarget, $todoLine)) {
                 continue;
             }
 
-            $todoLine = $this->buildTodoLine($change['c'], $change['m'], $change['n']);
+            $this->appendDocComment($commentTarget, $todoLine);
 
-            if ($this->appendTodoDocCommentSafely($expression, $todoLine)) {
-                $changed = true;
-            }
+            return $node;
         }
 
-        return $changed ? $expression : null;
-    }
-
-    private function refactorClassMethod(ClassMethod $classMethod): ?Node
-    {
-        if (!$classMethod->name instanceof Identifier) {
-            return null;
-        }
-
-        // Fetch scope dynamically here
-        $scope = ScopeFetcher::fetch($classMethod);
-        $classReflection = $scope->getClassReflection();
-
-        if ($classReflection === null) {
-            return null;
-        }
-
-        $methodName = $classMethod->name->toString();
-        $currentClassName = $classReflection->getName();
-
-        $changed = false;
-
-        foreach ($this->changes as $change) {
-            if (strcasecmp($change['m'], $methodName) !== 0) {
-                continue;
-            }
-
-            if (!$this->isClassSameOrSubclassOfConfigured($currentClassName, (string) $change['c'])) {
-                continue;
-            }
-
-            $todoLine = $this->buildTodoLine($change['c'], $change['m'], $change['n']);
-
-            if ($this->appendTodoDocCommentSafely($classMethod, $todoLine)) {
-                $changed = true;
-            }
-        }
-
-        return $changed ? $classMethod : null;
-    }
-
-    private function matchesCallTarget(MethodCall|NullsafeMethodCall|StaticCall $call, array $change): bool
-    {
-        if ($call instanceof StaticCall) {
-            $classNode = $call->class;
-            if ($classNode instanceof Name) {
-                return $this->isClassSameOrSubclassOfConfigured($classNode->toString(), (string) $change['c']);
-            }
-            return false;
-        }
-
-        $receiverType = $this->getType($call->var);
-
-        if ($this->isUnknownType($receiverType)) {
-            return (bool) ($change['u'] ?? false);
-        }
-
-        return $this->matchesTypeAgainstConfiguredClass($receiverType, (string) $change['c']);
-    }
-
-    private function resolveCalledMethodName(MethodCall|NullsafeMethodCall|StaticCall $call): ?string
-    {
-        if ($call->name instanceof Identifier) {
-            return $call->name->toString();
-        }
         return null;
     }
 
-    private function buildTodoLine(string $className, string $methodName, string $note): string
+    private function refactorClassMethod(ClassMethod $node): Node|null
     {
-        // Using the full configured class name to match the requested example
-        return sprintf('@TODO SSU RECTOR UPGRADE TASK - %s::%s: %s', $className, $methodName, $note);
+        if (! $node->name instanceof Identifier) {
+            return null;
+        }
+
+        $methodName = $node->name->toString();
+
+        foreach ($this->rules as $rule) {
+            if ($rule['m'] !== $methodName) {
+                continue;
+            }
+
+            if (! $this->isOverridingMethodOnConfiguredClass($node, $rule['c'], $rule['m'])) {
+                continue;
+            }
+
+            $todoLine = $this->buildTodoLine($rule);
+
+            if ($this->hasTodoAlready($node, $todoLine)) {
+                continue;
+            }
+
+            $this->appendDocComment($node, $todoLine);
+
+            return $node;
+        }
+
+        return null;
     }
 
-    private function appendTodoDocCommentSafely(Node $node, string $todoLine): bool
+    private function getCalledMethodName(MethodCall|NullsafeMethodCall $node): string|null
     {
-        $comments = $node->getComments();
-
-        foreach ($comments as $comment) {
-            if (str_contains($comment->getText(), $todoLine)) {
-                return false;
-            }
+        if (! $node->name instanceof Identifier) {
+            return null;
         }
 
-        $existingDoc = $node->getDocComment();
-        $newDocText = '/** ' . $todoLine . ' */';
+        return $node->name->toString();
+    }
 
-        if ($existingDoc instanceof Doc) {
-            $text = $existingDoc->getText();
-            $trimmed = rtrim($text);
+    private function canResolveObjectType(Node $expr): bool
+    {
+        $type = $this->getType($expr);
 
-            if (str_ends_with($trimmed, '*/')) {
-                $trimmed = substr($trimmed, 0, -2);
-                $newDocText = rtrim($trimmed) . "\n * " . $todoLine . "\n */";
-            } else {
-                $newDocText = $text . "\n" . $newDocText;
-            }
+        // Unknown / mixed / impossible => treat as unresolved
+        if ($type === null) {
+            return false;
         }
 
-        $node->setDocComment(new Doc($newDocText));
+        $typeClass = $type::class;
+
+        if (
+            str_contains($typeClass, 'MixedType') ||
+            str_contains($typeClass, 'ErrorType') ||
+            str_contains($typeClass, 'NeverType')
+        ) {
+            return false;
+        }
+
         return true;
     }
 
-    private function isUnknownType(Type $type): bool
+    private function resolveCommentTargetForCall(MethodCall|NullsafeMethodCall $node): Node
     {
-        return $type instanceof MixedType
-            || $type instanceof ErrorType
-            || $type instanceof ObjectWithoutClassType;
+        $parent = $node->getAttribute(AttributeKey::PARENT_NODE);
+
+        if ($parent instanceof Expression) {
+            return $parent;
+        }
+
+        return $node;
     }
 
-    private function matchesTypeAgainstConfiguredClass(Type $type, string $configuredClass): bool
+    private function isOverridingMethodOnConfiguredClass(ClassMethod $classMethod, string $configuredClass, string $methodName): bool
     {
-        if ($type instanceof UnionType) {
-            foreach ($type->getTypes() as $subType) {
-                if ($this->matchesTypeAgainstConfiguredClass($subType, $configuredClass)) {
-                    return true;
-                }
+        $classLike = $classMethod->getAttribute(AttributeKey::CLASS_NODE);
+        if (! $classLike instanceof Node\Stmt\Class_) {
+            return false;
+        }
+
+        $currentClassName = $this->getName($classLike);
+        if ($currentClassName === null) {
+            return false;
+        }
+
+        // If the method still exists on the current class itself, this may be the original class;
+        // request says the method has already been removed from original class, and we care about overrides/extensions.
+        // We still allow inheritance-based detection below.
+        if (! $this->reflectionProvider->hasClass($currentClassName)) {
+            return false;
+        }
+
+        $currentClassReflection = $this->reflectionProvider->getClass($currentClassName);
+
+        // Exact same class only makes sense if source still contains legacy method; usually not desired.
+        // We mainly want subclasses/extensions.
+        if (! $currentClassReflection->isSubclassOf($configuredClass)) {
+            return false;
+        }
+
+        // Best-effort: ensure configured parent class is known and the method existed/was expected there.
+        if ($this->reflectionProvider->hasClass($configuredClass)) {
+            $configuredReflection = $this->reflectionProvider->getClass($configuredClass);
+
+            // If reflection knows nothing about that method (because removed in installed version),
+            // we still proceed based on config, which is the source of truth.
+            unset($configuredReflection);
+        }
+
+        return $classMethod->name->toString() === $methodName;
+    }
+
+    /**
+     * @param array{c: string, m: string, n: string, u: bool} $rule
+     */
+    private function buildTodoLine(array $rule): string
+    {
+        return '@TODO UPGRADE TASK - ' . $rule['c'] . '::' . $rule['m'] . ': ' . $rule['n'];
+    }
+
+    private function hasTodoAlready(Node $node, string $todoLine): bool
+    {
+        $docComment = $node->getDocComment();
+        if ($docComment instanceof Doc && str_contains($docComment->getText(), $todoLine)) {
+            return true;
+        }
+
+        $comments = $node->getComments();
+        foreach ($comments as $comment) {
+            if (str_contains($comment->getText(), $todoLine)) {
+                return true;
             }
-            return false;
         }
 
-        if (!$type instanceof ObjectType) {
-            return false;
+        return false;
+    }
+
+    private function appendDocComment(Node $node, string $todoLine): void
+    {
+        $existingDoc = $node->getDocComment();
+
+        if ($existingDoc instanceof Doc) {
+            $newDocText = $this->appendTodoToExistingDocblock($existingDoc->getText(), $todoLine);
+            $node->setDocComment(new Doc($newDocText));
+
+            return;
         }
 
-        return $this->isClassSameOrSubclassOfConfigured($type->getClassName(), $configuredClass);
+        $docText = '/** ' . $todoLine . ' */';
+        $node->setDocComment(new Doc($docText));
+    }
+
+    private function appendTodoToExistingDocblock(string $docText, string $todoLine): string
+    {
+        if (str_contains($docText, $todoLine)) {
+            return $docText;
+        }
+
+        $trimmed = rtrim($docText);
+
+        // Standard multi-line docblock
+        if (str_ends_with($trimmed, '*/')) {
+            $trimmed = substr($trimmed, 0, -2);
+            $trimmed = rtrim($trimmed);
+
+            if (! str_ends_with($trimmed, "\n")) {
+                $trimmed .= "\n";
+            }
+
+            $trimmed .= ' * ' . $todoLine . "\n";
+            $trimmed .= ' */';
+
+            return $trimmed;
+        }
+
+        // Fallback (should not normally happen)
+        return "/**\n * " . $todoLine . "\n */";
     }
 }
