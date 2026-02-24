@@ -15,20 +15,23 @@
   },
   "require-dev": {
     "phpunit/phpunit": "^11.3",
+    "rector/rector-phpunit": "^2.3.4",
     "squizlabs/php_codesniffer": "^4",
     "phpstan/phpstan": "^2"
   },
   "autoload": {
     "psr-4": {
       "Netwerkstatt\\SilverstripeRector\\": "src/",
-      "Rector\\":"rules"
+      "Rector\\": "rules"
     }
   },
   "autoload-dev": {
     "psr-4": {
       "Netwerkstatt\\SilverstripeRector\\Tests\\": "tests"
     },
-    "classmap": ["stubs"],
+    "classmap": [
+      "stubs"
+    ],
     "exclude-from-classmap": [
       "**.php.inc"
     ]
