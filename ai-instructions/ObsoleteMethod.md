@@ -50,7 +50,7 @@ $controller->formAction();
 After
 
 ```php
-/** @TODO UPGRADE TASK - DNADesign\Elemental\Controllers\ElementalAreaController::formAction: removed without equivalent functionality to replace it */
+/** @TODO SSU RECTOR UPGRADE TASK - DNADesign\Elemental\Controllers\ElementalAreaController::formAction: removed without equivalent functionality to replace it */
 $controller->formAction();
 ```
 
@@ -70,7 +70,7 @@ function formAction()
 After
 
 ```php
-/** @TODO UPGRADE TASK - DNADesign\Elemental\Controllers\ElementalAreaController::formAction: removed without equivalent functionality to replace it */
+/** @TODO SSU RECTOR UPGRADE TASK - DNADesign\Elemental\Controllers\ElementalAreaController::formAction: removed without equivalent functionality to replace it */
 function formAction()
 {
     // ...
@@ -113,6 +113,18 @@ The class name c in the configuration might be a fully qualified class name (FQC
 
 ## Important constraints
 
+### name space setup
+
+The namespace is as follows:
+
+Rector rule: `namespace Netwerkstatt\SilverstripeRector\Rector\Methods;`
+Rector tests: `namespace Netwerkstatt\SilverstripeRector\Tests\Methods\XXX` where XXX is the name of the Rector Rule.
+
+In the tests, I have set up the following folders / files:
+
+- `config/configured_rule.php`
+- `Fixtures/fixture.php.inc`
+
 ### Configuration Injection
 
 The rule must implement `Rector\Contract\Rector\ConfigurableRectorInterface` to receive the array of method signature changes. Do not hardcode the configuration array inside the rule class itself.
@@ -127,7 +139,7 @@ Do not add duplicate TODO comments if the same TODO already exists.
 
 If a ClassMethod already has a docblock:
 
-append a new @TODO UPGRADE TASK - ... line to the existing docblock (preferred), or
+append a new @TODO SSU RECTOR UPGRADE TASK - ... line to the existing docblock (preferred), or
 
 otherwise preserve the existing docblock content and add the TODO without destroying it.
 
@@ -138,13 +150,13 @@ Please do not replace/remove existing docblocks.
 Use exactly this format:
 
 ```php
-@TODO UPGRADE TASK - {ClassName}::{methodName}: {note}
+@TODO SSU RECTOR UPGRADE TASK - {ClassName}::{methodName}: {note}
 ```
 
 Example:
 
 ```php
-@TODO UPGRADE TASK - DNADesign\Elemental\Controllers\ElementalAreaController::formAction: removed without equivalent functionality to replace it
+@TODO SSU RECTOR UPGRADE TASK - DNADesign\Elemental\Controllers\ElementalAreaController::formAction: removed without equivalent functionality to replace it
 ```
 
 ## What I want in the answer

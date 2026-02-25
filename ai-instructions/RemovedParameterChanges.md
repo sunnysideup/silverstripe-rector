@@ -56,7 +56,7 @@ $controller->elementForm($request);
 After
 
 ```php
-/** @TODO UPGRADE TASK - DNADesign\Elemental\Controllers\ElementalAreaController::elementForm: Removed deprecated parameter $request in ElementalAreaController::elementForm() */
+/** @TODO SSU RECTOR UPGRADE TASK - DNADesign\Elemental\Controllers\ElementalAreaController::elementForm: Removed deprecated parameter $request in ElementalAreaController::elementForm() */
 $controller->elementForm($request);
 ```
 
@@ -80,7 +80,7 @@ function validate($validator)
 After
 
 ```php
-/** @TODO UPGRADE TASK - SilverStripe\Forms\FormField::validate: Removed deprecated parameter $validator in FormField::validate() */
+/** @TODO SSU RECTOR UPGRADE TASK - SilverStripe\Forms\FormField::validate: Removed deprecated parameter $validator in FormField::validate() */
 function validate($validator)
 {
     // ...
@@ -140,6 +140,18 @@ The class name c in the configuration might be a fully qualified class name (FQC
 
 ## Important constraints
 
+### name space setup
+
+The namespace is as follows:
+
+Rector rule: `namespace Netwerkstatt\SilverstripeRector\Rector\Methods;`
+Rector tests: `namespace Netwerkstatt\SilverstripeRector\Tests\Methods\XXX` where XXX is the name of the Rector Rule.
+
+In the tests, I have set up the following folders / files:
+
+- `config/configured_rule.php`
+- `Fixtures/fixture.php.inc`
+
 ### Idempotency
 
 The rule must be idempotent:
@@ -150,7 +162,7 @@ The rule must be idempotent:
 
 If a `ClassMethod` already has a docblock:
 
-- append a new `@TODO UPGRADE TASK - ...` line to the existing docblock (preferred), or
+- append a new `@TODO SSU RECTOR UPGRADE TASK - ...` line to the existing docblock (preferred), or
 - otherwise preserve the existing docblock content and add the TODO without destroying it.
 
 Please do not replace/remove existing docblocks.
@@ -160,13 +172,13 @@ Please do not replace/remove existing docblocks.
 Use exactly this format:
 
 ```php
-@TODO UPGRADE TASK - {ClassName}::{methodName}: {note}
+@TODO SSU RECTOR UPGRADE TASK - {ClassName}::{methodName}: {note}
 ```
 
 Example:
 
 ```php
-@TODO UPGRADE TASK - DNADesign\Elemental\Controllers\ElementalAreaController::elementForm: Removed deprecated parameter $request in ElementalAreaController::elementForm()
+@TODO SSU RECTOR UPGRADE TASK - DNADesign\Elemental\Controllers\ElementalAreaController::elementForm: Removed deprecated parameter $request in ElementalAreaController::elementForm()
 ```
 
 ## What I want in the answer

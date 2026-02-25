@@ -1,6 +1,6 @@
 # Rename To
 
-I want a custom Rector rule called `RenameTo` for the latest Rector version.
+I want a custom Rector rule called `RenamedTo` for the latest Rector version.
 
 The purpose is to add a TODO upgrade comment when code calls or overrides methods that were renamed, and the existing code likely needs manual review.
 
@@ -53,7 +53,7 @@ $extension->MetaTags($params);
 After
 
 ```php
-/** @TODO UPGRADE TASK - TractorCow\Fluent\Extension\FluentSiteTreeExtension::MetaTags: renamed to updateMetaTags() */
+/** @TODO SSU RECTOR UPGRADE TASK - TractorCow\Fluent\Extension\FluentSiteTreeExtension::MetaTags: renamed to updateMetaTags() */
 $extension->MetaTags($params);
 ```
 
@@ -73,7 +73,7 @@ function init()
 After
 
 ```php
-/** @TODO UPGRADE TASK - SilverStripe\MFA\Extension\RequirementsExtension::init: renamed to onInit() */
+/** @TODO SSU RECTOR UPGRADE TASK - SilverStripe\MFA\Extension\RequirementsExtension::init: renamed to onInit() */
 function init()
 {
     // ...
@@ -136,6 +136,18 @@ The class name c in the configuration might be a fully qualified class name (FQC
 
 ## Important constraints
 
+### name space setup
+
+The namespace is as follows:
+
+Rector rule: `namespace Netwerkstatt\SilverstripeRector\Rector\Methods;`
+Rector tests: `namespace Netwerkstatt\SilverstripeRector\Tests\Methods\XXX` where XXX is the name of the Rector Rule.
+
+In the tests, I have set up the following folders / files:
+
+- `config/configured_rule.php`
+- `Fixtures/fixture.php.inc`
+
 ### Configuration Injection
 
 The rule must implement `Rector\Contract\Rector\ConfigurableRectorInterface` to receive the array of method signature changes. Do not hardcode the configuration array inside the rule class itself.
@@ -150,7 +162,7 @@ The rule must be idempotent:
 
 If a `ClassMethod` already has a docblock:
 
-- append a new `@TODO UPGRADE TASK - ...` line to the existing docblock (preferred), or
+- append a new `@TODO SSU RECTOR UPGRADE TASK - ...` line to the existing docblock (preferred), or
 - otherwise preserve the existing docblock content and add the TODO without destroying it.
 
 Please do not replace/remove existing docblocks.
@@ -160,20 +172,20 @@ Please do not replace/remove existing docblocks.
 Use exactly this format:
 
 ```php
-@TODO UPGRADE TASK - {ClassName}::{methodName}: {note}
+@TODO SSU RECTOR UPGRADE TASK - {ClassName}::{methodName}: {note}
 ```
 
 Example:
 
 ```php
-@TODO UPGRADE TASK - SilverStripe\CMS\Controllers\CMSMain::PageList: renamed to RecordList
+@TODO SSU RECTOR UPGRADE TASK - SilverStripe\CMS\Controllers\CMSMain::PageList: renamed to RecordList
 ```
 
 ## What I want in the answer
 
 Please provide:
 
-- Full Rector rule class (`RenameTo`)
+- Full Rector rule class (`RenamedTo`)
 - Any helper methods/classes needed
 - Example Rector config registration
 - Notes about required Rector services/packages (if any)
