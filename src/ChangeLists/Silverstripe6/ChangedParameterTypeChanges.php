@@ -8,7 +8,7 @@ namespace Netwerkstatt\SilverstripeRector\ChangeLists\Silverstripe6;
 use Netwerkstatt\SilverstripeRector\Interfaces\ChangeListInterface;
 use Netwerkstatt\SilverstripeRector\Traits\MethodChangeHelper;
 
-class ChangeParameterTypeChanges implements ChangeListInterface
+class ChangedParameterTypeChanges implements ChangeListInterface
 {
     use MethodChangeHelper;
 

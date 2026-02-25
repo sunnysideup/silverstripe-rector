@@ -8,7 +8,7 @@ namespace Netwerkstatt\SilverstripeRector\ChangeLists\Silverstripe6;
 use Netwerkstatt\SilverstripeRector\Interfaces\ChangeListInterface;
 use Netwerkstatt\SilverstripeRector\Traits\MethodChangeHelper;
 
-class RenameToChanges implements ChangeListInterface
+class RenamedToChanges implements ChangeListInterface
 {
     use MethodChangeHelper;
 
@@ -23,12 +23,12 @@ class RenameToChanges implements ChangeListInterface
         [
             'c' => 'SilverStripe\\CMS\\Controllers\\CMSMain',
             'm' => 'PageList',
-            'n' => 'renamed to RecordList',
+            'n' => 'renamed to RecordList - covered in main Rector config',
         ],
         [
             'c' => 'SilverStripe\\ORM\\CMSPreviewable',
             'm' => 'CMSEditLink',
-            'n' => 'renamed to getCMSEditLink()',
+            'n' => 'renamed to getCMSEditLink()- covered in main Rector config',
         ],
         [
             'c' => 'SilverStripe\\ORM\\Hierarchy\\Hierarchy',

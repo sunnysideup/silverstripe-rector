@@ -1,6 +1,6 @@
 # Change Parameter Type
 
-I want a custom Rector rule called `ChangeParameterType` for the latest Rector version.
+I want a custom Rector rule called `ChangedParameterType` for the latest Rector version.
 
 The purpose is to add a TODO upgrade comment when code calls or overrides methods whose parameter type changed, and the existing code likely needs manual review.
 
@@ -51,7 +51,7 @@ $service->run($request);
 After
 
 ```php
-/** @TODO UPGRADE TASK - BuildTask::run: Changed parameter type for $output in BuildTask::run() */
+/** @TODO SSU RECTOR UPGRADE TASK - BuildTask::run: Changed parameter type for $output in BuildTask::run() */
 $service->run($request);
 ```
 
@@ -71,7 +71,7 @@ function run($request)
 After
 
 ```php
-/** @TODO UPGRADE TASK - BuildTask::run: Changed parameter type for $output in BuildTask::run() */
+/** @TODO SSU RECTOR UPGRADE TASK - BuildTask::run: Changed parameter type for $output in BuildTask::run() */
 function run($request)
 {
     // ...
@@ -111,6 +111,18 @@ The class name c in the configuration might be a fully qualified class name (FQC
 
 ## Important constraints
 
+### name space setup
+
+The namespace is as follows:
+
+Rector rule: `namespace Netwerkstatt\SilverstripeRector\Rector\Methods;`
+Rector tests: `namespace Netwerkstatt\SilverstripeRector\Tests\Methods\XXX` where XXX is the name of the Rector Rule.
+
+In the tests, I have set up the following folders / files:
+
+- `config/configured_rule.php`
+- `Fixtures/fixture.php.inc`
+
 ### Configuration Injection
 
 The rule must implement `Rector\Contract\Rector\ConfigurableRectorInterface` to receive the array of method signature changes. Do not hardcode the configuration array inside the rule class itself.
@@ -125,7 +137,7 @@ The rule must be idempotent:
 
 If a `ClassMethod` already has a docblock:
 
-- append a new `@TODO UPGRADE TASK - ...` line to the existing docblock (preferred), or
+- append a new `@TODO SSU RECTOR UPGRADE TASK - ...` line to the existing docblock (preferred), or
 - otherwise preserve the existing docblock content and add the TODO without destroying it.
 
 Please do not replace/remove existing docblocks.
@@ -135,20 +147,20 @@ Please do not replace/remove existing docblocks.
 Use exactly this format:
 
 ```php
-@TODO UPGRADE TASK - {ClassName}::{methodName}: {note}
+@TODO SSU RECTOR UPGRADE TASK - {ClassName}::{methodName}: {note}
 ```
 
 Example:
 
 ```php
-@TODO UPGRADE TASK - BuildTask::run: Changed parameter type for $output in BuildTask::run()
+@TODO SSU RECTOR UPGRADE TASK - BuildTask::run: Changed parameter type for $output in BuildTask::run()
 ```
 
 ## What I want in the answer
 
 Please provide:
 
-- Full Rector rule class (`ChangeParameterType`)
+- Full Rector rule class (`ChangedParameterType`)
 - Any helper methods/classes needed
 - Example Rector config registration
 - Notes about required Rector services/packages (if any)

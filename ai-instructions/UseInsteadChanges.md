@@ -53,7 +53,7 @@ $value = $service->oldMethod($arg);
 After
 
 ```php
-/** @TODO UPGRADE TASK - SomeClass::oldMethod: use newMethod() instead. */
+/** @TODO SSU RECTOR UPGRADE TASK - SomeClass::oldMethod: use newMethod() instead. */
 $value = $service->oldMethod($arg);
 ```
 
@@ -85,7 +85,7 @@ function oldMethod($arg)
 After
 
 ```php
-/** @TODO UPGRADE TASK - SomeClass::oldMethod: use newMethod() instead. */
+/** @TODO SSU RECTOR UPGRADE TASK - SomeClass::oldMethod: use newMethod() instead. */
 function oldMethod($arg)
 {
     // ...
@@ -146,6 +146,18 @@ The class name c in the configuration might be a fully qualified class name (FQC
 
 ## Important constraints
 
+### name space setup
+
+The namespace is as follows:
+
+Rector rule: `namespace Netwerkstatt\SilverstripeRector\Rector\Methods;`
+Rector tests: `namespace Netwerkstatt\SilverstripeRector\Tests\Methods\XXX` where XXX is the name of the Rector Rule.
+
+In the tests, I have set up the following folders / files:
+
+- `config/configured_rule.php`
+- `Fixtures/fixture.php.inc`
+
 ### Configuration Injection
 
 The rule must implement `Rector\Contract\Rector\ConfigurableRectorInterface` to receive the array of method signature changes. Do not hardcode the configuration array inside the rule class itself.
@@ -160,7 +172,7 @@ The rule must be idempotent:
 
 If a `ClassMethod` already has a docblock:
 
-- append a new `@TODO UPGRADE TASK - ...` line to the existing docblock (preferred), or
+- append a new `@TODO SSU RECTOR UPGRADE TASK - ...` line to the existing docblock (preferred), or
 - otherwise preserve the existing docblock content and add the TODO without destroying it.
 
 Please do not replace/remove existing docblocks.
@@ -170,13 +182,13 @@ Please do not replace/remove existing docblocks.
 Use exactly this format:
 
 ```php
-@TODO UPGRADE TASK - {ClassName}::{methodName}: {note}
+@TODO SSU RECTOR UPGRADE TASK - {ClassName}::{methodName}: {note}
 ```
 
 Example:
 
 ```php
-@TODO UPGRADE TASK - SomeClass::oldMethod: use newMethod() instead.
+@TODO SSU RECTOR UPGRADE TASK - SomeClass::oldMethod: use newMethod() instead.
 ```
 
 ## What I want in the answer

@@ -8,7 +8,7 @@ namespace Netwerkstatt\SilverstripeRector\ChangeLists\Silverstripe6;
 use Netwerkstatt\SilverstripeRector\Interfaces\ChangeListInterface;
 use Netwerkstatt\SilverstripeRector\Traits\MethodChangeHelper;
 
-class ReplaceWithChanges implements ChangeListInterface
+class ReplacedWithChanges implements ChangeListInterface
 {
     use MethodChangeHelper;
     private const LIST =

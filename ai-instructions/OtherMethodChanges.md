@@ -53,7 +53,7 @@ $provider->getComposerLock();
 After
 
 ```php
-/** @TODO UPGRADE TASK - SilverStripe\Core\Manifest\VersionProvider::getComposerLock: has been replaced by composer-runtime-api */
+/** @TODO SSU RECTOR UPGRADE TASK - SilverStripe\Core\Manifest\VersionProvider::getComposerLock: has been replaced by composer-runtime-api */
 $provider->getComposerLock();
 ```
 
@@ -75,7 +75,7 @@ SiteTree::getPermissionChecker();
 After
 
 ```php
-/** @TODO UPGRADE TASK - SiteTree::getPermissionChecker: Method SiteTree::getPermissionChecker() is no longer static */
+/** @TODO SSU RECTOR UPGRADE TASK - SiteTree::getPermissionChecker: Method SiteTree::getPermissionChecker() is no longer static */
 SiteTree::getPermissionChecker();
 ```
 
@@ -102,7 +102,7 @@ function up()
 After
 
 ```php
-/** @TODO UPGRADE TASK - MigrationTask::up: Method MigrationTask::up() is now abstract */
+/** @TODO SSU RECTOR UPGRADE TASK - MigrationTask::up: Method MigrationTask::up() is now abstract */
 function up()
 {
     // ...
@@ -124,7 +124,7 @@ use SessionEnvTypeSwitcher;
 After
 
 ```php
-/** @TODO UPGRADE TASK - SilverStripe\Control\Middleware\URLSpecialsMiddleware\SessionEnvTypeSwitcher: Removed deprecated trait SilverStripe\Control\Middleware\URLSpecialsMiddleware\SessionEnvTypeSwitcher - removed without equivalent functionality to replace it */
+/** @TODO SSU RECTOR UPGRADE TASK - SilverStripe\Control\Middleware\URLSpecialsMiddleware\SessionEnvTypeSwitcher: Removed deprecated trait SilverStripe\Control\Middleware\URLSpecialsMiddleware\SessionEnvTypeSwitcher - removed without equivalent functionality to replace it */
 use SessionEnvTypeSwitcher;
 ```
 
@@ -181,6 +181,18 @@ This is primarily for removed deprecated traits.
 
 ## Important constraints
 
+### name space setup
+
+The namespace is as follows:
+
+Rector rule: `namespace Netwerkstatt\SilverstripeRector\Rector\Methods;`
+Rector tests: `namespace Netwerkstatt\SilverstripeRector\Tests\Methods\XXX` where XXX is the name of the Rector Rule.
+
+In the tests, I have set up the following folders / files:
+
+- `config/configured_rule.php`
+- `Fixtures/fixture.php.inc`
+
 ### Configuration Injection
 
 The rule must implement `Rector\Contract\Rector\ConfigurableRectorInterface` to receive the array of method signature changes. Do not hardcode the configuration array inside the rule class itself.
@@ -195,7 +207,7 @@ The rule must be idempotent:
 
 If a `ClassMethod` already has a docblock:
 
-- append a new `@TODO UPGRADE TASK - ...` line to the existing docblock (preferred), or
+- append a new `@TODO SSU RECTOR UPGRADE TASK - ...` line to the existing docblock (preferred), or
 - otherwise preserve the existing docblock content and add the TODO without destroying it.
 
 For non-docblock targets (method/static calls, trait uses), preserve existing comments and avoid duplicate insertions.
@@ -207,7 +219,7 @@ Please do not replace/remove existing docblocks.
 Use exactly this format:
 
 ```php
-@TODO UPGRADE TASK - {ClassName}{optionalMethodPart}: {note}
+@TODO SSU RECTOR UPGRADE TASK - {ClassName}{optionalMethodPart}: {note}
 ```
 
 Where:
@@ -218,11 +230,11 @@ Where:
 Examples:
 
 ```php
-@TODO UPGRADE TASK - SilverStripe\Core\Manifest\VersionProvider::getComposerLock: has been replaced by composer-runtime-api
+@TODO SSU RECTOR UPGRADE TASK - SilverStripe\Core\Manifest\VersionProvider::getComposerLock: has been replaced by composer-runtime-api
 ```
 
 ```php
-@TODO UPGRADE TASK - SilverStripe\Control\Middleware\URLSpecialsMiddleware\SessionEnvTypeSwitcher: Removed deprecated trait SilverStripe\Control\Middleware\URLSpecialsMiddleware\SessionEnvTypeSwitcher - removed without equivalent functionality to replace it
+@TODO SSU RECTOR UPGRADE TASK - SilverStripe\Control\Middleware\URLSpecialsMiddleware\SessionEnvTypeSwitcher: Removed deprecated trait SilverStripe\Control\Middleware\URLSpecialsMiddleware\SessionEnvTypeSwitcher - removed without equivalent functionality to replace it
 ```
 
 ## What I want in the answer

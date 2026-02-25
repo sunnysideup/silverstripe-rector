@@ -197,7 +197,7 @@ marks them in need of upgrade with a small upgrade note
 ```diff
  class SomeClass
  {
-+    /** @TODO UPGRADE TASK: someMethod has changed in this or that way
++    /** @TODO SSU RECTOR UPGRADE TASK: someMethod has changed in this or that way
      public function someMethod()
      {
 +        
