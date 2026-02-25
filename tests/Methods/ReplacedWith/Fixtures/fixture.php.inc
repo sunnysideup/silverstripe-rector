@@ -1,6 +1,6 @@
 <?php
 
-namespace Netwerkstatt\SilverstripeRector\Tests\Methods\ReplacedWith\Fixtures;
+namespace Netwerkstatt\SilverstripeRector\Tests\Methods\ReplacedWith\Fixture;
 
 use SilverStripe\UserForms\UserForm;
 use SilverStripe\View\SSViewer;
@@ -53,7 +53,7 @@ class Demo {
 -----
 <?php
 
-namespace Netwerkstatt\SilverstripeRector\Tests\Methods\ReplacedWith\Fixtures;
+namespace Netwerkstatt\SilverstripeRector\Tests\Methods\ReplacedWith\Fixture;
 
 use SilverStripe\UserForms\UserForm;
 use SilverStripe\View\SSViewer;

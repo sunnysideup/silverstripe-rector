@@ -1,6 +1,6 @@
 <?php
 
-namespace Netwerkstatt\SilverstripeRector\Tests\Methods\RenamedParameter\Fixtures;
+namespace Netwerkstatt\SilverstripeRector\Tests\Methods\RenamedParameter\Fixture;
 
 class BuildTask {
     public function run($request) {}
@@ -41,7 +41,7 @@ class Demo {
 -----
 <?php
 
-namespace Netwerkstatt\SilverstripeRector\Tests\Methods\RenamedParameter\Fixtures;
+namespace Netwerkstatt\SilverstripeRector\Tests\Methods\RenamedParameter\Fixture;
 
 class BuildTask {
     public function run($request) {}

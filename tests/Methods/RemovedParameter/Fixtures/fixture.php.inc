@@ -1,6 +1,6 @@
 <?php
 
-namespace Netwerkstatt\SilverstripeRector\Tests\Methods\RemovedParameter\Fixtures;
+namespace Netwerkstatt\SilverstripeRector\Tests\Methods\RemovedParameter\Fixture;
 
 use DNADesign\Elemental\Controllers\ElementalAreaController;
 use SilverStripe\Forms\FormField;
@@ -44,7 +44,7 @@ class Demo {
 -----
 <?php
 
-namespace Netwerkstatt\SilverstripeRector\Tests\Methods\RemovedParameter\Fixtures;
+namespace Netwerkstatt\SilverstripeRector\Tests\Methods\RemovedParameter\Fixture;
 
 use DNADesign\Elemental\Controllers\ElementalAreaController;
 use SilverStripe\Forms\FormField;

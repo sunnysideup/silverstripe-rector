@@ -1,6 +1,6 @@
 <?php
 
-namespace Netwerkstatt\SilverstripeRector\Tests\Methods\ObsoleteMethod\Fixtures;
+namespace Netwerkstatt\SilverstripeRector\Tests\Methods\ObsoleteMethod\Fixture;
 
 use DNADesign\Elemental\Controllers\ElementalAreaController;
 use SilverStripe\Admin\LeftAndMain;
@@ -44,7 +44,7 @@ class Demo {
 -----
 <?php
 
-namespace Netwerkstatt\SilverstripeRector\Tests\Methods\ObsoleteMethod\Fixtures;
+namespace Netwerkstatt\SilverstripeRector\Tests\Methods\ObsoleteMethod\Fixture;
 
 use DNADesign\Elemental\Controllers\ElementalAreaController;
 use SilverStripe\Admin\LeftAndMain;
