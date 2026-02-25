@@ -44,10 +44,12 @@ class Demo {
 namespace Netwerkstatt\SilverstripeRector\Tests\Methods\ChangedParameterType\Fixture;
 
 class BuildTask {
+    /** @TODO SSU RECTOR UPGRADE TASK - BuildTask::run: Changed type of parameter $request in BuildTask::run() from dynamic to Symfony\Component\Console\Input\InputInterface */
     public function run($request) {}
 }
 
 class LeftAndMain {
+    /** @TODO SSU RECTOR UPGRADE TASK - LeftAndMain::jsonError: Changed type of parameter $errorCode in LeftAndMain::jsonError() from dynamic to int */
     public function jsonError($errorCode) {}
 }
 

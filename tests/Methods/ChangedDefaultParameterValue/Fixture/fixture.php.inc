@@ -44,10 +44,12 @@ class Demo {
 namespace Netwerkstatt\SilverstripeRector\Tests\Methods\ChangedDefaultParameterValue\Fixture;
 
 class LeftAndMain {
+    /** @TODO SSU RECTOR UPGRADE TASK - LeftAndMain::jsonSuccess: Changed default value for parameter $data in LeftAndMain::jsonSuccess() from [] to null */
     public function jsonSuccess($data = []) {}
 }
 
 class SSViewer {
+    /** @TODO SSU RECTOR UPGRADE TASK - SSViewer::process: Changed default value for parameter $arguments in SSViewer::process() from null to [] */
     public function process($template, $arguments = null) {}
 }
 

@@ -28,6 +28,25 @@ trait MethodChangeHelper
         return self::get_list_of_unique_values('c');
     }
 
+    public static function get_list_of_missing_classes(): array
+    {
+        $list = self::get_list_of_unique_values('c');
+        $missing = [];
+        foreach ($list as $className) {
+            // echo 'Checking ' . $className . ' ... ' . PHP_EOL;
+            if (strpos($className, '\\') === false) {
+                if (! isset(self::SHORT_TO_LONG_CLASS_NAME[$className])) {
+                    $missing[] = $className;
+                } else {
+                    // echo '.... ... ' . $className . ' ... OK' . PHP_EOL;
+                }
+            } else {
+                // echo '... ' . $className . ' ... OK' . PHP_EOL;
+            }
+        }
+        return $missing;
+    }
+
     /**
      * provides a list like this
      * ```php
@@ -73,6 +92,7 @@ trait MethodChangeHelper
     }
 
     private const SHORT_TO_LONG_CLASS_NAME = [
+        'ArchiveRestoreAction' => 'SilverStripe\\VersionedAdmin\\Extensions\\ArchiveRestoreAction',
         'AdminErrorExtension' => 'SilverStripe\\Admin\\AdminErrorExtension',
         'AdminRootController' => 'SilverStripe\\Admin\\AdminRootController',
         'AdvancedWorkflowExtension' => 'Symbiote\\AdvancedWorkflow\\Extensions\\AdvancedWorkflowExtension',

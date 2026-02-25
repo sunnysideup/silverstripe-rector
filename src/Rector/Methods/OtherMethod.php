@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Netwerkstatt\SilverstripeRector\Rector\Methods;
 
+use Netwerkstatt\SilverstripeRector\Traits\MethodHelper;
 use PhpParser\Comment\Doc;
 use PhpParser\Node;
 use PhpParser\Node\Expr\MethodCall;
@@ -14,7 +15,7 @@ use PhpParser\Node\Name;
 use PhpParser\Node\Stmt\ClassMethod;
 use PhpParser\Node\Stmt\Expression;
 use PhpParser\Node\Stmt\TraitUse;
-use PHPStan\Analyser\Scope;
+use Rector\PHPStan\ScopeFetcher;
 use PHPStan\Reflection\ReflectionProvider;
 use PHPStan\Type\ErrorType;
 use PHPStan\Type\MixedType;
@@ -23,12 +24,13 @@ use PHPStan\Type\ObjectWithoutClassType;
 use PHPStan\Type\Type;
 use PHPStan\Type\UnionType;
 use Rector\Contract\Rector\ConfigurableRectorInterface;
-use Rector\Rector\AbstractScopeAwareRector;
+use Rector\Rector\AbstractRector;
 use Symplify\RuleDocGenerator\ValueObject\CodeSample\ConfiguredCodeSample;
 use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 
-final class OtherMethod extends AbstractScopeAwareRector implements ConfigurableRectorInterface
+final class OtherMethod extends AbstractRector implements ConfigurableRectorInterface
 {
+    use MethodHelper;
     /**
      * @var array<int, array{c: string, m: string, n: string, u?: bool}>
      */
@@ -86,14 +88,14 @@ CODE_SAMPLE,
     /**
      * @param Expression|ClassMethod|TraitUse $node
      */
-    public function refactorWithScope(Node $node, Scope $scope): ?Node
+    public function refactor(Node $node): ?Node
     {
         if ($node instanceof Expression) {
             return $this->refactorExpression($node);
         }
 
         if ($node instanceof ClassMethod) {
-            return $this->refactorClassMethod($node, $scope);
+            return $this->refactorClassMethod($node);
         }
 
         if ($node instanceof TraitUse) {
@@ -141,13 +143,16 @@ CODE_SAMPLE,
         return $changed ? $expression : null;
     }
 
-    private function refactorClassMethod(ClassMethod $classMethod, Scope $scope): ?Node
+    private function refactorClassMethod(ClassMethod $classMethod): ?Node
     {
         if (!$classMethod->name instanceof Identifier) {
             return null;
         }
 
+        // Fetch scope dynamically here
+        $scope = ScopeFetcher::fetch($classMethod);
         $classReflection = $scope->getClassReflection();
+
         if ($classReflection === null) {
             return null;
         }
@@ -295,39 +300,5 @@ CODE_SAMPLE,
         }
 
         return $this->isClassSameOrSubclassOfConfigured($type->getClassName(), $configuredClass);
-    }
-
-    private function isClassSameOrSubclassOfConfigured(string $actualClass, string $configuredClass): bool
-    {
-        $actualClass = ltrim($actualClass, '\\');
-        $configuredClass = ltrim($configuredClass, '\\');
-
-        if (
-            strcasecmp($actualClass, $configuredClass) === 0 ||
-            str_ends_with(strtolower($actualClass), '\\' . strtolower($configuredClass))
-        ) {
-            return true;
-        }
-
-        if (!$this->reflectionProvider->hasClass($actualClass)) {
-            return false;
-        }
-
-        $classReflection = $this->reflectionProvider->getClass($actualClass);
-
-        if (str_contains($configuredClass, '\\')) {
-            return $classReflection->isSubclassOf($configuredClass);
-        }
-
-        foreach (array_merge([$classReflection->getName()], array_keys($classReflection->getParentClassesNames())) as $candidate) {
-            if (
-                str_ends_with(strtolower($candidate), '\\' . strtolower($configuredClass)) ||
-                strcasecmp($candidate, $configuredClass) === 0
-            ) {
-                return true;
-            }
-        }
-
-        return false;
     }
 }
