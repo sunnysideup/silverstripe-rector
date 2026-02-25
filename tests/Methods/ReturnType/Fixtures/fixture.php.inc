@@ -1,6 +1,6 @@
 <?php
 
-namespace Netwerkstatt\SilverstripeRector\Tests\Methods\ReturnType\Fixtures;
+namespace Netwerkstatt\SilverstripeRector\Tests\Methods\ReturnType\Fixture;
 
 class BaseElement {
     public function forTemplate() {}
@@ -41,7 +41,7 @@ class Demo {
 -----
 <?php
 
-namespace Netwerkstatt\SilverstripeRector\Tests\Methods\ReturnType\Fixtures;
+namespace Netwerkstatt\SilverstripeRector\Tests\Methods\ReturnType\Fixture;
 
 class BaseElement {
     public function forTemplate() {}

@@ -1,6 +1,6 @@
 <?php
 
-namespace Netwerkstatt\SilverstripeRector\Tests\Methods\OtherMethod\Fixtures;
+namespace Netwerkstatt\SilverstripeRector\Tests\Methods\OtherMethod\Fixture;
 
 use SilverStripe\Core\Manifest\VersionProvider;
 use SilverStripe\Control\Middleware\URLSpecialsMiddleware\SessionEnvTypeSwitcher;
@@ -56,7 +56,7 @@ class Demo {
 -----
 <?php
 
-namespace Netwerkstatt\SilverstripeRector\Tests\Methods\OtherMethod\Fixtures;
+namespace Netwerkstatt\SilverstripeRector\Tests\Methods\OtherMethod\Fixture;
 
 use SilverStripe\Core\Manifest\VersionProvider;
 use SilverStripe\Control\Middleware\URLSpecialsMiddleware\SessionEnvTypeSwitcher;

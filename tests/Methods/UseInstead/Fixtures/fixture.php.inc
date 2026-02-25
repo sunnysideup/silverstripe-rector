@@ -1,6 +1,6 @@
 <?php
 
-namespace Netwerkstatt\SilverstripeRector\Tests\Methods\UseInstead\Fixtures;
+namespace Netwerkstatt\SilverstripeRector\Tests\Methods\UseInstead\Fixture;
 
 use SilverStripe\Admin\LeftAndMain;
 use SilverStripe\CMS\Controllers\CMSMain;
@@ -58,7 +58,7 @@ class Demo {
 -----
 <?php
 
-namespace Netwerkstatt\SilverstripeRector\Tests\Methods\UseInstead\Fixtures;
+namespace Netwerkstatt\SilverstripeRector\Tests\Methods\UseInstead\Fixture;
 
 use SilverStripe\Admin\LeftAndMain;
 use SilverStripe\CMS\Controllers\CMSMain;
