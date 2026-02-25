@@ -44,10 +44,12 @@ class Demo {
 namespace Netwerkstatt\SilverstripeRector\Tests\Methods\AddNewParameter\Fixture;
 
 class BuildTask {
+    /** @TODO SSU RECTOR UPGRADE TASK - BuildTask::run: Added new parameter $output in BuildTask::run() */
     public function run($request) {}
 }
 
 class VirtualPage {
+    /** @TODO SSU RECTOR UPGRADE TASK - VirtualPage::castingHelper: Added new parameter $useFallback in VirtualPage::castingHelper() */
     public function castingHelper($field) {}
 }
 

@@ -44,10 +44,12 @@ class Demo {
 namespace Netwerkstatt\SilverstripeRector\Tests\Methods\ReturnType\Fixture;
 
 class BaseElement {
+    /** @TODO SSU RECTOR UPGRADE TASK - BaseElement::forTemplate: Changed return type for method BaseElement::forTemplate() from dynamic to string */
     public function forTemplate() {}
 }
 
 class LeftAndMain {
+    /** @TODO SSU RECTOR UPGRADE TASK - LeftAndMain::getRecord: Changed return type for method LeftAndMain::getRecord() from dynamic to DataObject|null */
     public function getRecord() {}
 }
 

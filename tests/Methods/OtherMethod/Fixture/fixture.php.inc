@@ -66,10 +66,12 @@ class VersionProvider {
 }
 
 class SiteTree {
+    /** @TODO SSU RECTOR UPGRADE TASK - SiteTree::getPermissionChecker: Method SiteTree::getPermissionChecker() is no longer static */
     public static function getPermissionChecker() {}
 }
 
 class MigrationTask {
+    /** @TODO SSU RECTOR UPGRADE TASK - MigrationTask::up: Method MigrationTask::up() is now abstract */
     public function up() {}
 }
 
@@ -114,4 +116,4 @@ class Demo {
          */
         $vp->getComposerLock();
     }
-}   
+}

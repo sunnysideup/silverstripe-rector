@@ -44,10 +44,12 @@ class Demo {
 namespace Netwerkstatt\SilverstripeRector\Tests\Methods\RenamedParameter\Fixture;
 
 class BuildTask {
+    /** @TODO SSU RECTOR UPGRADE TASK - BuildTask::run: Renamed parameter $request in BuildTask::run() to $input */
     public function run($request) {}
 }
 
 class VirtualPage {
+    /** @TODO SSU RECTOR UPGRADE TASK - VirtualPage::hasField: Renamed parameter $field in VirtualPage::hasField() to $fieldName */
     public function hasField($field) {}
 }
 
