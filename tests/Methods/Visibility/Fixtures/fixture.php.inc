@@ -1,6 +1,6 @@
 <?php
 
-namespace Netwerkstatt\SilverstripeRector\Tests\Methods\Visibility\Fixtures;
+namespace Netwerkstatt\SilverstripeRector\Tests\Methods\Visibility\Fixture;
 
 use LeftAndMain;
 use EditFormFactory;
@@ -49,7 +49,7 @@ class Demo {
 -----
 <?php
 
-namespace Netwerkstatt\SilverstripeRector\Tests\Methods\Visibility\Fixtures;
+namespace Netwerkstatt\SilverstripeRector\Tests\Methods\Visibility\Fixture;
 
 use LeftAndMain;
 use EditFormFactory;
