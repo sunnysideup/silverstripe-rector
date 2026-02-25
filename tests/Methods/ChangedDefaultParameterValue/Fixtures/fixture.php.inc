@@ -1,6 +1,6 @@
 <?php
 
-namespace Netwerkstatt\SilverstripeRector\Tests\Methods\ChangedDefaultParameterValue\Fixtures;
+namespace Netwerkstatt\SilverstripeRector\Tests\Methods\ChangedDefaultParameterValue\Fixture;
 
 class LeftAndMain {
     public function jsonSuccess($data = []) {}
@@ -41,7 +41,7 @@ class Demo {
 -----
 <?php
 
-namespace Netwerkstatt\SilverstripeRector\Tests\Methods\ChangedDefaultParameterValue\Fixtures;
+namespace Netwerkstatt\SilverstripeRector\Tests\Methods\ChangedDefaultParameterValue\Fixture;
 
 class LeftAndMain {
     public function jsonSuccess($data = []) {}

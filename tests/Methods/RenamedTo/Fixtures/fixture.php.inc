@@ -1,6 +1,6 @@
 <?php
 
-namespace Netwerkstatt\SilverstripeRector\Tests\Methods\RenamedTo\Fixtures;
+namespace Netwerkstatt\SilverstripeRector\Tests\Methods\RenamedTo\Fixture;
 
 use TractorCow\Fluent\Extension\FluentSiteTreeExtension;
 use SilverStripe\MFA\Extension\RequirementsExtension;
@@ -52,7 +52,7 @@ class Demo {
 -----
 <?php
 
-namespace Netwerkstatt\SilverstripeRector\Tests\Methods\RenamedTo\Fixtures;
+namespace Netwerkstatt\SilverstripeRector\Tests\Methods\RenamedTo\Fixture;
 
 use TractorCow\Fluent\Extension\FluentSiteTreeExtension;
 use SilverStripe\MFA\Extension\RequirementsExtension;
