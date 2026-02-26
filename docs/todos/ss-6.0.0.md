@@ -1,0 +1,80 @@
+# Silverstripe 6.0.0 Rector TODOs
+
+Original Changelog: [docs.silverstripe.org](https://docs.silverstripe.org/en/6/changelogs/6.0.0/#api-changes)
+
+- [x] [RENAME/MOVE] SilverStripe\ORM\ArrayLib has been renamed to SilverStripe\Core\ArrayLib
+- [x] [RENAME/MOVE] SilverStripe\ORM\ArrayList has been renamed to SilverStripe\Model\List\ArrayList
+- [x] [RENAME/MOVE] SilverStripe\ORM\GroupedList has been renamed to SilverStripe\Model\List\GroupedList
+- [x] [RENAME/MOVE] SilverStripe\ORM\ListDecorator has been renamed to SilverStripe\Model\List\ListDecorator
+- [x] [RENAME/MOVE] SilverStripe\ORM\Map has been renamed to SilverStripe\Model\List\Map
+- [x] [RENAME/MOVE] SilverStripe\ORM\PaginatedList has been renamed to SilverStripe\Model\List\PaginatedList
+- [x] [RENAME/MOVE] SilverStripe\ORM\SS_List has been renamed to SilverStripe\Model\List\SS_List
+- [x] [RENAME/MOVE] SilverStripe\ORM\ValidationException has been renamed to SilverStripe\Core\Validation\ValidationException
+- [x] [RENAME/MOVE] SilverStripe\ORM\ValidationResult has been renamed to SilverStripe\Core\Validation\ValidationResult
+- [x] [RENAME/MOVE] SilverStripe\View\ArrayData has been renamed to SilverStripe\Model\ArrayData
+- [x] [RENAME/MOVE] SilverStripe\View\ViewableData has been renamed to SilverStripe\Model\ModelData
+- [x] [RENAME/MOVE] SilverStripe\View\ViewableData_Customised has been renamed to SilverStripe\Model\ModelDataCustomised
+- [x] [RENAME/MOVE] SilverStripe\View\ViewableData_Debugger has been renamed to SilverStripe\Model\ModelDataDebugger
+- [x] [RENAME/MOVE] SilverStripe\View\SSViewer_BasicIteratorSupport has been renamed to SilverStripe\TemplateEngine\BasicIteratorSupport
+- [x] [RENAME/MOVE] SilverStripe\View\SSTemplateParseException has been renamed to SilverStripe\TemplateEngine\Exception\SSTemplateParseException
+- [x] [RENAME/MOVE] SilverStripe\View\SSTemplateParser has been renamed to SilverStripe\TemplateEngine\SSTemplateParser
+- [x] [RENAME/MOVE] SilverStripe\View\SSViewer_Scope has been renamed to SilverStripe\TemplateEngine\ScopeManager
+- [x] [RENAME/MOVE] SilverStripe\View\SSViewer_DataPresenter has been renamed to SilverStripe\TemplateEngine\ScopeManager
+- [x] [RENAME/MOVE] SilverStripe\View\TemplateIteratorProvider has been renamed to SilverStripe\TemplateEngine\TemplateIteratorProvider
+- [x] [RENAME/MOVE] SilverStripe\View\TemplateParser has been renamed to SilverStripe\TemplateEngine\TemplateParser
+- [x] [RENAME/MOVE] SilverStripe\ExternalLinks\BrokenExternalLinksReport has been renamed to SilverStripe\Reports\ExternalLinks\Reports\BrokenExternalLinksReport
+- [x] [RENAME/MOVE] SilverStripe\ExternalLinks\Controllers\CMSExternalLinksController has been renamed to SilverStripe\Reports\ExternalLinks\Controllers\CMSExternalLinksController
+- [x] [RENAME/MOVE] SilverStripe\ExternalLinks\Jobs\CheckExternalLinksJob has been renamed to SilverStripe\Reports\ExternalLinks\Jobs\CheckExternalLinksJob
+- [x] [RENAME/MOVE] SilverStripe\ExternalLinks\Model\BrokenExternalLink has been renamed to SilverStripe\Reports\ExternalLinks\Model\BrokenExternalLink
+- [x] [RENAME/MOVE] SilverStripe\ExternalLinks\Model\BrokenExternalPageTrack has been renamed to SilverStripe\Reports\ExternalLinks\Model\BrokenExternalPageTrack
+- [x] [RENAME/MOVE] SilverStripe\ExternalLinks\Model\BrokenExternalPageTrackStatus has been renamed to SilverStripe\Reports\ExternalLinks\Model\BrokenExternalPageTrackStatus
+- [x] [RENAME/MOVE] SilverStripe\ExternalLinks\Tasks\CheckExternalLinksTask has been renamed to SilverStripe\Reports\ExternalLinks\Tasks\CheckExternalLinksTask
+- [x] [RENAME/MOVE] SilverStripe\ExternalLinks\Tasks\CurlLinkChecker has been renamed to SilverStripe\Reports\ExternalLinks\Tasks\CurlLinkChecker
+- [x] [RENAME/MOVE] SilverStripe\ExternalLinks\Tasks\LinkChecker has been renamed to SilverStripe\Reports\ExternalLinks\Tasks\LinkChecker
+- [x] [RENAME/MOVE] SilverStripe\SecurityReport\Forms\GridFieldExportReportButton has been renamed to SilverStripe\Reports\SecurityReport\Forms\GridFieldExportReportButton
+- [x] [RENAME/MOVE] SilverStripe\SecurityReport\Forms\GridFieldPrintReportButton has been renamed to SilverStripe\Reports\SecurityReport\Forms\GridFieldPrintReportButton
+- [x] [RENAME/MOVE] SilverStripe\SecurityReport\MemberReportExtension has been renamed to SilverStripe\Reports\SecurityReport\MemberReportExtension
+- [x] [RENAME/MOVE] SilverStripe\SecurityReport\UserSecurityReport has been renamed to SilverStripe\Reports\SecurityReport\UserSecurityReport
+- [x] [RENAME/MOVE] SilverStripe\SiteWideContentReport\Form\GridFieldBasicContentReport has been renamed to SilverStripe\Reports\SiteWideContentReport\Form\GridFieldBasicContentReport
+- [x] [RENAME/MOVE] SilverStripe\SiteWideContentReport\Model\SitewideContentTaxonomy has been renamed to SilverStripe\Reports\SiteWideContentReport\Model\SitewideContentTaxonomy
+- [x] [RENAME/MOVE] SilverStripe\SiteWideContentReport\SitewideContentReport has been renamed to SilverStripe\Reports\SiteWideContentReport\SitewideContentReport
+- [x] [RENAME/MOVE] SilverStripe\Forms\Validator has been renamed to SilverStripe\Forms\Validation\Validator
+- [x] [RENAME/MOVE] SilverStripe\Forms\RequiredFields has been renamed to SilverStripe\Forms\Validation\RequiredFieldsValidator
+- [x] [RENAME/MOVE] SilverStripe\Forms\CompositeValidator has been renamed to SilverStripe\Forms\Validation\CompositeValidator
+- [x] [RENAME/MOVE] SilverStripe\UserForms\Form\UserFormsRequiredFields has been renamed to SilverStripe\UserForms\Form\UserFormsRequiredFieldsValidator
+- [x] [RENAME/MOVE] Symbiote\AdvancedWorkflow\Forms\AWRequiredFields has been renamed to Symbiote\AdvancedWorkflow\Forms\AWRequiredFieldsValidator
+- [x] [RENAME/MOVE] SilverStripe\Security\PasswordValidator has been renamed to SilverStripe\Security\Validation\RulesPasswordValidator
+- [x] [RENAME/MOVE] DNADesign\Elemental\TopPage\DataExtension has been renamed to DNADesign\Elemental\Extensions\TopPageElementExtension
+- [x] [RENAME/MOVE] DNADesign\Elemental\TopPage\FluentExtension has been renamed to DNADesign\Elemental\Extensions\TopPageFluentElementExtension
+- [x] [RENAME/MOVE] DNADesign\Elemental\TopPage\SiteTreeExtension has been renamed to DNADesign\Elemental\Extensions\TopPageSiteTreeExtension
+- [x] [RENAME/MOVE] SilverStripe\CMS\Controllers\LeftAndMainPageIconsExtension has been renamed to SilverStripe\CMS\Controllers\LeftAndMainRecordIconsExtension
+- [x] [RENAME/MOVE] SilverStripe\CMS\Model\CurrentPageIdentifier has been renamed to SilverStripe\CMS\Model\CurrentRecordIdentifier
+- [x] [RENAME/MOVE] SilverStripe\Dev\Constraint\ViewableDataContains has been renamed to SilverStripe\Dev\Constraint\ModelDataContains
+- [x] [RENAME/MOVE] SilverStripe\Dev\Validation\DatabaseAdminExtension has been renamed to SilverStripe\Dev\Validation\DbBuildExtension
+- [x] [RENAME/MOVE] SilverStripe\Logging\HTTPOutputHandler has been renamed to SilverStripe\Logging\ErrorOutputHandler
+- [x] [REMOVED] SilverStripe\ORM\DataObject::get_by_id() has been removed. Use DataObject::get($className)->byID($id) instead.
+- [ ] [REMOVED] SilverStripe\ORM\DataObject::get_one() has been removed. Use DataObject::get($className)->first() instead.
+- [ ] [REMOVED] SilverStripe\ORM\DataObject::delete_by_id() has been removed. Use DataObject::get($className)->byID($id)->delete() instead.
+- [ ] [RENAME/MOVE] Extension hook updateRelativeLink($base, &$relativeLink, $action) in SiteTree has been renamed to updateRelativeLink(&$link).
+- [ ] [RENAME/MOVE] Extension hook updateRelativeLink($base, &$relativeLink, $action) in SiteTreeExtension has been renamed to updateRelativeLink(&$link).
+- [ ] [RENAME/MOVE] Extension hook updateLink($base, &$link, $action) in SiteTree has been renamed to updateLink(&$link).
+- [ ] [RENAME/MOVE] Extension hook updateLink($base, &$link, $action) in SiteTreeExtension has been renamed to updateLink(&$link).
+- [ ] [RENAME/MOVE] Extension hook updateAbsoluteLink($base, &$link, $action) in SiteTree has been renamed to updateAbsoluteLink(&$link).
+- [ ] [RENAME/MOVE] Extension hook updateAbsoluteLink($base, &$link, $action) in SiteTreeExtension has been renamed to updateAbsoluteLink(&$link).
+- [x] [RENAME/MOVE] Extension hook afterMemberLoggedIn has been renamed to onAfterMemberLoggedIn.
+- [x] [RENAME/MOVE] Extension hook afterMemberLoggedOut has been renamed to onAfterMemberLoggedOut.
+- [x] [RENAME/MOVE] Extension hook authenticationFailed has been renamed to onAuthenticationFailed.
+- [x] [RENAME/MOVE] Extension hook authenticationFailedUnknownUser has been renamed to onAuthenticationFailedUnknownUser.
+- [x] [RENAME/MOVE] Extension hook authenticationSucceeded has been renamed to onAuthenticationSucceeded.
+- [x] [RENAME/MOVE] Extension hook beforeMemberLoggedIn has been renamed to onBeforeMemberLoggedIn.
+- [x] [RENAME/MOVE] Extension hook beforeMemberLoggedOut has been renamed to onBeforeMemberLoggedOut.
+- [x] [RENAME/MOVE] Extension hook registerFailedLogin has been renamed to onRegisterFailedLogin.
+- [x] [RENAME/MOVE] Extension hook init has been renamed to onInit.
+- [x] [RENAME/MOVE] Extension hook flushCache has been renamed to onFlushCache.
+- [x] [RENAME/MOVE] Extension hook populateDefaults has been renamed to onAfterPopulateDefaults.
+- [x] [RENAME/MOVE] Extension hook requireDefaultRecords has been renamed to onRequireDefaultRecords.
+- [x] [RENAME/MOVE] Extension hook forgotPassword has been renamed to onForgotPassword.
+- [x] [RENAME/MOVE] Extension hook getDefaultRecords has been renamed to updateDefaultRecords.
+- [x] [RENAME/MOVE] Extension hook MetaComponents has been renamed to updateMetaComponents.
+- [x] [RENAME/MOVE] Extension hook MetaTags has been renamed to updateMetaTags.
+- [x] [RENAME/MOVE] Extension hook validate has been renamed to updateValidate.

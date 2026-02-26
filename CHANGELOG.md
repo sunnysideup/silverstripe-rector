@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+- Added `StatToConfigGetRector` to replace `$this->stat()` with `static::config()->get()` for Silverstripe 4.
+- Updated documentation to include Silverstripe version or setlist in rule descriptions.
+- Added `ReplaceHasCurrWithCurrRector` to replace `Controller::has_curr()` with `Controller::curr() !== null` for Silverstripe 6.
+- Added Silverstripe 6.0 Extension hook renames to the SS 6.0 setlist (thanks to [@lerni](https://github.com/lerni)).
+- Added Silverstripe 6.0 class renames for `ViewableDataContains` and `DatabaseAdminExtension`.
+- Added tests for Silverstripe 6.0 SetList
+
 ## [1.2] - 2026-01-28
 
 ### Added
