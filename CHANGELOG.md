@@ -8,12 +8,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Added rules for Silverstripe 6.1 deprecations:
+    - Added `DataObjectStaticMethodsToFluentRector` to replace `DataObject::get_by_id()`, `get_one()`, and `delete_by_id()` with fluent equivalents (e.g. `DataObject::get($className)->setUseCache(true)->byID($id)`).
+- Added rules for Silverstripe 6.2 deprecations:
+    - Added `GetIDListToColumnIDRector` to replace `getIDList()` with `sort(null)->column('ID')` or `column('ID')`.
+    - Added `FieldList::dataFields()` to `getDataFields()` rename to Silverstripe 6.2 setlist.
+- Added rules for Silverstripe 4.8 and 4.10 deprecations:
+    - Added `DataObject::i18n_plural_name()` to `plural_name()` rename to Silverstripe 4.10 setlist.
 - Added `StatToConfigGetRector` to replace `$this->stat()` with `static::config()->get()` for Silverstripe 4.
 - Updated documentation to include Silverstripe version or setlist in rule descriptions.
 - Added `ReplaceHasCurrWithCurrRector` to replace `Controller::has_curr()` with `Controller::curr() !== null` for Silverstripe 6.
 - Added Silverstripe 6.0 Extension hook renames to the SS 6.0 setlist (thanks to [@lerni](https://github.com/lerni)).
 - Added Silverstripe 6.0 class renames for `ViewableDataContains` and `DatabaseAdminExtension`.
 - Added tests for Silverstripe 6.0 SetList
+- Improved `SilverstripeDeprecationCommentRector`:
+  - Added tests and comprehensive documentation.
+  - Improved class and method detection using PHPStan Scope.
+  - Ensured PHP 7.4 compatibility.
+- Added new Silverstripe 5.4 set with deprecations without substitute using `SilverstripeDeprecationCommentRector`.
+- Add jack for testing outdated packages in CI
+- Improved CI script
 
 ## [1.2] - 2026-01-28
 

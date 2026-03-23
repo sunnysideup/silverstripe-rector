@@ -74,4 +74,5 @@ return static function (RectorConfig $rectorConfig): void {
         UseInstead::class,
         UseInsteadChanges::get_list_cleaned()
     );
+    $rectorConfig->rule(DataObjectStaticMethodsToFluentRector::class);
 };
