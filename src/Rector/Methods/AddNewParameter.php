@@ -12,8 +12,8 @@ use PhpParser\Node\Expr\StaticCall;
 use PhpParser\Node\Identifier;
 use PhpParser\Node\Name;
 use PhpParser\Node\Stmt\ClassMethod;
-use PhpParser\Node\Stmt\Class_;
 use PhpParser\Node\Stmt\Expression;
+use PHPStan\Analyser\Scope;
 use PHPStan\Reflection\ReflectionProvider;
 use PHPStan\Type\ErrorType;
 use PHPStan\Type\MixedType;
@@ -22,12 +22,11 @@ use PHPStan\Type\ObjectWithoutClassType;
 use PHPStan\Type\Type;
 use PHPStan\Type\UnionType;
 use Rector\Contract\Rector\ConfigurableRectorInterface;
-use Rector\NodeTypeResolver\Node\AttributeKey;
-use Rector\Rector\AbstractRector;
+use Rector\Rector\AbstractScopeAwareRector;
 use Symplify\RuleDocGenerator\ValueObject\CodeSample\ConfiguredCodeSample;
 use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 
-final class AddNewParameter extends AbstractRector implements ConfigurableRectorInterface
+final class AddNewParameter extends AbstractScopeAwareRector implements ConfigurableRectorInterface
 {
     /**
      * @var array<int, array{c: string, m: string, n: string, u?: bool}>
@@ -48,7 +47,7 @@ final class AddNewParameter extends AbstractRector implements ConfigurableRector
 $service->run($request);
 CODE_SAMPLE,
                     <<<'CODE_SAMPLE'
-/** @TODO UPGRADE TASK - BuildTask::run: Added new parameter $output in BuildTask::run() */
+/** @TODO SSU RECTOR UPGRADE TASK - BuildTask::run: Added new parameter $output in BuildTask::run() */
 $service->run($request);
 CODE_SAMPLE,
                     [['c' => 'BuildTask', 'm' => 'run', 'n' => 'Added new parameter $output in BuildTask::run()', 'u' => false]]
@@ -76,6 +75,7 @@ CODE_SAMPLE,
 
     public function getNodeTypes(): array
     {
+        // Target Expression (so comments go *above* the statement) and ClassMethod
         return [
             Expression::class,
             ClassMethod::class,
@@ -85,13 +85,13 @@ CODE_SAMPLE,
     /**
      * @param Expression|ClassMethod $node
      */
-    public function refactor(Node $node): ?Node
+    public function refactorWithScope(Node $node, Scope $scope): ?Node
     {
         if ($node instanceof Expression) {
             return $this->refactorExpression($node);
         }
 
-        return $this->refactorClassMethod($node);
+        return $this->refactorClassMethod($node, $scope);
     }
 
     private function refactorExpression(Expression $expression): ?Node
@@ -128,18 +128,19 @@ CODE_SAMPLE,
         return $changed ? $expression : null;
     }
 
-    private function refactorClassMethod(ClassMethod $classMethod): ?Node
+    private function refactorClassMethod(ClassMethod $classMethod, Scope $scope): ?Node
     {
         if (!$classMethod->name instanceof Identifier) {
             return null;
         }
 
-        $methodName = $classMethod->name->toString();
-        $currentClassName = $this->resolveCurrentClassName($classMethod);
-
-        if ($currentClassName === null) {
+        $classReflection = $scope->getClassReflection();
+        if ($classReflection === null) {
             return null;
         }
+
+        $methodName = $classMethod->name->toString();
+        $currentClassName = $classReflection->getName();
 
         $changed = false;
 
@@ -165,7 +166,11 @@ CODE_SAMPLE,
     private function matchesCallTarget(MethodCall|NullsafeMethodCall|StaticCall $call, array $change): bool
     {
         if ($call instanceof StaticCall) {
-            return $this->matchesStaticCallClass($call, (string) $change['c']);
+            $classNode = $call->class;
+            if ($classNode instanceof Name) {
+                return $this->isClassSameOrSubclassOfConfigured($classNode->toString(), (string) $change['c']);
+            }
+            return false;
         }
 
         $receiverType = $this->getType($call->var);
@@ -177,18 +182,6 @@ CODE_SAMPLE,
         return $this->matchesTypeAgainstConfiguredClass($receiverType, (string) $change['c']);
     }
 
-    private function matchesStaticCallClass(StaticCall $staticCall, string $configuredClass): bool
-    {
-        $classNode = $staticCall->class;
-
-        if ($classNode instanceof Name) {
-            $calledClass = $classNode->toString();
-            return $this->isClassSameOrSubclassOfConfigured($calledClass, $configuredClass);
-        }
-
-        return false;
-    }
-
     private function resolveCalledMethodName(MethodCall|NullsafeMethodCall|StaticCall $call): ?string
     {
         if ($call->name instanceof Identifier) {
@@ -197,43 +190,19 @@ CODE_SAMPLE,
         return null;
     }
 
-    private function resolveCurrentClassName(ClassMethod $classMethod): ?string
-    {
-        $className = $classMethod->getAttribute(AttributeKey::CLASS_NAME);
-        if (is_string($className) && $className !== '') {
-            return $className;
-        }
-
-        /** @var Class_|null $classLike */
-        $classLike = $classMethod->getAttribute(AttributeKey::PARENT_NODE);
-        if ($classLike instanceof Class_ && $classLike->name instanceof Identifier) {
-            return $classLike->name->toString();
-        }
-
-        return null;
-    }
-
     private function buildTodoLine(string $className, string $methodName, string $note): string
     {
-        $displayClass = $this->shortClassName($className);
-        return sprintf('@TODO UPGRADE TASK - %s::%s: %s', $displayClass, $methodName, $note);
-    }
-
-    private function shortClassName(string $className): string
-    {
         $parts = explode('\\', ltrim($className, '\\'));
-        return (string) end($parts);
+        $displayClass = (string) end($parts);
+
+        return sprintf('@TODO SSU RECTOR UPGRADE TASK - %s::%s: %s', $displayClass, $methodName, $note);
     }
 
-    /**
-     * Appends a Doc comment properly using PHP-Parser's Comment arrays.
-     * Returns true if changed, false if it already existed.
-     */
     private function appendTodoDocCommentSafely(Node $node, string $todoLine): bool
     {
         $comments = $node->getComments();
 
-        // Idempotency check across all existing comments
+        // Idempotency check across all comments
         foreach ($comments as $comment) {
             if (str_contains($comment->getText(), $todoLine)) {
                 return false;
@@ -248,26 +217,19 @@ CODE_SAMPLE,
             $trimmed = rtrim($text);
 
             if (str_ends_with($trimmed, '*/')) {
-                // Strip the closing tags, append our line, and re-close it nicely
                 $trimmed = substr($trimmed, 0, -2);
                 $newDocText = rtrim($trimmed) . "\n * " . $todoLine . "\n */";
             } else {
                 $newDocText = $text . "\n" . $newDocText;
             }
-
-            // Remove the old docblock from the stack
-            $comments = array_filter($comments, fn($c) => $c !== $existingDoc);
         }
 
-        $comments[] = new Doc($newDocText);
-        $node->setAttribute(AttributeKey::COMMENTS, array_values($comments));
-
+        $node->setDocComment(new Doc($newDocText));
         return true;
     }
 
     private function isUnknownType(Type $type): bool
     {
-        // Properly check against PHPStan's base unknown/mixed types
         return $type instanceof MixedType
             || $type instanceof ErrorType
             || $type instanceof ObjectWithoutClassType;
@@ -296,7 +258,6 @@ CODE_SAMPLE,
         $actualClass = ltrim($actualClass, '\\');
         $configuredClass = ltrim($configuredClass, '\\');
 
-        // Exact or suffix match
         if (
             strcasecmp($actualClass, $configuredClass) === 0 ||
             str_ends_with(strtolower($actualClass), '\\' . strtolower($configuredClass))
@@ -314,7 +275,6 @@ CODE_SAMPLE,
             return $classReflection->isSubclassOf($configuredClass);
         }
 
-        // Short-name fallback loop over parent chain
         foreach (array_merge([$classReflection->getName()], array_keys($classReflection->getParentClassesNames())) as $candidate) {
             if (
                 str_ends_with(strtolower($candidate), '\\' . strtolower($configuredClass)) ||
