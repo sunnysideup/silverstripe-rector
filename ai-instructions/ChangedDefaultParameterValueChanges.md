@@ -147,7 +147,7 @@ Rector tests: `namespace Netwerkstatt\SilverstripeRector\Tests\Methods\XXX` wher
 In the tests, I have set up the following folders / files:
 
 - `config/configured_rule.php`
-- `Fixture/fixture.php.inc`
+- `Fixtures/fixture.php.inc`
 
 ### Configuration Injection
 
@@ -163,7 +163,7 @@ The rule must be idempotent:
 
 If a `ClassMethod` already has a docblock:
 
-- append a new `@TODO SSU RECTOR UPGRADE TASK - ...` line to the existing docblock (preferred), or
+- append a new `@TODO UPGRADE TASK - ...` line to the existing docblock (preferred), or
 - otherwise preserve the existing docblock content and add the TODO without destroying it.
 
 Please do not replace/remove existing docblocks.
@@ -173,13 +173,13 @@ Please do not replace/remove existing docblocks.
 Use exactly this format:
 
 ```php
-@TODO SSU RECTOR UPGRADE TASK - {ClassName}::{methodName}: {note}
+@TODO UPGRADE TASK - {ClassName}::{methodName}: {note}
 ```
 
 Example:
 
 ```php
-@TODO SSU RECTOR UPGRADE TASK - SomeClass::doThing: Changed default value of parameter $mode in SomeClass::doThing() from null to 'strict'
+@TODO UPGRADE TASK - SomeClass::doThing: Changed default value of parameter $mode in SomeClass::doThing() from null to 'strict'
 ```
 
 ## What I want in the answer

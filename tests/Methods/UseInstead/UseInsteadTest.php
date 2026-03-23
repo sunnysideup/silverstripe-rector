@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Netwerkstatt\SilverstripeRector\Tests\Methods\UseInstead;
+namespace Netwerkstatt\SilverstripeRector\Tests\Methods\ReturnType;
 
 use Iterator;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Rector\Testing\PHPUnit\AbstractRectorTestCase;
 
-final class UseInsteadTest extends AbstractRectorTestCase
+final class ReturnTypeTest extends AbstractRectorTestCase
 {
     #[DataProvider('provideData')]
     public function test(string $filePath): void
@@ -18,7 +18,7 @@ final class UseInsteadTest extends AbstractRectorTestCase
 
     public static function provideData(): Iterator
     {
-        return self::yieldFilesFromDirectory(__DIR__ . '/Fixture');
+        return self::yieldFilesFromDirectory(__DIR__ . '/Fixtures');
     }
 
     public function provideConfigFilePath(): string

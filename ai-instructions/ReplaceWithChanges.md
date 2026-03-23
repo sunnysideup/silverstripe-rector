@@ -144,7 +144,7 @@ Rector tests: `namespace Netwerkstatt\SilverstripeRector\Tests\Methods\XXX` wher
 In the tests, I have set up the following folders / files:
 
 - `config/configured_rule.php`
-- `Fixture/fixture.php.inc`
+- `Fixtures/fixture.php.inc`
 
 ### Configuration Injection
 
