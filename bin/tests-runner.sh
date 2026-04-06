@@ -4,3 +4,6 @@ cd /tmp/ss-rector
 composer install
 ./vendor/bin/phpunit
 rm /tmp/ss-rector -rf
+
+
+echo "consider --- ../../bin/phpunit/mytest --bootstrap ../../autoload.php"
