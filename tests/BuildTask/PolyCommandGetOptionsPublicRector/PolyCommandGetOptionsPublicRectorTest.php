@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Netwerkstatt\SilverstripeRector\Tests\Misc\PolyCommandGetOptionsPublicRector;
+namespace Netwerkstatt\SilverstripeRector\Tests\BuildTask\PolyCommandGetOptionsPublicRector;
 
 use Iterator;
 use PHPUnit\Framework\Attributes\DataProvider;
