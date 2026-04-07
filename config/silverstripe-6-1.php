@@ -25,6 +25,7 @@ use Netwerkstatt\SilverstripeRector\Rector\Methods\RenamedTo;
 use Netwerkstatt\SilverstripeRector\Rector\Methods\ReplacedWith;
 use Netwerkstatt\SilverstripeRector\Rector\Methods\ReturnType;
 use Netwerkstatt\SilverstripeRector\Rector\Methods\UseInstead;
+use Netwerkstatt\SilverstripeRector\Rector\Misc\PolyCommandGetOptionsPublicRector;
 use Rector\Config\RectorConfig;
 
 
@@ -76,4 +77,5 @@ return static function (RectorConfig $rectorConfig): void {
         UseInsteadChanges::get_list_cleaned()
     );
     $rectorConfig->rule(DataObjectStaticMethodsToFluentRector::class);
+    $rectorConfig->rule(PolyCommandGetOptionsPublicRector::class);
 };
