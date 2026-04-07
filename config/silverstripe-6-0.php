@@ -8,6 +8,8 @@ use Netwerkstatt\SilverstripeRector\Rector\DataObject\DataObjectGetByIdToByIDRec
 use Netwerkstatt\SilverstripeRector\Rector\Misc\BuildTaskUpdateRector;
 use Netwerkstatt\SilverstripeRector\Rector\Misc\RemoveSilverstripeDeprecationCommentRector;
 use Rector\Config\RectorConfig;
+use Netwerkstatt\SilverstripeRector\Rector\Injector\FactoryCreateMethodSignatureRector;
+use Netwerkstatt\SilverstripeRector\Rector\Misc\ModelDataExistsReturnTypeRector;
 use Rector\Renaming\Rector\ClassConstFetch\RenameClassConstFetchRector;
 use Rector\Renaming\Rector\MethodCall\RenameMethodRector;
 use Rector\Renaming\Rector\Name\RenameClassRector;
@@ -186,6 +188,7 @@ return static function (RectorConfig $rectorConfig): void {
         // RememberLoginHash hooks
         new MethodCallRename('SilverStripe\Core\Extension', 'onAfterRenewToken', 'onAfterRenewSession'),
     ]);
+    $rectorConfig->rule(FactoryCreateMethodSignatureRector::class);
     $rectorConfig->rule(ReplaceHasCurrWithCurrRector::class);
     $rectorConfig->rule(DataObjectGetByIdToByIDRector::class);
     $rectorConfig->ruleWithConfiguration(RemoveSilverstripeDeprecationCommentRector::class, [
