@@ -25,7 +25,7 @@ use Netwerkstatt\SilverstripeRector\Rector\Methods\RenamedTo;
 use Netwerkstatt\SilverstripeRector\Rector\Methods\ReplacedWith;
 use Netwerkstatt\SilverstripeRector\Rector\Methods\ReturnType;
 use Netwerkstatt\SilverstripeRector\Rector\Methods\UseInstead;
-use Netwerkstatt\SilverstripeRector\Rector\Misc\PolyCommandGetOptionsPublicRector;
+use Netwerkstatt\SilverstripeRector\Rector\BuildTask\PolyCommandGetOptionsPublicRector;
 use Rector\Config\RectorConfig;
 
 
