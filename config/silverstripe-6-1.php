@@ -13,6 +13,7 @@ use Netwerkstatt\SilverstripeRector\ChangeLists\Silverstripe6\RenamedToChanges;
 use Netwerkstatt\SilverstripeRector\ChangeLists\Silverstripe6\ReplacedWithChanges;
 use Netwerkstatt\SilverstripeRector\ChangeLists\Silverstripe6\ReturnTypeChanges;
 use Netwerkstatt\SilverstripeRector\ChangeLists\Silverstripe6\UseInsteadChanges;
+use Netwerkstatt\SilverstripeRector\Rector\DataObject\DataObjectStaticMethodsToFluentRector;
 use Netwerkstatt\SilverstripeRector\Rector\Methods\AddNewParameter;
 use Netwerkstatt\SilverstripeRector\Rector\Methods\ChangedDefaultParameterValue;
 use Netwerkstatt\SilverstripeRector\Rector\Methods\ChangedParameterType;
