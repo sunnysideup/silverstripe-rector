@@ -1,6 +1,5 @@
 <?php
 
-namespace Netwerkstatt\SilverstripeRector\Tests\Misc\PolyCommandGetOptionsPublicRector\Fixture;
 
 // Dummy classes to satisfy PHPStan's inheritance check
 namespace SilverStripe\PolyExecution {
@@ -25,7 +24,6 @@ namespace App\Commands {
 -----
 <?php
 
-namespace Netwerkstatt\SilverstripeRector\Tests\Misc\PolyCommandGetOptionsPublicRector\Fixture;
 
 // Dummy classes to satisfy PHPStan's inheritance check
 namespace SilverStripe\PolyExecution {
