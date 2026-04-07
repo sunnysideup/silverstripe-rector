@@ -1,6 +1,5 @@
 <?php
 
-namespace Netwerkstatt\SilverstripeRector\Tests\Injector\FactoryCreateMethodSignatureRector\Fixture;
 
 // Dummy interfaces and classes to satisfy PHPStan's inheritance checks
 namespace SilverStripe\Core\Injector {
@@ -34,7 +33,6 @@ namespace App\Factories {
 -----
 <?php
 
-namespace Netwerkstatt\SilverstripeRector\Tests\Injector\FactoryCreateMethodSignatureRector\Fixture;
 
 // Dummy interfaces and classes to satisfy PHPStan's inheritance checks
 namespace SilverStripe\Core\Injector {
