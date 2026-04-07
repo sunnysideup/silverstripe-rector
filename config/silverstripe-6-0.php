@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Netwerkstatt\SilverstripeRector\Rector\Control\ReplaceHasCurrWithCurrRector;
 use Netwerkstatt\SilverstripeRector\Rector\DataObject\DataObjectGetByIdToByIDRector;
+use Netwerkstatt\SilverstripeRector\Rector\Injector\FactoryCreateMethodSignatureRector;
 use Netwerkstatt\SilverstripeRector\Rector\Misc\ModelDataExistsReturnTypeRector;
 use Rector\Config\RectorConfig;
 use Rector\Renaming\Rector\ClassConstFetch\RenameClassConstFetchRector;
@@ -177,6 +178,7 @@ return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->rule(ReplaceHasCurrWithCurrRector::class);
     $rectorConfig->rule(DataObjectGetByIdToByIDRector::class);
     $rectorConfig->rule(ModelDataExistsReturnTypeRector::class);
+    $rectorConfig->rule(FactoryCreateMethodSignatureRector::class);
     $rectorConfig->ruleWithConfiguration(RenameClassConstFetchRector::class, [
         new RenameClassAndConstFetch(
             'SilverStripe\Admin\LeftAndMain',
