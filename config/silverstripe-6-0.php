@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Netwerkstatt\SilverstripeRector\Rector\Control\ReplaceHasCurrWithCurrRector;
 use Netwerkstatt\SilverstripeRector\Rector\DataObject\DataObjectGetByIdToByIDRector;
+use Netwerkstatt\SilverstripeRector\Rector\Misc\ModelDataExistsReturnTypeRector;
 use Rector\Config\RectorConfig;
 use Rector\Renaming\Rector\ClassConstFetch\RenameClassConstFetchRector;
 use Rector\Renaming\Rector\MethodCall\RenameMethodRector;
@@ -88,10 +89,18 @@ return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->importNames();
     $rectorConfig->removeUnusedImports();
     $rectorConfig->ruleWithConfiguration(RenameStaticMethodRector::class, [
-        new RenameStaticMethod('SilverStripe\View\SSViewer', 'flush', 'SilverStripe\TemplateEngine\SSTemplateEngine',
-            'flush'),
-        new RenameStaticMethod('SilverStripe\ORM\FieldType\DBEnum', 'flushCache', 'SilverStripe\ORM\FieldType\DBEnum',
-            'reset'),
+        new RenameStaticMethod(
+            'SilverStripe\View\SSViewer',
+            'flush',
+            'SilverStripe\TemplateEngine\SSTemplateEngine',
+            'flush'
+        ),
+        new RenameStaticMethod(
+            'SilverStripe\ORM\FieldType\DBEnum',
+            'flushCache',
+            'SilverStripe\ORM\FieldType\DBEnum',
+            'reset'
+        ),
     ]);
     $rectorConfig->ruleWithConfiguration(RenamePropertyRector::class, [
         new RenameProperty('SilverStripe\Admin\LeftAndMain', 'tree_class', 'model_class'),
@@ -126,8 +135,11 @@ return static function (RectorConfig $rectorConfig): void {
         new MethodCallRename('SilverStripe\CMS\Controllers\CMSMain', 'getPageTypes', 'getRecordTypes'),
         new MethodCallRename('SilverStripe\CMS\Controllers\CMSMain', 'PageTypes', 'RecordTypes'),
         new MethodCallRename('SilverStripe\CMS\Controllers\CMSMain', 'SiteTreeHints', 'TreeHints'),
-        new MethodCallRename('SilverStripe\CMS\Controllers\LeftAndMainRecordIconsExtension', 'generatePageIconsCss',
-            'generateRecordIconsCss'),
+        new MethodCallRename(
+            'SilverStripe\CMS\Controllers\LeftAndMainRecordIconsExtension',
+            'generatePageIconsCss',
+            'generateRecordIconsCss'
+        ),
         new MethodCallRename('SilverStripe\Forms\Form', 'validationResult', 'validate'),
         new MethodCallRename('SilverStripe\Forms\TextareaField', 'ValueEntities', 'getFormattedValueEntities'),
         new MethodCallRename('SilverStripe\Model\List\ListDecorator', 'TotalItems', 'getTotalItems'),
@@ -137,8 +149,11 @@ return static function (RectorConfig $rectorConfig): void {
         new MethodCallRename('SilverStripe\Core\Extension', 'afterMemberLoggedIn', 'onAfterMemberLoggedIn'),
         new MethodCallRename('SilverStripe\Core\Extension', 'afterMemberLoggedOut', 'onAfterMemberLoggedOut'),
         new MethodCallRename('SilverStripe\Core\Extension', 'authenticationFailed', 'onAuthenticationFailed'),
-        new MethodCallRename('SilverStripe\Core\Extension', 'authenticationFailedUnknownUser',
-            'onAuthenticationFailedUnknownUser'),
+        new MethodCallRename(
+            'SilverStripe\Core\Extension',
+            'authenticationFailedUnknownUser',
+            'onAuthenticationFailedUnknownUser'
+        ),
         new MethodCallRename('SilverStripe\Core\Extension', 'authenticationSucceeded', 'onAuthenticationSucceeded'),
         new MethodCallRename('SilverStripe\Core\Extension', 'beforeMemberLoggedIn', 'onBeforeMemberLoggedIn'),
         new MethodCallRename('SilverStripe\Core\Extension', 'beforeMemberLoggedOut', 'onBeforeMemberLoggedOut'),
@@ -161,8 +176,13 @@ return static function (RectorConfig $rectorConfig): void {
     ]);
     $rectorConfig->rule(ReplaceHasCurrWithCurrRector::class);
     $rectorConfig->rule(DataObjectGetByIdToByIDRector::class);
+    $rectorConfig->rule(ModelDataExistsReturnTypeRector::class);
     $rectorConfig->ruleWithConfiguration(RenameClassConstFetchRector::class, [
-        new RenameClassAndConstFetch('SilverStripe\Admin\LeftAndMain', 'SCHEMA_HEADER',
-            'SilverStripe\Forms\Schema\FormSchema', 'SCHEMA_HEADER'),
+        new RenameClassAndConstFetch(
+            'SilverStripe\Admin\LeftAndMain',
+            'SCHEMA_HEADER',
+            'SilverStripe\Forms\Schema\FormSchema',
+            'SCHEMA_HEADER'
+        ),
     ]);
 };
