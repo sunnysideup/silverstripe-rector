@@ -13,6 +13,7 @@ use Netwerkstatt\SilverstripeRector\ChangeLists\Silverstripe6\RenamedToChanges;
 use Netwerkstatt\SilverstripeRector\ChangeLists\Silverstripe6\ReplacedWithChanges;
 use Netwerkstatt\SilverstripeRector\ChangeLists\Silverstripe6\ReturnTypeChanges;
 use Netwerkstatt\SilverstripeRector\ChangeLists\Silverstripe6\UseInsteadChanges;
+use Netwerkstatt\SilverstripeRector\Rector\BuildTask\BuildTaskTitlePropertyRector;
 use Netwerkstatt\SilverstripeRector\Rector\DataObject\DataObjectStaticMethodsToFluentRector;
 use Netwerkstatt\SilverstripeRector\Rector\Methods\AddNewParameter;
 use Netwerkstatt\SilverstripeRector\Rector\Methods\ChangedDefaultParameterValue;
@@ -78,4 +79,5 @@ return static function (RectorConfig $rectorConfig): void {
     );
     $rectorConfig->rule(DataObjectStaticMethodsToFluentRector::class);
     $rectorConfig->rule(PolyCommandGetOptionsPublicRector::class);
+    $rectorConfig->rule(BuildTaskTitlePropertyRector::class);
 };
