@@ -3,9 +3,9 @@
 declare(strict_types=1);
 
 use Rector\Config\RectorConfig;
-use Utils\Rector\ModelDataExistsReturnTypeRector;
+
 
 return RectorConfig::configure()
     ->withRules([
-        ModelDataExistsReturnTypeRector::class,
+        \Netwerkstatt\SilverstripeRector\Rector\Misc\ModelDataExistsReturnTypeRector::class,
     ]);
