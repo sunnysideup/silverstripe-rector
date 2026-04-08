@@ -8,6 +8,7 @@ use Netwerkstatt\SilverstripeRector\Rector\Injector\FactoryCreateMethodSignature
 use Netwerkstatt\SilverstripeRector\Rector\Misc\ModelDataExistsReturnTypeRector;
 use Netwerkstatt\SilverstripeRector\Rector\ORM\DBCompositeWriteToManipulationSignatureRector;
 use Netwerkstatt\SilverstripeRector\Rector\ORM\DBFieldAddToQuerySignatureRector;
+use Netwerkstatt\SilverstripeRector\Rector\ORM\DBFieldScaffoldFormFieldSignatureRector;
 use Netwerkstatt\SilverstripeRector\Rector\ORM\DBFieldSetValueSignatureRector;
 use Netwerkstatt\SilverstripeRector\Rector\ORM\DBVarcharURLReturnTypeRector;
 use Rector\Config\RectorConfig;
@@ -187,6 +188,7 @@ return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->rule(FactoryCreateMethodSignatureRector::class);
     $rectorConfig->rule(DBFieldAddToQuerySignatureRector::class);
     $rectorConfig->rule(DBFieldSetValueSignatureRector::class);
+    $rectorConfig->rule(DBFieldScaffoldFormFieldSignatureRector::class);
     $rectorConfig->ruleWithConfiguration(RenameClassConstFetchRector::class, [
         new RenameClassAndConstFetch(
             'SilverStripe\Admin\LeftAndMain',
