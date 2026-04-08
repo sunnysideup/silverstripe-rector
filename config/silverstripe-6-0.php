@@ -1,6 +1,10 @@
 <?php
 
 declare(strict_types=1);
+use Netwerkstatt\SilverstripeRector\Rector\Injector\FactoryCreateMethodSignatureRector;
+use Netwerkstatt\SilverstripeRector\Rector\Misc\ModelDataExistsReturnTypeRector;
+use Netwerkstatt\SilverstripeRector\Rector\ORM\DBCompositeWriteToManipulationSignatureRector;
+use Netwerkstatt\SilverstripeRector\Rector\ORM\DBFieldAddToQuerySignatureRector;
 
 se Netwerkstatt\SilverstripeRector\Rector\Misc\ModelDataExistsReturnTypeRector;
 use Netwerkstatt\SilverstripeRector\Rector\Control\ReplaceHasCurrWithCurrRector;
@@ -231,4 +235,7 @@ return static function (RectorConfig $rectorConfig): void {
             'SCHEMA_HEADER'
         ),
     ]);
+    $rectorConfig->rule(ModelDataExistsReturnTypeRector::class);
+    $rectorConfig->rule(DBFieldAddToQuerySignatureRector::class);
+
 };
