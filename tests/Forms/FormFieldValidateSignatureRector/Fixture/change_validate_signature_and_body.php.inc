@@ -41,11 +41,12 @@ namespace App\Forms {
         public function validate(): \SilverStripe\ORM\ValidationResult
         {
             $valid = parent::validate();
-
             if (true) {
-                $valid->addError('That "Slug" is not unique for listings', 'validation');
+                $valid->addError(
+                    'That "Slug" is not unique for listings',
+                    'validation'
+                );
             }
-
             return $valid;
         }
     }
