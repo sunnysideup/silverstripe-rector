@@ -7,6 +7,7 @@ use Netwerkstatt\SilverstripeRector\Rector\DataObject\DataObjectGetByIdToByIDRec
 use Netwerkstatt\SilverstripeRector\Rector\Injector\FactoryCreateMethodSignatureRector;
 use Netwerkstatt\SilverstripeRector\Rector\Misc\ModelDataExistsReturnTypeRector;
 use Netwerkstatt\SilverstripeRector\Rector\ORM\DBCompositeWriteToManipulationSignatureRector;
+use Netwerkstatt\SilverstripeRector\Rector\ORM\DBFieldAddToQuerySignatureRector;
 use Netwerkstatt\SilverstripeRector\Rector\ORM\DBVarcharURLReturnTypeRector;
 use Rector\Config\RectorConfig;
 use Rector\Renaming\Rector\ClassConstFetch\RenameClassConstFetchRector;
@@ -183,6 +184,7 @@ return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->rule(DBVarcharURLReturnTypeRector::class);
     $rectorConfig->rule(DBCompositeWriteToManipulationSignatureRector::class);
     $rectorConfig->rule(FactoryCreateMethodSignatureRector::class);
+    $rectorConfig->rule(DBFieldAddToQuerySignatureRector::class);
     $rectorConfig->ruleWithConfiguration(RenameClassConstFetchRector::class, [
         new RenameClassAndConstFetch(
             'SilverStripe\Admin\LeftAndMain',
