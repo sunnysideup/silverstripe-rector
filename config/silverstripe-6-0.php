@@ -10,6 +10,7 @@ use Netwerkstatt\SilverstripeRector\Rector\Misc\ModelDataExistsReturnTypeRector;
 use Netwerkstatt\SilverstripeRector\Rector\ORM\DBCompositeWriteToManipulationSignatureRector;
 use Netwerkstatt\SilverstripeRector\Rector\ORM\DBFieldAddToQuerySignatureRector;
 use Netwerkstatt\SilverstripeRector\Rector\ORM\DBFieldSetValueSignatureRector;
+use Netwerkstatt\SilverstripeRector\Rector\ORM\DBFieldScaffoldFormFieldSignatureRector;
 
 se Netwerkstatt\SilverstripeRector\Rector\Misc\ModelDataExistsReturnTypeRector;
 use Netwerkstatt\SilverstripeRector\Rector\Control\ReplaceHasCurrWithCurrRector;
@@ -245,5 +246,9 @@ return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->rule(ModelDataExistsReturnTypeRector::class);
     $rectorConfig->rule(DBFieldAddToQuerySignatureRector::class);
     $rectorConfig->rule(DBFieldSetValueSignatureRector::class);
- 
+    $rectorConfig->rule(ModelDataExistsReturnTypeRector::class); 
+    $rectorConfig->rule(DBFieldAddToQuerySignatureRector::class);
+    $rectorConfig->rule(DBFieldSetValueSignatureRector::class);
+    $rectorConfig->rule(DBFieldScaffoldFormFieldSignatureRector::class);
+  
 };
