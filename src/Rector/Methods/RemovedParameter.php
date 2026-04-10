@@ -49,7 +49,7 @@ final class RemovedParameter extends AbstractRector implements ConfigurableRecto
 $controller->elementForm($request);
 CODE_SAMPLE,
                     <<<'CODE_SAMPLE'
-/** @TODO SSU RECTOR UPGRADE TASK - DNADesign\Elemental\Controllers\ElementalAreaController::elementForm: Removed deprecated parameter $request in ElementalAreaController::elementForm() */
+/** @TODO SSU RECTOR UPGRADE TASK - ElementalAreaController::elementForm: Removed deprecated parameter $request in ElementalAreaController::elementForm() FQCN: (DNADesign\Elemental\Controllers\ElementalAreaController) */
 $controller->elementForm($request);
 CODE_SAMPLE,
                     [['c' => 'DNADesign\Elemental\Controllers\ElementalAreaController', 'm' => 'elementForm', 'parameter' => '$request', 'n' => 'Removed deprecated parameter $request in ElementalAreaController::elementForm()', 'u' => false]]
