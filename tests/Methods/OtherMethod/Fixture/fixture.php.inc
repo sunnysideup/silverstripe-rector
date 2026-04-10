@@ -43,7 +43,7 @@ class Demo {
         SiteTree::getPermissionChecker();
 
         // 7. already annotated code (should not duplicate)
-        /** @TODO SSU RECTOR UPGRADE TASK - SilverStripe\Core\Manifest\VersionProvider::getComposerLock: has been replaced by composer-runtime-api */
+        /** @TODO SSU RECTOR UPGRADE TASK - VersionProvider::getComposerLock: has been replaced by composer-runtime-api FQCN: (SilverStripe\Core\Manifest\VersionProvider) */
         $vp->getComposerLock();
 
         // 8. class method with existing docblock (should append TODO, not replace)
@@ -91,7 +91,7 @@ class Demo {
     public function execute(VersionProvider $vp, $unknownObject) {
         
         // 1. known typed instance method call (should annotate)
-        /** @TODO SSU RECTOR UPGRADE TASK - SilverStripe\Core\Manifest\VersionProvider::getComposerLock: has been replaced by composer-runtime-api */
+        /** @TODO SSU RECTOR UPGRADE TASK - VersionProvider::getComposerLock: has been replaced by composer-runtime-api FQCN: (SilverStripe\Core\Manifest\VersionProvider) */
         $vp->getComposerLock();
 
         // 2. unknown typed instance method call + fallback safe = true (should annotate)
@@ -106,13 +106,13 @@ class Demo {
         SiteTree::getPermissionChecker();
 
         // 7. already annotated code (should not duplicate)
-        /** @TODO SSU RECTOR UPGRADE TASK - SilverStripe\Core\Manifest\VersionProvider::getComposerLock: has been replaced by composer-runtime-api */
+        /** @TODO SSU RECTOR UPGRADE TASK - VersionProvider::getComposerLock: has been replaced by composer-runtime-api FQCN: (SilverStripe\Core\Manifest\VersionProvider) */
         $vp->getComposerLock();
 
         // 8. class method with existing docblock (should append TODO, not replace)
         /**
          * Existing useful comment.
-         * @TODO SSU RECTOR UPGRADE TASK - SilverStripe\Core\Manifest\VersionProvider::getComposerLock: has been replaced by composer-runtime-api
+         * @TODO SSU RECTOR UPGRADE TASK - VersionProvider::getComposerLock: has been replaced by composer-runtime-api FQCN: (SilverStripe\Core\Manifest\VersionProvider)
          */
         $vp->getComposerLock();
     }

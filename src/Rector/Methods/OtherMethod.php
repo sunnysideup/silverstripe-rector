@@ -50,7 +50,7 @@ final class OtherMethod extends AbstractRector implements ConfigurableRectorInte
 $provider->getComposerLock();
 CODE_SAMPLE,
                     <<<'CODE_SAMPLE'
-/** @TODO SSU RECTOR UPGRADE TASK - SilverStripe\Core\Manifest\VersionProvider::getComposerLock: has been replaced by composer-runtime-api */
+/** @TODO SSU RECTOR UPGRADE TASK - VersionProvider::getComposerLock: has been replaced by composer-runtime-api FQCN: (SilverStripe\Core\Manifest\VersionProvider) */
 $provider->getComposerLock();
 CODE_SAMPLE,
                     [['c' => 'SilverStripe\Core\Manifest\VersionProvider', 'm' => 'getComposerLock', 'n' => 'has been replaced by composer-runtime-api', 'u' => false]]
