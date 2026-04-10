@@ -231,74 +231,11 @@ CODE_SAMPLE,
         return $this->matchesTypeAgainstConfiguredClass($receiverType, (string) $change['c']);
     }
 
-    private function resolveCalledMethodName(MethodCall|NullsafeMethodCall|StaticCall $call): ?string
-    {
-        if ($call->name instanceof Identifier) {
-            return $call->name->toString();
-        }
-        return null;
-    }
+// private function resolveCalledMethodName(MethodCall|NullsafeMethodCall|StaticCall $call): ?string - see Trait
 
-    private function buildTodoLine(string $className, string $methodName, string $note): string
-    {
-        if ($methodName === '') {
-            return sprintf('@TODO SSU RECTOR UPGRADE TASK - %s: %s', $className, $note);
-        }
+    // private function appendTodoDocCommentSafely(Node $node, string $todoLine): bool - see Trait
 
-        return sprintf('@TODO SSU RECTOR UPGRADE TASK - %s::%s: %s', $className, $methodName, $note);
-    }
+// private function isUnknownType(Type $type): bool - see Trait
 
-    private function appendTodoDocCommentSafely(Node $node, string $todoLine): bool
-    {
-        $comments = $node->getComments();
-
-        foreach ($comments as $comment) {
-            if (str_contains($comment->getText(), $todoLine)) {
-                return false;
-            }
-        }
-
-        $existingDoc = $node->getDocComment();
-        $newDocText = '/** ' . $todoLine . ' */';
-
-        if ($existingDoc instanceof Doc) {
-            $text = $existingDoc->getText();
-            $trimmed = rtrim($text);
-
-            if (str_ends_with($trimmed, '*/')) {
-                $trimmed = substr($trimmed, 0, -2);
-                $newDocText = rtrim($trimmed) . "\n * " . $todoLine . "\n */";
-            } else {
-                $newDocText = $text . "\n" . $newDocText;
-            }
-        }
-
-        $node->setDocComment(new Doc($newDocText));
-        return true;
-    }
-
-    private function isUnknownType(Type $type): bool
-    {
-        return $type instanceof MixedType
-            || $type instanceof ErrorType
-            || $type instanceof ObjectWithoutClassType;
-    }
-
-    private function matchesTypeAgainstConfiguredClass(Type $type, string $configuredClass): bool
-    {
-        if ($type instanceof UnionType) {
-            foreach ($type->getTypes() as $subType) {
-                if ($this->matchesTypeAgainstConfiguredClass($subType, $configuredClass)) {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        if (!$type instanceof ObjectType) {
-            return false;
-        }
-
-        return $this->isClassSameOrSubclassOfConfigured($type->getClassName(), $configuredClass);
-    }
+// private function matchesTypeAgainstConfiguredClass(Type $type, string $configuredClass): bool
 }
