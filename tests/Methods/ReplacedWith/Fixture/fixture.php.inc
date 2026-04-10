@@ -46,7 +46,7 @@ namespace Netwerkstatt\SilverstripeRector\Tests\Methods\ReplacedWith\Fixture {
             $unknownObject->getCMSValidator();
 
             // 5. already annotated code (should rename if not already renamed, but not duplicate comment)
-            /** @TODO SSU RECTOR UPGRADE TASK - UserForm::getCMSValidator: replaced with getCMSCompositeValidator() FQCN: (SilverStripe\UserForms\UserForm)*/
+            /** @TODO SSU RECTOR UPGRADE TASK - UserForm::getCMSValidator: replaced with getCMSCompositeValidator() FQCN: (SilverStripe\UserForms\UserForm) */
             $form->getCMSValidator();
 
             // 6. class method with existing docblock (should append TODO & auto-rename)
