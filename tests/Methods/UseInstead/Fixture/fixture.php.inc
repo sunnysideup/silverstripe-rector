@@ -139,7 +139,7 @@ namespace Netwerkstatt\SilverstripeRector\Tests\Methods\UseInstead\Fixture {
             // 6. class method with existing docblock (should append TODO & auto-rename)
             /**
              * Existing useful comment.
-             * @TODO SSU RECTOR UPGRADE TASK - LeftAndMain::currentPage: use currentRecord() instead. FQCN: (SilverStripe\Admin\LeftAndMain) */
+             * @TODO SSU RECTOR UPGRADE TASK - LeftAndMain::currentPage: use currentRecord() instead. FQCN: (SilverStripe\Admin\LeftAndMain)
              */
             $admin->currentRecord();
         }
