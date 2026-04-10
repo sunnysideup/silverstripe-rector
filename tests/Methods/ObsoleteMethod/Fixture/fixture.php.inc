@@ -30,7 +30,7 @@ namespace Netwerkstatt\SilverstripeRector\Tests\Methods\ObsoleteMethod\Fixtures 
             $unknownObject->formAction();
 
             // 5. already annotated code (should not duplicate)
-            /** @TODO SSU RECTOR UPGRADE TASK - DNADesign\Elemental\Controllers\ElementalAreaController::formAction: removed without equivalent functionality to replace it */
+            /** @TODO SSU RECTOR UPGRADE TASK - ElementalAreaController::formAction: removed without equivalent functionality to replace it FQCN: (DNADesign\Elemental\Controllers\ElementalAreaController) */
             $controller->formAction();
 
             // 6. class method with existing docblock (should append TODO, not replace)
@@ -47,7 +47,7 @@ namespace Netwerkstatt\SilverstripeRector\Tests\Methods\ObsoleteMethod\Fixtures 
 // 1. Declare the mock in the exact namespace the config is looking for
 namespace DNADesign\Elemental\Controllers {
     class ElementalAreaController {
-        /** @TODO SSU RECTOR UPGRADE TASK - DNADesign\Elemental\Controllers\ElementalAreaController::formAction: removed without equivalent functionality to replace it */
+        /** @TODO SSU RECTOR UPGRADE TASK - ElementalAreaController::formAction: removed without equivalent functionality to replace it FQCN: (DNADesign\Elemental\Controllers\ElementalAreaController) */
         public function formAction() {}
     }
 }
@@ -59,7 +59,7 @@ namespace Netwerkstatt\SilverstripeRector\Tests\Methods\ObsoleteMethod\Fixtures 
 
     class CustomController extends ElementalAreaController {
         // 4. overriding class method in subclass (should annotate)
-        /** @TODO SSU RECTOR UPGRADE TASK - DNADesign\Elemental\Controllers\ElementalAreaController::formAction: removed without equivalent functionality to replace it */
+        /** @TODO SSU RECTOR UPGRADE TASK - ElementalAreaController::formAction: removed without equivalent functionality to replace it FQCN: (DNADesign\Elemental\Controllers\ElementalAreaController) */
         public function formAction() {}
     }
 
@@ -67,7 +67,7 @@ namespace Netwerkstatt\SilverstripeRector\Tests\Methods\ObsoleteMethod\Fixtures 
         public function execute(ElementalAreaController $controller, $unknownObject) {
             
             // 1. known typed method call (should annotate)
-            /** @TODO SSU RECTOR UPGRADE TASK - DNADesign\Elemental\Controllers\ElementalAreaController::formAction: removed without equivalent functionality to replace it */
+            /** @TODO SSU RECTOR UPGRADE TASK - ElementalAreaController::formAction: removed without equivalent functionality to replace it FQCN: (DNADesign\Elemental\Controllers\ElementalAreaController) */
             $controller->formAction();
 
             // 2. unknown typed method call + fallback safe = true (should annotate - assuming config allows)
@@ -77,13 +77,13 @@ namespace Netwerkstatt\SilverstripeRector\Tests\Methods\ObsoleteMethod\Fixtures 
             $unknownObject->formAction();
 
             // 5. already annotated code (should not duplicate)
-            /** @TODO SSU RECTOR UPGRADE TASK - DNADesign\Elemental\Controllers\ElementalAreaController::formAction: removed without equivalent functionality to replace it */
+            /** @TODO SSU RECTOR UPGRADE TASK - ElementalAreaController::formAction: removed without equivalent functionality to replace it FQCN: (DNADesign\Elemental\Controllers\ElementalAreaController) */
             $controller->formAction();
 
             // 6. class method with existing docblock (should append TODO, not replace)
             /**
              * Existing useful comment.
-             * @TODO SSU RECTOR UPGRADE TASK - DNADesign\Elemental\Controllers\ElementalAreaController::formAction: removed without equivalent functionality to replace it
+             * @TODO SSU RECTOR UPGRADE TASK - ElementalAreaController::formAction: removed without equivalent functionality to replace it FQCN: (DNADesign\Elemental\Controllers\ElementalAreaController)
              */
             $controller->formAction();
         }

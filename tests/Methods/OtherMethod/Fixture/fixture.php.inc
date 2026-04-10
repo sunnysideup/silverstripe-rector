@@ -79,7 +79,7 @@ trait SessionEnvTypeSwitcher {}
 
 class MyTask extends MigrationTask {
     // 6. trait use for removed trait with m === '' (should annotate)
-    /** @TODO SSU RECTOR UPGRADE TASK - SilverStripe\Control\Middleware\URLSpecialsMiddleware\SessionEnvTypeSwitcher: Removed deprecated trait SilverStripe\Control\Middleware\URLSpecialsMiddleware\SessionEnvTypeSwitcher - removed without equivalent functionality to replace it */
+    /** @TODO SSU RECTOR UPGRADE TASK - SessionEnvTypeSwitcher: Removed deprecated trait SilverStripe\Control\Middleware\URLSpecialsMiddleware\SessionEnvTypeSwitcher - removed without equivalent functionality to replace it FQCN: (SilverStripe\Control\Middleware\URLSpecialsMiddleware\SessionEnvTypeSwitcher) */
     use SessionEnvTypeSwitcher;
 
     // 5. overriding class method in subclass (should annotate)
