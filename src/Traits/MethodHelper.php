@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Netwerkstatt\SilverstripeRector\Traits;
 
-use LogicException;
 use PhpParser\Node;
 use PhpParser\Comment\Doc;
 use PHPStan\Type\Type;
@@ -19,13 +18,8 @@ use PhpParser\Node\Name;
 use PhpParser\Node\Stmt\ClassMethod;
 use PhpParser\Node\Stmt\Expression;
 use Rector\PHPStan\ScopeFetcher;
-use PHPStan\Reflection\ReflectionProvider;
 use PHPStan\Type\ObjectType;
 use PHPStan\Type\UnionType;
-use Rector\Contract\Rector\ConfigurableRectorInterface;
-use Rector\Rector\AbstractRector;
-use Symplify\RuleDocGenerator\ValueObject\CodeSample\ConfiguredCodeSample;
-use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 
 trait MethodHelper
 {
