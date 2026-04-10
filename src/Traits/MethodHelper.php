@@ -64,9 +64,9 @@ trait MethodHelper
     {
         $parts = explode('\\', ltrim($className, '\\'));
         $displayClass = (string) end($parts);
-        if ($displayClass !== $className) {
-            $note .= " FQCN: ({$className})";
-        }
+        // if ($displayClass !== $className) {
+        //     $note .= " FQCN: ({$className})";
+        // }
         if ($methodName === '') {
             return sprintf('@TODO SSU RECTOR UPGRADE TASK - %s: %s', $displayClass, $note);
         }
