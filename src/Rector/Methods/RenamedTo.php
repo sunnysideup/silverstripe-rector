@@ -49,7 +49,7 @@ final class RenamedTo extends AbstractRector implements ConfigurableRectorInterf
 $extension->MetaTags($params);
 CODE_SAMPLE,
                     <<<'CODE_SAMPLE'
-/** @TODO SSU RECTOR UPGRADE TASK - TractorCow\Fluent\Extension\FluentSiteTreeExtension::MetaTags: renamed to updateMetaTags() */
+/** @TODO SSU RECTOR UPGRADE TASK - FluentSiteTreeExtension::MetaTags: renamed to updateMetaTags() FQCN: (TractorCow\Fluent\Extension\FluentSiteTreeExtension) */
 $extension->updateMetaTags($params);
 CODE_SAMPLE,
                     [['c' => 'TractorCow\Fluent\Extension\FluentSiteTreeExtension', 'm' => 'MetaTags', 'n' => 'renamed to updateMetaTags()', 'u' => false]]

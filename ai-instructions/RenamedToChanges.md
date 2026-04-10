@@ -53,7 +53,7 @@ $extension->MetaTags($params);
 After
 
 ```php
-/** @TODO SSU RECTOR UPGRADE TASK - TractorCow\Fluent\Extension\FluentSiteTreeExtension::MetaTags: renamed to updateMetaTags() */
+/** @TODO SSU RECTOR UPGRADE TASK - FluentSiteTreeExtension::MetaTags: renamed to updateMetaTags() FQCN: (TractorCow\Fluent\Extension\FluentSiteTreeExtension) */
 $extension->MetaTags($params);
 ```
 
@@ -73,7 +73,7 @@ function init()
 After
 
 ```php
-/** @TODO SSU RECTOR UPGRADE TASK - SilverStripe\MFA\Extension\RequirementsExtension::init: renamed to onInit() */
+/** @TODO SSU RECTOR UPGRADE TASK - RequirementsExtension::init: renamed to onInit() FQCN: (SilverStripe\MFA\Extension\RequirementsExtension) */
 function init()
 {
     // ...
