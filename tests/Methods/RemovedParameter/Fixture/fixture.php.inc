@@ -59,7 +59,7 @@ namespace DNADesign\Elemental\Controllers {
 
 namespace SilverStripe\Forms {
     class FormField {
-        /** @TODO SSU RECTOR UPGRADE TASK - SilverStripe\Forms\FormField::validate: Removed deprecated parameter $validator in FormField::validate() */
+        /** @TODO SSU RECTOR UPGRADE TASK - FormField::validate: Removed deprecated parameter $validator in FormField::validate() FQCN: (SilverStripe\Forms\FormField) */
         public function validate($validator = null) {}
     }
 }
@@ -71,7 +71,7 @@ namespace Netwerkstatt\SilverstripeRector\Tests\Methods\RemovedParameter\Fixture
 
     class CustomField extends FormField {
         // 4. overriding class method in subclass (should annotate)
-        /** @TODO SSU RECTOR UPGRADE TASK - SilverStripe\Forms\FormField::validate: Removed deprecated parameter $validator in FormField::validate() */
+        /** @TODO SSU RECTOR UPGRADE TASK - FormField::validate: Removed deprecated parameter $validator in FormField::validate() FQCN: (SilverStripe\Forms\FormField) */
         public function validate($validator = null) {}
     }
 
@@ -84,7 +84,7 @@ namespace Netwerkstatt\SilverstripeRector\Tests\Methods\RemovedParameter\Fixture
             $controller->elementForm('my-request');
 
             // 2. unknown typed method call + fallback safe = true (should annotate)
-            /** @TODO SSU RECTOR UPGRADE TASK - SilverStripe\Forms\FormField::validate: Removed deprecated parameter $validator in FormField::validate() */
+            /** @TODO SSU RECTOR UPGRADE TASK - FormField::validate: Removed deprecated parameter $validator in FormField::validate() FQCN: (SilverStripe\Forms\FormField) */
             $unknownObject->validate('my-validator');
 
             // 3. unknown typed method call + fallback safe = false (should NOT annotate)
