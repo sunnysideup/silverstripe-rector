@@ -55,7 +55,7 @@ namespace Netwerkstatt\SilverstripeRector\Tests\Methods\UseInstead\Fixture {
             $unknownObject->currentPage();
 
             // 5. already annotated code (should rename if not already renamed, but not duplicate comment)
-            /** @TODO SSU RECTOR UPGRADE TASK - LeftAndMain::currentPage: use currentRecord() instead. */
+            /** @TODO SSU RECTOR UPGRADE TASK - LeftAndMain::currentPage: use currentRecord() instead. FQCN: (SilverStripe\Admin\LeftAndMain) */
             $admin->currentPage();
 
             // 6. class method with existing docblock (should append TODO & auto-rename)
@@ -72,7 +72,7 @@ namespace Netwerkstatt\SilverstripeRector\Tests\Methods\UseInstead\Fixture {
 namespace SilverStripe\Admin {
     class LeftAndMain
     {
-        /** @TODO SSU RECTOR UPGRADE TASK - LeftAndMain::currentPage: use currentRecord() instead. */
+        /** @TODO SSU RECTOR UPGRADE TASK - LeftAndMain::currentPage: use currentRecord() instead. FQCN: (SilverStripe\Admin\LeftAndMain) */
         public function currentRecord() {}
     }
 }
@@ -80,13 +80,13 @@ namespace SilverStripe\Admin {
 namespace SilverStripe\CMS\Controllers {
     class CMSMain
     {
-        /** @TODO SSU RECTOR UPGRADE TASK - CMSMain::CanOrganiseSitetree: use canOrganiseTree instead. */
+        /** @TODO SSU RECTOR UPGRADE TASK - CMSMain::CanOrganiseSitetree: use canOrganiseTree instead. FQCN: (SilverStripe\CMS\Controllers\CMSMain) */
         public function canOrganiseTree() {}
     }
 
     class ContentController
     {
-        /** @TODO SSU RECTOR UPGRADE TASK - ContentController::Menu: use getMenu() instead. You can continue to use $Menu in templates. */
+        /** @TODO SSU RECTOR UPGRADE TASK - ContentController::Menu: use getMenu() instead. You can continue to use $Menu in templates. FQCN: (SilverStripe\CMS\Controllers\ContentController) */
         public function Menu() {}
     }
 }
@@ -94,7 +94,7 @@ namespace SilverStripe\CMS\Controllers {
 namespace SilverStripe\AssetAdmin\Extensions {
     class RemoteFileModalExtension
     {
-        /** @TODO SSU RECTOR UPGRADE TASK - RemoteFileModalExtension::getRequest: use $this->getOwner()->getRequest() instead. */
+        /** @TODO SSU RECTOR UPGRADE TASK - RemoteFileModalExtension::getRequest: use $this->getOwner()->getRequest() instead. FQCN: (SilverStripe\AssetAdmin\Extensions\RemoteFileModalExtension) */
         public function getRequest() {}
     }
 }
@@ -108,7 +108,7 @@ namespace Netwerkstatt\SilverstripeRector\Tests\Methods\UseInstead\Fixture {
 
     class CustomAdmin extends LeftAndMain {
         // 4 & 8. overriding class method in subclass (should annotate & auto-rename safely)
-        /** @TODO SSU RECTOR UPGRADE TASK - LeftAndMain::currentPage: use currentRecord() instead. */
+        /** @TODO SSU RECTOR UPGRADE TASK - LeftAndMain::currentPage: use currentRecord() instead. FQCN: (SilverStripe\Admin\LeftAndMain) */
         public function currentRecord() {}
     }
 
@@ -116,30 +116,30 @@ namespace Netwerkstatt\SilverstripeRector\Tests\Methods\UseInstead\Fixture {
         public function execute(LeftAndMain $admin, ContentController $controller, RemoteFileModalExtension $ext, $unknownObject) {
             
             // 1 & 7. known typed method call (should annotate & auto-rename safely)
-            /** @TODO SSU RECTOR UPGRADE TASK - LeftAndMain::currentPage: use currentRecord() instead. */
+            /** @TODO SSU RECTOR UPGRADE TASK - LeftAndMain::currentPage: use currentRecord() instead. FQCN: (SilverStripe\Admin\LeftAndMain) */
             $admin->currentRecord();
 
             // 9. non-method replacement note (annotate only, NO auto-fix)
-            /** @TODO SSU RECTOR UPGRADE TASK - ContentController::Menu: use getMenu() instead. You can continue to use $Menu in templates. */
+            /** @TODO SSU RECTOR UPGRADE TASK - ContentController::Menu: use getMenu() instead. You can continue to use $Menu in templates. FQCN: (SilverStripe\CMS\Controllers\ContentController) */
             $controller->Menu();
-            /** @TODO SSU RECTOR UPGRADE TASK - RemoteFileModalExtension::getRequest: use $this->getOwner()->getRequest() instead. */
+            /** @TODO SSU RECTOR UPGRADE TASK - RemoteFileModalExtension::getRequest: use $this->getOwner()->getRequest() instead. FQCN: (SilverStripe\AssetAdmin\Extensions\RemoteFileModalExtension) */
             $ext->getRequest();
 
             // 2. unknown typed method call + fallback safe = true (should annotate & auto-rename)
-            /** @TODO SSU RECTOR UPGRADE TASK - CMSMain::CanOrganiseSitetree: use canOrganiseTree instead. */
+            /** @TODO SSU RECTOR UPGRADE TASK - CMSMain::CanOrganiseSitetree: use canOrganiseTree instead. FQCN: (SilverStripe\CMS\Controllers\CMSMain) */
             $unknownObject->canOrganiseTree();
 
             // 3. unknown typed method call + fallback safe = false (should NOT annotate or rename)
             $unknownObject->currentPage();
 
             // 5. already annotated code (should rename if not already renamed, but not duplicate comment)
-            /** @TODO SSU RECTOR UPGRADE TASK - LeftAndMain::currentPage: use currentRecord() instead. */
+            /** @TODO SSU RECTOR UPGRADE TASK - LeftAndMain::currentPage: use currentRecord() instead. FQCN: (SilverStripe\Admin\LeftAndMain) */
             $admin->currentRecord();
 
             // 6. class method with existing docblock (should append TODO & auto-rename)
             /**
              * Existing useful comment.
-             * @TODO SSU RECTOR UPGRADE TASK - LeftAndMain::currentPage: use currentRecord() instead.
+             * @TODO SSU RECTOR UPGRADE TASK - LeftAndMain::currentPage: use currentRecord() instead. FQCN: (SilverStripe\Admin\LeftAndMain) */
              */
             $admin->currentRecord();
         }
