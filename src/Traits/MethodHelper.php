@@ -68,10 +68,10 @@ trait MethodHelper
             $note .= " FQCN: ({$className})";
         }
         if ($methodName === '') {
-            return sprintf('@TODO SSU RECTOR UPGRADE TASK - %s: %s', $displayClass, $note);
+            return trim(sprintf('@TODO SSU RECTOR UPGRADE TASK - %s: %s', $displayClass, $note));
         }
 
-        return sprintf('@TODO SSU RECTOR UPGRADE TASK - %s::%s: %s', $displayClass, $methodName, $note);
+        return trim(sprintf('@TODO SSU RECTOR UPGRADE TASK - %s::%s: %s', $displayClass, $methodName, $note));
     }
     private function appendTodoDocCommentSafely(Node $node, string $todoLine): bool
     {
