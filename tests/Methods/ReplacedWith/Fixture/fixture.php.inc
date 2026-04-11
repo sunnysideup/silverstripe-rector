@@ -47,7 +47,7 @@ namespace Netwerkstatt\SilverstripeRector\Tests\Methods\ReplacedWith\Fixture {
             // 5. already annotated code (should rename if not already renamed, but not duplicate comment)
             // @TODO SSU RECTOR UPGRADE TASK - UserForm::getCMSValidator: replaced with getCMSCompositeValidator() FQCN: (SilverStripe\UserForms\UserForm)
             $form->getCMSValidator();
-            
+
             // 6. class method with existing docblock (should append TODO & auto-rename)
             /**
              * Existing Comments
@@ -61,19 +61,22 @@ namespace Netwerkstatt\SilverstripeRector\Tests\Methods\ReplacedWith\Fixture {
 
 namespace SilverStripe\UserForms {
     class UserForm {
-        // @TODO SSU RECTOR UPGRADE TASK - UserForm::getCMSValidator: replaced with getCMSCompositeValidator() FQCN: (SilverStripe\UserForms\UserForm)        public function getCMSCompositeValidator() {}
+        // @TODO SSU RECTOR UPGRADE TASK - UserForm::getCMSValidator: replaced with getCMSCompositeValidator() FQCN: (SilverStripe\UserForms\UserForm)
+        public function getCMSCompositeValidator() {}
     }
 }
 
 namespace SilverStripe\View {
     class SSViewer {
-        // @TODO SSU RECTOR UPGRADE TASK - SSViewer::fromString: replaced with SSTemplateEngine::renderString() FQCN: (SilverStripe\View\SSViewer)        public function fromString() {}
+        // @TODO SSU RECTOR UPGRADE TASK - SSViewer::fromString: replaced with SSTemplateEngine::renderString() FQCN: (SilverStripe\View\SSViewer)
+        public function fromString() {}
     }
 }
 
 namespace SilverStripe\CMS\Controllers {
     class CMSSiteTreeFilter {
-        // @TODO SSU RECTOR UPGRADE TASK - CMSSiteTreeFilter::applyDefaultFilters: replaced with a SearchContext subclass FQCN: (SilverStripe\CMS\Controllers\CMSSiteTreeFilter)        public function applyDefaultFilters() {}
+        // @TODO SSU RECTOR UPGRADE TASK - CMSSiteTreeFilter::applyDefaultFilters: replaced with a SearchContext subclass FQCN: (SilverStripe\CMS\Controllers\CMSSiteTreeFilter)
+        public function applyDefaultFilters() {}
     }
 }
 
