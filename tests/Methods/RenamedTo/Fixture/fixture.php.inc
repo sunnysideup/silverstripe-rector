@@ -47,7 +47,8 @@ namespace Netwerkstatt\SilverstripeRector\Tests\Methods\RenamedTo\Fixture {
             $unknownObject->MetaTags('params');
 
             // 5. already annotated code (should rename if not already renamed, but not duplicate comment)
-            // @TODO SSU RECTOR UPGRADE TASK - FluentSiteTreeExtension::MetaTags: renamed to updateMetaTags() FQCN: (TractorCow\Fluent\Extension\FluentSiteTreeExtension)            $extension->MetaTags('params');
+            // @TODO SSU RECTOR UPGRADE TASK - FluentSiteTreeExtension::MetaTags: renamed to updateMetaTags() FQCN: (TractorCow\Fluent\Extension\FluentSiteTreeExtension)            
+            $extension->MetaTags('params');
 
             // 6. class method with existing docblock (should append TODO & auto-rename)
             /**
@@ -66,21 +67,24 @@ namespace Netwerkstatt\SilverstripeRector\Tests\Methods\RenamedTo\Fixture {
 namespace TractorCow\Fluent\Extension {
     class FluentSiteTreeExtension
     {
-        // @TODO SSU RECTOR UPGRADE TASK - FluentSiteTreeExtension::MetaTags: renamed to updateMetaTags() FQCN: (TractorCow\Fluent\Extension\FluentSiteTreeExtension)        public function updateMetaTags($params) {}
+        // @TODO SSU RECTOR UPGRADE TASK - FluentSiteTreeExtension::MetaTags: renamed to updateMetaTags() FQCN: (TractorCow\Fluent\Extension\FluentSiteTreeExtension)        
+        public function updateMetaTags($params) {}
     }
 }
 
 namespace SilverStripe\MFA\Extension {
     class RequirementsExtension
     {
-        // @TODO SSU RECTOR UPGRADE TASK - RequirementsExtension::init: renamed to onInit() FQCN: (SilverStripe\MFA\Extension\RequirementsExtension)        public function onInit() {}
+        // @TODO SSU RECTOR UPGRADE TASK - RequirementsExtension::init: renamed to onInit() FQCN: (SilverStripe\MFA\Extension\RequirementsExtension)        
+        public function onInit() {}
     }
 }
 
 namespace SilverStripe\ORM {
     class CMSPreviewable
     {
-        // @TODO SSU RECTOR UPGRADE TASK - CMSPreviewable::CMSEditLink: changed to something entirely different FQCN: (SilverStripe\ORM\CMSPreviewable)        public function CMSEditLink() {}
+        // @TODO SSU RECTOR UPGRADE TASK - CMSPreviewable::CMSEditLink: changed to something entirely different FQCN: (SilverStripe\ORM\CMSPreviewable)        
+        public function CMSEditLink() {}
     }
 }
 
@@ -93,7 +97,8 @@ namespace Netwerkstatt\SilverstripeRector\Tests\Methods\RenamedTo\Fixture {
     class CustomExtension extends RequirementsExtension
     {
         // 4 & 8. overriding class method in subclass (should annotate & auto-rename safely)
-        // @TODO SSU RECTOR UPGRADE TASK - RequirementsExtension::init: renamed to onInit() FQCN: (SilverStripe\MFA\Extension\RequirementsExtension)        public function onInit() {}
+        // @TODO SSU RECTOR UPGRADE TASK - RequirementsExtension::init: renamed to onInit() FQCN: (SilverStripe\MFA\Extension\RequirementsExtension)        
+        public function onInit() {}
     }
 
     class Demo
@@ -101,16 +106,19 @@ namespace Netwerkstatt\SilverstripeRector\Tests\Methods\RenamedTo\Fixture {
         public function execute(FluentSiteTreeExtension $extension, CMSPreviewable $preview, $unknownObject)
         {
             // 1 & 7. known typed method call (should annotate & auto-rename safely)
-            // @TODO SSU RECTOR UPGRADE TASK - FluentSiteTreeExtension::MetaTags: renamed to updateMetaTags() FQCN: (TractorCow\Fluent\Extension\FluentSiteTreeExtension)            $extension->updateMetaTags('params');
+            // @TODO SSU RECTOR UPGRADE TASK - FluentSiteTreeExtension::MetaTags: renamed to updateMetaTags() FQCN: (TractorCow\Fluent\Extension\FluentSiteTreeExtension)            
+            $extension->updateMetaTags('params');
 
             // 2. unknown typed method call + fallback safe = true (should annotate & auto-rename)
-            // @TODO SSU RECTOR UPGRADE TASK - RequirementsExtension::init: renamed to onInit() FQCN: (SilverStripe\MFA\Extension\RequirementsExtension)            $unknownObject->onInit();
+            // @TODO SSU RECTOR UPGRADE TASK - RequirementsExtension::init: renamed to onInit() FQCN: (SilverStripe\MFA\Extension\RequirementsExtension)            
+            $unknownObject->onInit();
 
             // 3. unknown typed method call + fallback safe = false (should NOT annotate or rename)
             $unknownObject->MetaTags('params');
 
             // 5. already annotated code (should rename if not already renamed, but not duplicate comment)
-            // @TODO SSU RECTOR UPGRADE TASK - FluentSiteTreeExtension::MetaTags: renamed to updateMetaTags() FQCN: (TractorCow\Fluent\Extension\FluentSiteTreeExtension)            $extension->updateMetaTags('params');
+            // @TODO SSU RECTOR UPGRADE TASK - FluentSiteTreeExtension::MetaTags: renamed to updateMetaTags() FQCN: (TractorCow\Fluent\Extension\FluentSiteTreeExtension)            
+            $extension->updateMetaTags('params');
 
             // 6. class method with existing docblock (should append TODO & auto-rename)
             /**
@@ -120,7 +128,8 @@ namespace Netwerkstatt\SilverstripeRector\Tests\Methods\RenamedTo\Fixture {
             $extension->updateMetaTags('params');
 
             // 9. ambiguous note format (should annotate only, NO rename)
-            // @TODO SSU RECTOR UPGRADE TASK - CMSPreviewable::CMSEditLink: changed to something entirely different FQCN: (SilverStripe\ORM\CMSPreviewable)            $preview->CMSEditLink();
+            // @TODO SSU RECTOR UPGRADE TASK - CMSPreviewable::CMSEditLink: changed to something entirely different FQCN: (SilverStripe\ORM\CMSPreviewable)           
+            $preview->CMSEditLink();
         }
     }
 }

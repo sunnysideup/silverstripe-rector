@@ -51,13 +51,15 @@ namespace Netwerkstatt\SilverstripeRector\Tests\Methods\RemovedParameter\Fixture
 
 namespace DNADesign\Elemental\Controllers {
     class ElementalAreaController {
-        // @TODO SSU RECTOR UPGRADE TASK - ElementalAreaController::elementForm: Removed deprecated parameter $request in ElementalAreaController::elementForm() FQCN: (DNADesign\Elemental\Controllers\ElementalAreaController)        public function elementForm($request = null) {}
+        // @TODO SSU RECTOR UPGRADE TASK - ElementalAreaController::elementForm: Removed deprecated parameter $request in ElementalAreaController::elementForm() FQCN: (DNADesign\Elemental\Controllers\ElementalAreaController)        
+        public function elementForm($request = null) {}
     }
 }
 
 namespace SilverStripe\Forms {
     class FormField {
-        // @TODO SSU RECTOR UPGRADE TASK - FormField::validate: Removed deprecated parameter $validator in FormField::validate() FQCN: (SilverStripe\Forms\FormField)        public function validate($validator = null) {}
+        // @TODO SSU RECTOR UPGRADE TASK - FormField::validate: Removed deprecated parameter $validator in FormField::validate() FQCN: (SilverStripe\Forms\FormField)        
+        public function validate($validator = null) {}
     }
 }
 
@@ -68,7 +70,8 @@ namespace Netwerkstatt\SilverstripeRector\Tests\Methods\RemovedParameter\Fixture
 
     class CustomField extends FormField {
         // 4. overriding class method in subclass (should annotate)
-        // @TODO SSU RECTOR UPGRADE TASK - FormField::validate: Removed deprecated parameter $validator in FormField::validate() FQCN: (SilverStripe\Forms\FormField)        public function validate($validator = null) {}
+        // @TODO SSU RECTOR UPGRADE TASK - FormField::validate: Removed deprecated parameter $validator in FormField::validate() FQCN: (SilverStripe\Forms\FormField)        
+        public function validate($validator = null) {}
     }
 
     class Demo
@@ -79,7 +82,8 @@ namespace Netwerkstatt\SilverstripeRector\Tests\Methods\RemovedParameter\Fixture
             // @TODO SSU RECTOR UPGRADE TASK - ElementalAreaController::elementForm: Removed deprecated parameter $request in ElementalAreaController::elementForm() FQCN: (DNADesign\Elemental\Controllers\ElementalAreaController)            $controller->elementForm('my-request');
 
             // 2. unknown typed method call + fallback safe = true (should annotate)
-            // @TODO SSU RECTOR UPGRADE TASK - FormField::validate: Removed deprecated parameter $validator in FormField::validate() FQCN: (SilverStripe\Forms\FormField)            $unknownObject->validate('my-validator');
+            // @TODO SSU RECTOR UPGRADE TASK - FormField::validate: Removed deprecated parameter $validator in FormField::validate() FQCN: (SilverStripe\Forms\FormField)            
+            $unknownObject->validate('my-validator');
 
             // 3. unknown typed method call + fallback safe = false (should NOT annotate)
             $unknownObject->elementForm('my-request');
