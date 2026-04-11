@@ -30,6 +30,7 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 final class Visibility extends AbstractRector implements ConfigurableRectorInterface
 {
     use MethodHelper;
+
     /**
      * @var array<int, array{c: string, m: string, from: string, to: string, n: string, u?: bool}>
      */

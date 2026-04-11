@@ -85,18 +85,21 @@ trait MethodHelper
         }
 
         $existingDoc = $node->getDocComment();
-        $newDocText = '/** ' . $todoLine . ' */';
 
         if ($existingDoc instanceof Doc) {
             $text = $existingDoc->getText();
             $trimmed = rtrim($text);
 
+            // If it's a standard docblock ending in */
             if (str_ends_with($trimmed, '*/')) {
                 $trimmed = substr($trimmed, 0, -2);
                 $newDocText = rtrim($trimmed) . "\n * " . $todoLine . "\n */";
             } else {
-                $newDocText = $text . "\n" . $newDocText;
+                $newDocText = $text . "\n * " . $todoLine;
             }
+        } else {
+            // Create a fresh multi-line docblock
+            $newDocText = "/**\n * " . $todoLine . "\n */";
         }
 
         $node->setDocComment(new Doc($newDocText));
