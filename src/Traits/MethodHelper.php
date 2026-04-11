@@ -75,34 +75,26 @@ trait MethodHelper
     }
     private function appendTodoDocCommentSafely(Node $node, string $todoLine): bool
     {
+        // Get all existing comments (both // and /** */)
         $comments = $node->getComments();
 
-        // Idempotency check across all comments
+        // Idempotency check: Don't add the same TODO if it already exists
         foreach ($comments as $comment) {
             if (str_contains($comment->getText(), $todoLine)) {
                 return false;
             }
         }
 
-        $existingDoc = $node->getDocComment();
+        // Create the new line comment
+        // Note: We use \PhpParser\Comment for // and \PhpParser\Comment\Doc for /** */
+        $newComment = new \PhpParser\Comment('// ' . $todoLine);
 
-        if ($existingDoc instanceof Doc) {
-            $text = $existingDoc->getText();
-            $trimmed = rtrim($text);
+        // Add the new comment to the array
+        $comments[] = $newComment;
 
-            // If it's a standard docblock ending in */
-            if (str_ends_with($trimmed, '*/')) {
-                $trimmed = substr($trimmed, 0, -2);
-                $newDocText = rtrim($trimmed) . "\n * " . $todoLine . "\n */";
-            } else {
-                $newDocText = $text . "\n * " . $todoLine;
-            }
-        } else {
-            // Create a fresh multi-line docblock
-            $newDocText = "/**\n * " . $todoLine . "\n */";
-        }
+        // Re-attach the updated comments array to the node
+        $node->setAttribute('comments', $comments);
 
-        $node->setDocComment(new Doc($newDocText));
         return true;
     }
 
