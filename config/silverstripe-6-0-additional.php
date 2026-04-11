@@ -25,8 +25,9 @@ use Netwerkstatt\SilverstripeRector\Rector\Methods\RenamedTo;
 use Netwerkstatt\SilverstripeRector\Rector\Methods\ReplacedWith;
 use Netwerkstatt\SilverstripeRector\Rector\Methods\ReturnType;
 use Netwerkstatt\SilverstripeRector\Rector\Methods\UseInstead;
+use Netwerkstatt\SilverstripeRector\Rector\Methods\Visibility;
 use Rector\Config\RectorConfig;
-use Rector\ValueObject\Visibility;
+
 
 return static function (RectorConfig $rectorConfig): void {
 

@@ -14,7 +14,5 @@ return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->importNames();
     $rectorConfig->removeUnusedImports();
     $rectorConfig->rule(DataObjectStaticMethodsToFluentRector::class);
-    $rectorConfig->rule(PolyCommandGetOptionsPublicRector::class);
-    $rectorConfig->rule(BuildTaskTitlePropertyRector::class);
-    $rectorConfig->rule(DataObjectGetToClassGetRector::class);
+    $rectorConfig->rule(PolyCommandGetOptionsPublicRector::class); // this is after you have manually upgraded the buildTask.
 };

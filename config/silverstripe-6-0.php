@@ -2,10 +2,12 @@
 
 declare(strict_types=1);
 
+use Netwerkstatt\SilverstripeRector\Rector\BuildTask\BuildTaskTitlePropertyRector;
 use Netwerkstatt\SilverstripeRector\Rector\Control\ReplaceHasCurrWithCurrRector;
 use Netwerkstatt\SilverstripeRector\Rector\DataObject\DataObjectGetByIdToByIDRector;
 use Netwerkstatt\SilverstripeRector\Rector\Injector\FactoryCreateMethodSignatureRector;
 use Netwerkstatt\SilverstripeRector\Rector\Misc\ModelDataExistsReturnTypeRector;
+use Netwerkstatt\SilverstripeRector\Rector\ORM\DataObjectGetToClassGetRector;
 use Netwerkstatt\SilverstripeRector\Rector\ORM\DBCompositeWriteToManipulationSignatureRector;
 use Netwerkstatt\SilverstripeRector\Rector\ORM\DBFieldAddToQuerySignatureRector;
 use Netwerkstatt\SilverstripeRector\Rector\ORM\DBFieldScaffoldFormFieldSignatureRector;
@@ -197,4 +199,6 @@ return static function (RectorConfig $rectorConfig): void {
             'SCHEMA_HEADER'
         ),
     ]);
+    $rectorConfig->rule(BuildTaskTitlePropertyRector::class);
+    $rectorConfig->rule(DataObjectGetToClassGetRector::class);
 };
