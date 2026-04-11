@@ -31,7 +31,7 @@ namespace Netwerkstatt\SilverstripeRector\Tests\Methods\ReplacedWith\Fixture {
 
     class Demo {
         public function execute(UserForm $form, SSViewer $viewer, CMSSiteTreeFilter $filter, $unknownObject) {
-                       // 1 & 7. known typed method call (should annotate & auto-rename safely)
+            // 1 & 7. known typed method call (should annotate & auto-rename safely)
             $form->getCMSValidator();
 
             // 9. non-method replacement note (annotate only, NO auto-fix)
@@ -90,7 +90,6 @@ namespace Netwerkstatt\SilverstripeRector\Tests\Methods\ReplacedWith\Fixture {
 
     class Demo {
         public function execute(UserForm $form, SSViewer $viewer, CMSSiteTreeFilter $filter, $unknownObject) {
-
             // 1 & 7. known typed method call (should annotate & auto-rename safely)
             // @TODO SSU RECTOR UPGRADE TASK - UserForm::getCMSValidator: replaced with getCMSCompositeValidator() FQCN: (SilverStripe\UserForms\UserForm)
             $form->getCMSCompositeValidator();

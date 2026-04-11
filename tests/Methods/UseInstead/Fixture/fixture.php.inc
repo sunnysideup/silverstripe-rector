@@ -40,7 +40,7 @@ namespace Netwerkstatt\SilverstripeRector\Tests\Methods\UseInstead\Fixture {
 
     class Demo {
         public function execute(LeftAndMain $admin, ContentController $controller, RemoteFileModalExtension $ext, $unknownObject) {
-                       // 1 & 7. known typed method call (should annotate & auto-rename safely)
+            // 1 & 7. known typed method call (should annotate & auto-rename safely)
             $admin->currentPage();
 
             // 9. non-method replacement note (annotate only, NO auto-fix)
@@ -113,7 +113,6 @@ namespace Netwerkstatt\SilverstripeRector\Tests\Methods\UseInstead\Fixture {
 
     class Demo {
         public function execute(LeftAndMain $admin, ContentController $controller, RemoteFileModalExtension $ext, $unknownObject) {
-
             // 1 & 7. known typed method call (should annotate & auto-rename safely)
             // @TODO SSU RECTOR UPGRADE TASK - LeftAndMain::currentPage: use currentRecord() instead. FQCN: (SilverStripe\Admin\LeftAndMain)
             $admin->currentRecord();
