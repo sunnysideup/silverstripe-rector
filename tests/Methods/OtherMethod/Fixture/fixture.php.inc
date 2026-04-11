@@ -29,8 +29,7 @@ class MyTask extends MigrationTask {
 
 class Demo {
     public function execute(VersionProvider $vp, $unknownObject) {
-        
-        // 1. known typed instance method call (should annotate)
+               // 1. known typed instance method call (should annotate)
         $vp->getComposerLock();
 
         // 2. unknown typed instance method call + fallback safe = true (should annotate)
@@ -43,8 +42,7 @@ class Demo {
         SiteTree::getPermissionChecker();
 
         // 7. already annotated code (should not duplicate)
-        // @TODO SSU RECTOR UPGRADE TASK - VersionProvider::getComposerLock: has been replaced by composer-runtime-api FQCN: (SilverStripe\Core\Manifest\VersionProvider) 
-        $vp->getComposerLock();
+        // @TODO SSU RECTOR UPGRADE TASK - VersionProvider::getComposerLock: has been replaced by composer-runtime-api FQCN: (SilverStripe\Core\Manifest\VersionProvider)        $vp->getComposerLock();
 
         // 8. class method with existing docblock (should append TODO, not replace)
         /**
@@ -66,48 +64,39 @@ class VersionProvider {
 }
 
 class SiteTree {
-    // @TODO SSU RECTOR UPGRADE TASK - SiteTree::getPermissionChecker: Method SiteTree::getPermissionChecker() is no longer static 
-    public static function getPermissionChecker() {}
+    // @TODO SSU RECTOR UPGRADE TASK - SiteTree::getPermissionChecker: Method SiteTree::getPermissionChecker() is no longer static    public static function getPermissionChecker() {}
 }
 
 class MigrationTask {
-    // @TODO SSU RECTOR UPGRADE TASK - MigrationTask::up: Method MigrationTask::up() is now abstract 
-    public function up() {}
+    // @TODO SSU RECTOR UPGRADE TASK - MigrationTask::up: Method MigrationTask::up() is now abstract    public function up() {}
 }
 
 trait SessionEnvTypeSwitcher {}
 
 class MyTask extends MigrationTask {
     // 6. trait use for removed trait with m === '' (should annotate)
-    // @TODO SSU RECTOR UPGRADE TASK - SessionEnvTypeSwitcher: Removed deprecated trait SilverStripe\Control\Middleware\URLSpecialsMiddleware\SessionEnvTypeSwitcher - removed without equivalent functionality to replace it FQCN: (SilverStripe\Control\Middleware\URLSpecialsMiddleware\SessionEnvTypeSwitcher) 
-    use SessionEnvTypeSwitcher;
+    // @TODO SSU RECTOR UPGRADE TASK - SessionEnvTypeSwitcher: Removed deprecated trait SilverStripe\Control\Middleware\URLSpecialsMiddleware\SessionEnvTypeSwitcher - removed without equivalent functionality to replace it FQCN: (SilverStripe\Control\Middleware\URLSpecialsMiddleware\SessionEnvTypeSwitcher)    use SessionEnvTypeSwitcher;
 
     // 5. overriding class method in subclass (should annotate)
-    // @TODO SSU RECTOR UPGRADE TASK - MigrationTask::up: Method MigrationTask::up() is now abstract 
-    public function up() {}
+    // @TODO SSU RECTOR UPGRADE TASK - MigrationTask::up: Method MigrationTask::up() is now abstract    public function up() {}
 }
 
 class Demo {
     public function execute(VersionProvider $vp, $unknownObject) {
-        
-        // 1. known typed instance method call (should annotate)
-        // @TODO SSU RECTOR UPGRADE TASK - VersionProvider::getComposerLock: has been replaced by composer-runtime-api FQCN: (SilverStripe\Core\Manifest\VersionProvider) 
-        $vp->getComposerLock();
+               // 1. known typed instance method call (should annotate)
+        // @TODO SSU RECTOR UPGRADE TASK - VersionProvider::getComposerLock: has been replaced by composer-runtime-api FQCN: (SilverStripe\Core\Manifest\VersionProvider)        $vp->getComposerLock();
 
         // 2. unknown typed instance method call + fallback safe = true (should annotate)
-        // @TODO SSU RECTOR UPGRADE TASK - SiteTree::getPermissionChecker: Method SiteTree::getPermissionChecker() is no longer static 
-        $unknownObject->getPermissionChecker();
+        // @TODO SSU RECTOR UPGRADE TASK - SiteTree::getPermissionChecker: Method SiteTree::getPermissionChecker() is no longer static        $unknownObject->getPermissionChecker();
 
         // 3. unknown typed instance method call + fallback safe = false (should NOT annotate)
         $unknownObject->getComposerLock();
 
         // 4. static method call for "now static" / "no longer static" case (should annotate)
-        // @TODO SSU RECTOR UPGRADE TASK - SiteTree::getPermissionChecker: Method SiteTree::getPermissionChecker() is no longer static 
-        SiteTree::getPermissionChecker();
+        // @TODO SSU RECTOR UPGRADE TASK - SiteTree::getPermissionChecker: Method SiteTree::getPermissionChecker() is no longer static        SiteTree::getPermissionChecker();
 
         // 7. already annotated code (should not duplicate)
-        // @TODO SSU RECTOR UPGRADE TASK - VersionProvider::getComposerLock: has been replaced by composer-runtime-api FQCN: (SilverStripe\Core\Manifest\VersionProvider) 
-        $vp->getComposerLock();
+        // @TODO SSU RECTOR UPGRADE TASK - VersionProvider::getComposerLock: has been replaced by composer-runtime-api FQCN: (SilverStripe\Core\Manifest\VersionProvider)        $vp->getComposerLock();
 
         // 8. class method with existing docblock (should append TODO, not replace)
         /**
