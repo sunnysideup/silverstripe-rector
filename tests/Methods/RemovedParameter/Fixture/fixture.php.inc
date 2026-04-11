@@ -36,7 +36,8 @@ namespace Netwerkstatt\SilverstripeRector\Tests\Methods\RemovedParameter\Fixture
             $unknownObject->elementForm('my-request');
 
             // 5. already annotated code (should not duplicate)
-            // @TODO SSU RECTOR UPGRADE TASK - ElementalAreaController::elementForm: Removed deprecated parameter $request in ElementalAreaController::elementForm() FQCN: (DNADesign\Elemental\Controllers\ElementalAreaController)            $controller->elementForm('req2');
+            // @TODO SSU RECTOR UPGRADE TASK - ElementalAreaController::elementForm: Removed deprecated parameter $request in ElementalAreaController::elementForm() FQCN: (DNADesign\Elemental\Controllers\ElementalAreaController)
+            $controller->elementForm('req2');
 
             // 6. class method with existing docblock (should append TODO, not replace)
             /**
@@ -79,7 +80,8 @@ namespace Netwerkstatt\SilverstripeRector\Tests\Methods\RemovedParameter\Fixture
         public function execute(ElementalAreaController $controller, FormField $field, $unknownObject)
         {
             // 1. known typed method call (should annotate)
-            // @TODO SSU RECTOR UPGRADE TASK - ElementalAreaController::elementForm: Removed deprecated parameter $request in ElementalAreaController::elementForm() FQCN: (DNADesign\Elemental\Controllers\ElementalAreaController)            $controller->elementForm('my-request');
+            // @TODO SSU RECTOR UPGRADE TASK - ElementalAreaController::elementForm: Removed deprecated parameter $request in ElementalAreaController::elementForm() FQCN: (DNADesign\Elemental\Controllers\ElementalAreaController)
+            $controller->elementForm('my-request');
 
             // 2. unknown typed method call + fallback safe = true (should annotate)
             // @TODO SSU RECTOR UPGRADE TASK - FormField::validate: Removed deprecated parameter $validator in FormField::validate() FQCN: (SilverStripe\Forms\FormField)
@@ -89,7 +91,8 @@ namespace Netwerkstatt\SilverstripeRector\Tests\Methods\RemovedParameter\Fixture
             $unknownObject->elementForm('my-request');
 
             // 5. already annotated code (should not duplicate)
-            // @TODO SSU RECTOR UPGRADE TASK - ElementalAreaController::elementForm: Removed deprecated parameter $request in ElementalAreaController::elementForm() FQCN: (DNADesign\Elemental\Controllers\ElementalAreaController)            $controller->elementForm('req2');
+            // @TODO SSU RECTOR UPGRADE TASK - ElementalAreaController::elementForm: Removed deprecated parameter $request in ElementalAreaController::elementForm() FQCN: (DNADesign\Elemental\Controllers\ElementalAreaController)
+            $controller->elementForm('req2');
 
             // 6. class method with existing docblock (should append TODO, not replace)
             /**
