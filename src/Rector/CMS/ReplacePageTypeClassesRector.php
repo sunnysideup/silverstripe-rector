@@ -45,7 +45,7 @@ CODE_SAMPLE
 
     public function getNodeTypes(): array
     {
-        // Target any node that contains an array of statements (ClassMethod, If_, Closure, etc.)
+        // Target any node that contains an array of statements (ClassMethod, If_, Foreach_, Closure, etc.)
         return [StmtsAwareInterface::class];
     }
 
