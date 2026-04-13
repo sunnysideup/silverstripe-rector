@@ -8,13 +8,9 @@ use PhpParser\Node;
 use PhpParser\Node\Expr\Assign;
 use PhpParser\Node\Expr\StaticCall;
 use PhpParser\Node\Expr\Variable;
-use PhpParser\Node\Stmt;
-use PhpParser\Node\Stmt\Block;
-use PhpParser\Node\Stmt\ClassLike;
 use PhpParser\Node\Stmt\Expression;
-use PhpParser\Node\Stmt\FunctionLike;
-use PhpParser\Node\Stmt\Namespace_;
 use PHPStan\Type\ObjectType;
+use Rector\Contract\PhpParser\Node\StmtsAwareInterface;
 use Rector\Rector\AbstractRector;
 use Symplify\RuleDocGenerator\ValueObject\CodeSample\CodeSample;
 use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
@@ -49,73 +45,79 @@ CODE_SAMPLE
 
     public function getNodeTypes(): array
     {
-        // Target any Statement so we can return an array of statements to replace it
-        return [Stmt::class];
+        // Target any node that contains an array of statements (ClassMethod, If_, Closure, etc.)
+        return [StmtsAwareInterface::class];
     }
 
     /**
-     * @param Stmt $node
+     * @param StmtsAwareInterface $node
      */
-    public function refactor(Node $node): ?array
+    public function refactor(Node $node): ?Node
     {
-        // Skip structural nodes that shouldn't be replaced by an array of inline statements
-        if (
-            $node instanceof ClassLike ||
-            $node instanceof FunctionLike ||
-            $node instanceof Namespace_ ||
-            $node instanceof Block
-        ) {
+        if ($node->stmts === null) {
             return null;
         }
 
         $hasChanged = false;
+        $newStmts = [];
 
-        $this->traverseNodesWithCallable($node, function (Node $subNode) use (&$hasChanged) {
-            if (! $subNode instanceof StaticCall) {
-                return null;
+        foreach ($node->stmts as $stmt) {
+            $foundTarget = false;
+
+            // Traverse the current statement to find and replace our target StaticCall
+            $this->traverseNodesWithCallable($stmt, function (Node $subNode) use (&$foundTarget) {
+                if (! $subNode instanceof StaticCall) {
+                    return null;
+                }
+
+                if (! $this->isName($subNode->name, 'page_type_classes')) {
+                    return null;
+                }
+
+                if (! $this->isObjectType($subNode->class, new ObjectType('SilverStripe\CMS\Model\SiteTree')) && ! $this->isName($subNode->class, 'SiteTree')) {
+                    return null;
+                }
+
+                $foundTarget = true;
+                
+                // Swap out the StaticCall with our target variable
+                return new Variable('classes');
+            });
+
+            if ($foundTarget) {
+                $siteTreeClassConst = $this->nodeFactory->createClassConstFetch('SilverStripe\CMS\Model\SiteTree', 'class');
+                $classesVar = new Variable('classes');
+
+                // 1. $classes = ClassInfo::getValidSubClasses(SiteTree::class);
+                $assign = new Assign(
+                    $classesVar,
+                    $this->nodeFactory->createStaticCall('SilverStripe\Core\ClassInfo', 'getValidSubClasses', [$siteTreeClassConst])
+                );
+                $stmt1 = new Expression($assign);
+
+                // 2. DataObject::singleton(SiteTree::class)->invokeWithExtensions('updateAllowedSubClasses', $classes);
+                $singletonCall = $this->nodeFactory->createStaticCall('SilverStripe\ORM\DataObject', 'singleton', [$siteTreeClassConst]);
+                $invokeCall = $this->nodeFactory->createMethodCall($singletonCall, 'invokeWithExtensions', [
+                    'updateAllowedSubClasses',
+                    $classesVar
+                ]);
+                $stmt2 = new Expression($invokeCall);
+
+                // Splice our setup statements right above the mutated statement
+                $newStmts[] = $stmt1;
+                $newStmts[] = $stmt2;
+                $newStmts[] = $stmt;
+                $hasChanged = true;
+            } else {
+                $newStmts[] = $stmt;
             }
-
-            if (! $this->isName($subNode->name, 'page_type_classes')) {
-                return null;
-            }
-
-            if (! $this->isObjectType($subNode->class, new ObjectType('SilverStripe\CMS\Model\SiteTree')) && ! $this->isName($subNode->class, 'SiteTree')) {
-                return null;
-            }
-
-            $hasChanged = true;
-            
-            // Swap out the StaticCall with our target variable
-            return new Variable('classes');
-        });
-
-        if (! $hasChanged) {
-            return null;
         }
 
-        $siteTreeClassConst = $this->nodeFactory->createClassConstFetch('SilverStripe\CMS\Model\SiteTree', 'class');
-        $classesVar = new Variable('classes');
+        if ($hasChanged) {
+            $node->stmts = $newStmts;
+            return $node;
+        }
 
-        // 1. $classes = ClassInfo::getValidSubClasses(SiteTree::class);
-        $assign = new Assign(
-            $classesVar,
-            $this->nodeFactory->createStaticCall('SilverStripe\Core\ClassInfo', 'getValidSubClasses', [$siteTreeClassConst])
-        );
-        $stmt1 = new Expression($assign);
-
-        // 2. DataObject::singleton(SiteTree::class)->invokeWithExtensions('updateAllowedSubClasses', $classes);
-        $singletonCall = $this->nodeFactory->createStaticCall('SilverStripe\ORM\DataObject', 'singleton', [$siteTreeClassConst]);
-        $invokeCall = $this->nodeFactory->createMethodCall($singletonCall, 'invokeWithExtensions', [
-            'updateAllowedSubClasses',
-            $classesVar
-        ]);
-        $stmt2 = new Expression($invokeCall);
-
-        // Return array of nodes: replaces the original single statement with these three
-        return [
-            $stmt1,
-            $stmt2,
-            $node
-        ];
+        return null;
     }
 }
