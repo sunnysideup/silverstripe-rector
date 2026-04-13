@@ -53,7 +53,6 @@ CODE_SAMPLE
 
     public function getNodeTypes(): array
     {
-        // Target Class_ to efficiently evaluate inheritance context
         return [Class_::class];
     }
 
@@ -64,6 +63,11 @@ CODE_SAMPLE
     {
         // Verify class extends SilverStripe\Control\Controller
         if (! $this->isObjectType($node, new ObjectType('SilverStripe\Control\Controller'))) {
+            return null;
+        }
+
+        // CRITICAL FIX: Do not apply this to the base Controller class itself!
+        if ($this->isName($node, 'SilverStripe\Control\Controller')) {
             return null;
         }
 
