@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 use Netwerkstatt\SilverstripeRector\Rector\BuildTask\BuildTaskTitlePropertyRector;
 use Netwerkstatt\SilverstripeRector\Rector\DataObject\DataObjectStaticMethodsToFluentRector;
-
+use Netwerkstatt\SilverstripeRector\Rector\ORM\RemoveEmptyFilterRector;
+use Netwerkstatt\SilverstripeRector\Tests\ORM\RemoveEmptyFilterRector\RemoveEmptyFilterRectorTest;
 use Netwerkstatt\SilverstripeRector\Rector\BuildTask\PolyCommandGetOptionsPublicRector;
 use Netwerkstatt\SilverstripeRector\Rector\ORM\DataObjectGetToClassGetRector;
 use Rector\Config\RectorConfig;
@@ -25,4 +26,6 @@ return static function (RectorConfig $rectorConfig): void {
     ]);
     $rectorConfig->rule(BuildTaskTitlePropertyRector::class);
     $rectorConfig->rule(DataObjectGetToClassGetRector::class);
+    $rectorConfig->rule(RemoveEmptyFilterRector::class); // this is after you have manually upgraded the buildTask.
+}
 };
