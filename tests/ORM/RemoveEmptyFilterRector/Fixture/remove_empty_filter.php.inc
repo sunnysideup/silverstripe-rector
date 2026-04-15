@@ -5,8 +5,14 @@ namespace App {
 
     class Test {
         public function run() {
+            // Case 1: Direct chain
             $list = SiteTree::get()->filter('');
-            $list2 = SiteTree::get()->filter("")->filter('ID', 1);
+            
+            // Case 2: Double quotes
+            $list2 = SiteTree::get()->filter("");
+            
+            // Case 3: Preserving other filters
+            $list3 = SiteTree::get()->filter('')->filter('ID', 1);
         }
     }
 }
@@ -18,8 +24,14 @@ namespace App {
 
     class Test {
         public function run() {
+            // Case 1: Direct chain
             $list = SiteTree::get();
-            $list2 = SiteTree::get()->filter('ID', 1);
+            
+            // Case 2: Double quotes
+            $list2 = SiteTree::get();
+            
+            // Case 3: Preserving other filters
+            $list3 = SiteTree::get()->filter('ID', 1);
         }
     }
 }

@@ -6,8 +6,8 @@ namespace Netwerkstatt\SilverstripeRector\Rector\ORM;
 
 use PhpParser\Node;
 use PhpParser\Node\Expr\MethodCall;
+use PhpParser\Node\Expr\StaticCall;
 use PhpParser\Node\Scalar\String_;
-use PhpParser\Node\Stmt\Expression;
 use Netwerkstatt\SilverstripeRector\Traits\MethodHelper;
 use Rector\Rector\AbstractRector;
 use Symplify\RuleDocGenerator\ValueObject\CodeSample\CodeSample;
@@ -22,55 +22,56 @@ final class RemoveEmptyFilterRector extends AbstractRector
 
     public function getRuleDefinition(): RuleDefinition
     {
-        return new RuleDefinition('Remove empty filter() calls from DataList', [
+        return new RuleDefinition('Remove empty filter() calls following a DataObject::get()', [
             new CodeSample(
-                'SiteTree::get()->filter("");',
-                'SiteTree::get();'
+                'MyDataObject::get()->filter("");',
+                'MyDataObject::get();'
             ),
         ]);
     }
 
     public function getNodeTypes(): array
     {
-        return [Expression::class];
+        return [MethodCall::class];
     }
 
     /**
-     * @param Expression $node
+     * @param MethodCall $node
      */
     public function refactor(Node $node): ?Node
     {
-        $expr = $node->expr;
-        if (!$expr instanceof MethodCall) {
+        // 1. Must be a call to filter()
+        if (!$this->isName($node->name, 'filter')) {
             return null;
         }
 
-        if (!$this->isName($expr->name, 'filter')) {
-            return null;
-        }
-
-        // Use MethodHelper's string-matching logic to identify the class
-        // This is more resilient in test environments where reflection might fail
-        $callerType = $this->getType($expr->var);
-        $className = $this->getName($expr->var) ?? '';
-        
-        $isDataList = $this->isObjectType($expr->var, new \PHPStan\Type\ObjectType('SilverStripe\ORM\DataList')) || 
-                      $this->isClassSameOrSubclassOfConfigured($className, 'SilverStripe\ORM\DataList');
-
-        if (!$isDataList) {
-            return null;
-        }
-
-        $args = $expr->getArgs();
+        // 2. Must have exactly one argument that is an empty string
+        $args = $node->getArgs();
         if (count($args) !== 1) {
             return null;
         }
-
         $argValue = $args[0]->value;
-        if ($argValue instanceof String_ && $argValue->value === '') {
-            // Replace the entire expression's inner call with just the caller
-            $node->expr = $expr->var;
-            return $node;
+        if (!$argValue instanceof String_ || $argValue->value !== '') {
+            return null;
+        }
+
+        // 3. Structural Check: Is the caller MyDataObject::get()?
+        $caller = $node->var;
+        
+        // Handle $list->filter('') where $list is known or inferred
+        if ($this->isObjectType($caller, new \PHPStan\Type\ObjectType('SilverStripe\ORM\DataList'))) {
+            return $caller;
+        }
+
+        // Handle the specific chain: SomeClass::get()->filter('')
+        if ($caller instanceof MethodCall && $this->isName($caller->name, 'get')) {
+            $staticCaller = $caller->var;
+            if ($staticCaller instanceof StaticCall) {
+                $className = $this->getName($staticCaller->class);
+                if ($className && $this->isClassSameOrSubclassOfConfigured($className, 'SilverStripe\ORM\DataObject')) {
+                    return $caller;
+                }
+            }
         }
 
         return null;
