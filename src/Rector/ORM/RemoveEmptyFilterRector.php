@@ -7,7 +7,7 @@ namespace Netwerkstatt\SilverstripeRector\Rector\ORM;
 use PhpParser\Node;
 use PhpParser\Node\Expr\MethodCall;
 use PhpParser\Node\Scalar\String_;
-use PHPStan\Type\ObjectType;
+use Netwerkstatt\SilverstripeRector\Traits\MethodHelper;
 use Rector\Rector\AbstractRector;
 use Symplify\RuleDocGenerator\ValueObject\CodeSample\CodeSample;
 use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
@@ -17,19 +17,14 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class RemoveEmptyFilterRector extends AbstractRector
 {
+    use MethodHelper;
+
     public function getRuleDefinition(): RuleDefinition
     {
         return new RuleDefinition('Remove empty filter() calls from DataList', [
             new CodeSample(
-                <<<'CODE_SAMPLE'
-use SilverStripe\CMS\Model\SiteTree;
-$pages = SiteTree::get()->filter('');
-CODE_SAMPLE
-                ,
-                <<<'CODE_SAMPLE'
-use SilverStripe\CMS\Model\SiteTree;
-$pages = SiteTree::get();
-CODE_SAMPLE
+                'SiteTree::get()->filter("");',
+                'SiteTree::get();'
             ),
         ]);
     }
@@ -44,11 +39,15 @@ CODE_SAMPLE
      */
     public function refactor(Node $node): ?Node
     {
-        if (!$this->isName($node->name, 'filter')) {
-            return null;
+        // Use MethodHelper to verify this is a DataList->filter() call
+        if (!$this->isClassSameOrSubclassOfConfigured($this->getName($node->var) ?? '', 'SilverStripe\ORM\DataList')) {
+             // Fallback to type check if name resolution is insufficient in tests
+             if (!$this->isObjectType($node->var, new \PHPStan\Type\ObjectType('SilverStripe\ORM\DataList'))) {
+                return null;
+             }
         }
 
-        if (!$this->isObjectType($node->var, new ObjectType('SilverStripe\ORM\DataList'))) {
+        if (!$this->isName($node->name, 'filter')) {
             return null;
         }
 
