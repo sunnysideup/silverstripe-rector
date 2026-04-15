@@ -8,13 +8,15 @@ use Netwerkstatt\SilverstripeRector\Rector\DataObject\DataObjectStaticMethodsToF
 use Netwerkstatt\SilverstripeRector\Rector\BuildTask\PolyCommandGetOptionsPublicRector;
 use Netwerkstatt\SilverstripeRector\Rector\ORM\DataObjectGetToClassGetRector;
 use Rector\Config\RectorConfig;
-
+use Netwerkstatt\SilverstripeRector\Tests\ORM\RemoveEmptyFilterRector\RemoveEmptyFilterRectorTest;
 
 return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->importNames();
     $rectorConfig->removeUnusedImports();
     $rectorConfig->rule(DataObjectStaticMethodsToFluentRector::class);
-    $rectorConfig->rule(PolyCommandGetOptionsPublicRector::class);
+
+    $rectorConfig->rule(PolyCommandGetOptionsPublicRector::class); // this is after you have manually upgraded the buildTask.
+    $rectorConfig->rule(RemoveEmptyFilterRectorTest::class); // this is after you have manually upgraded the buildTask.
     $rectorConfig->ruleWithConfiguration(SilverstripeDeprecationCommentRector::class, [
         'SilverStripe\UserForms\Extension\UpgradePolymorphicExtension' => [
             'message' => 'UpgradePolymorphicExtension has been deprecated and will be removed without equivalent functionality',
