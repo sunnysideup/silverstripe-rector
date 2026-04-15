@@ -34,9 +34,6 @@ CODE_SAMPLE
         ]);
     }
 
-    /**
-     * @return array<class-string<Node>>
-     */
     public function getNodeTypes(): array
     {
         return [MethodCall::class];
@@ -51,6 +48,7 @@ CODE_SAMPLE
             return null;
         }
 
+        // Ensure the caller is a DataList
         if (!$this->isObjectType($node->var, new ObjectType('SilverStripe\ORM\DataList'))) {
             return null;
         }
