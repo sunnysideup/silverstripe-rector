@@ -41,14 +41,9 @@ final class RemoveEmptyFilterRector extends AbstractRector
             return null;
         }
 
-        // Check if caller is DataList or a class that looks like one (for testing)
-        $type = $this->getType($node->var);
-        if (!$type->isSuperTypeOf(new ObjectType('SilverStripe\ORM\DataList'))->yes()) {
-            // If the type system is failing in tests, we can fall back to checking the method caller's name
-            // but for a robust rule, ObjectType is preferred.
-            if (!$this->isObjectType($node->var, new ObjectType('SilverStripe\ORM\DataList'))) {
-                return null;
-            }
+        // Validate that the caller is a DataList (or subclass)
+        if (!$this->isObjectType($node->var, new ObjectType('SilverStripe\ORM\DataList'))) {
+            return null;
         }
 
         $args = $node->getArgs();
@@ -57,6 +52,7 @@ final class RemoveEmptyFilterRector extends AbstractRector
         }
 
         $argValue = $args[0]->value;
+        // Check for empty string literal
         if (!$argValue instanceof String_ || $argValue->value !== '') {
             return null;
         }
