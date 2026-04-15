@@ -41,7 +41,7 @@ final class RemoveEmptyFilterRector extends AbstractRector
             return null;
         }
 
-        // Validate that the caller is a DataList (or subclass)
+        // isObjectType leverages PHPStan's reflection to check inheritance safely
         if (!$this->isObjectType($node->var, new ObjectType('SilverStripe\ORM\DataList'))) {
             return null;
         }
@@ -52,11 +52,11 @@ final class RemoveEmptyFilterRector extends AbstractRector
         }
 
         $argValue = $args[0]->value;
-        // Check for empty string literal
         if (!$argValue instanceof String_ || $argValue->value !== '') {
             return null;
         }
 
+        // Return the object the method was called on, removing the call
         return $node->var;
     }
 }
