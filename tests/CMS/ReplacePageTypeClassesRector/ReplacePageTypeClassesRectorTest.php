@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Netwerkstatt\SilverstripeRector\Tests\CMS\ReplacePageTypeClassesRector;
 
-use Iterator;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Rector\Testing\PHPUnit\AbstractRectorTestCase;
 
@@ -16,7 +15,7 @@ final class ReplacePageTypeClassesRectorTest extends AbstractRectorTestCase
         $this->doTestFile($filePath);
     }
 
-    public static function provideData(): Iterator
+    public static function provideData(): \Iterator
     {
         return self::yieldFilesFromDirectory(__DIR__ . '/Fixture');
     }
