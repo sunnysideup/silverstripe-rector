@@ -11,7 +11,7 @@ namespace App {
             // Case 2: Double quotes
             $list2 = SiteTree::get()->filter("");
             
-            // Case 3: Preserving other filters
+            // Case 3: Preserving other filters in chain
             $list3 = SiteTree::get()->filter('')->filter('ID', 1);
         }
     }
@@ -30,7 +30,7 @@ namespace App {
             // Case 2: Double quotes
             $list2 = SiteTree::get();
             
-            // Case 3: Preserving other filters
+            // Case 3: Preserving other filters in chain
             $list3 = SiteTree::get()->filter('ID', 1);
         }
     }
