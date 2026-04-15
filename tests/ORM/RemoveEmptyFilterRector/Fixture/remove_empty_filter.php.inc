@@ -9,7 +9,9 @@ namespace SilverStripe\ORM {
 namespace SilverStripe\CMS\Model {
     use SilverStripe\ORM\DataList;
     class SiteTree {
-        /** @return DataList */
+        /**
+         * @return DataList
+         */
         public static function get() { return new DataList(); }
     }
 }
@@ -36,7 +38,9 @@ namespace SilverStripe\ORM {
 namespace SilverStripe\CMS\Model {
     use SilverStripe\ORM\DataList;
     class SiteTree {
-        /** @return DataList */
+        /**
+         * @return DataList
+         */
         public static function get() { return new DataList(); }
     }
 }

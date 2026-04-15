@@ -48,7 +48,6 @@ CODE_SAMPLE
             return null;
         }
 
-        // Check if caller is a Silverstripe DataList or subclass
         if (!$this->isObjectType($node->var, new ObjectType('SilverStripe\ORM\DataList'))) {
             return null;
         }
