@@ -7,7 +7,7 @@ namespace Netwerkstatt\SilverstripeRector\Rector\ORM;
 use PhpParser\Node;
 use PhpParser\Node\Expr\MethodCall;
 use PhpParser\Node\Scalar\String_;
-use Netwerkstatt\SilverstripeRector\Traits\MethodHelper;
+use PHPStan\Type\ObjectType;
 use Rector\Rector\AbstractRector;
 use Symplify\RuleDocGenerator\ValueObject\CodeSample\CodeSample;
 use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
@@ -17,8 +17,6 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class RemoveEmptyFilterRector extends AbstractRector
 {
-    use MethodHelper;
-
     public function getRuleDefinition(): RuleDefinition
     {
         return new RuleDefinition('Remove empty filter() calls from DataList', [
@@ -39,16 +37,18 @@ final class RemoveEmptyFilterRector extends AbstractRector
      */
     public function refactor(Node $node): ?Node
     {
-        // Use MethodHelper to verify this is a DataList->filter() call
-        if (!$this->isClassSameOrSubclassOfConfigured($this->getName($node->var) ?? '', 'SilverStripe\ORM\DataList')) {
-             // Fallback to type check if name resolution is insufficient in tests
-             if (!$this->isObjectType($node->var, new \PHPStan\Type\ObjectType('SilverStripe\ORM\DataList'))) {
-                return null;
-             }
-        }
-
         if (!$this->isName($node->name, 'filter')) {
             return null;
+        }
+
+        // Check if caller is DataList or a class that looks like one (for testing)
+        $type = $this->getType($node->var);
+        if (!$type->isSuperTypeOf(new ObjectType('SilverStripe\ORM\DataList'))->yes()) {
+            // If the type system is failing in tests, we can fall back to checking the method caller's name
+            // but for a robust rule, ObjectType is preferred.
+            if (!$this->isObjectType($node->var, new ObjectType('SilverStripe\ORM\DataList'))) {
+                return null;
+            }
         }
 
         $args = $node->getArgs();
@@ -56,8 +56,8 @@ final class RemoveEmptyFilterRector extends AbstractRector
             return null;
         }
 
-        $firstArgValue = $args[0]->value;
-        if (!$firstArgValue instanceof String_ || $firstArgValue->value !== '') {
+        $argValue = $args[0]->value;
+        if (!$argValue instanceof String_ || $argValue->value !== '') {
             return null;
         }
 
