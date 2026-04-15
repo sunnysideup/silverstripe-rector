@@ -41,7 +41,7 @@ final class RemoveEmptyFilterRector extends AbstractRector
             return null;
         }
 
-        // isObjectType leverages PHPStan's reflection to check inheritance safely
+        // Standard Rector inheritance check
         if (!$this->isObjectType($node->var, new ObjectType('SilverStripe\ORM\DataList'))) {
             return null;
         }
@@ -56,7 +56,6 @@ final class RemoveEmptyFilterRector extends AbstractRector
             return null;
         }
 
-        // Return the object the method was called on, removing the call
         return $node->var;
     }
 }
