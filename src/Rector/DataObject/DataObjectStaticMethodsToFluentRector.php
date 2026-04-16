@@ -7,6 +7,7 @@ namespace Netwerkstatt\SilverstripeRector\Rector\DataObject;
 use PhpParser\Node;
 use PhpParser\Node\Expr\StaticCall;
 use PhpParser\Node\Arg;
+use PhpParser\Node\Expr\ClassConstFetch;
 use PHPStan\Type\ObjectType;
 use Rector\Rector\AbstractRector;
 use Rector\PhpParser\Node\Value\ValueResolver;
@@ -46,9 +47,6 @@ CODE_SAMPLE
         return [StaticCall::class];
     }
 
-    /**
-     * @param StaticCall $node
-     */
     public function refactor(Node $node): ?Node
     {
         if (!$this->isObjectType($node->class, new ObjectType('SilverStripe\ORM\DataObject'))) {
@@ -70,16 +68,25 @@ CODE_SAMPLE
         return null;
     }
 
+    private function resolveCallee(Node $node): Node|Node\Name
+    {
+        // If it's Member::class, we want just 'Member'
+        if ($node instanceof ClassConstFetch && $this->isName($node->name, 'class')) {
+            return $node->class;
+        }
+        return $node;
+    }
+
     private function refactorGetById(StaticCall $node): ?Node
     {
         if (count($node->args) < 2) {
             return null;
         }
 
-        $classNameArg = $node->args[0]->value;
+        $callee = $this->resolveCallee($node->args[0]->value);
         $idArg = $node->args[1];
 
-        $getCall = new StaticCall($classNameArg, 'get');
+        $getCall = new StaticCall($callee, 'get');
         $setUseCacheCall = $this->nodeFactory->createMethodCall($getCall, 'setUseCache', [new Arg($this->nodeFactory->createTrue())]);
 
         return $this->nodeFactory->createMethodCall($setUseCacheCall, 'byID', [$idArg]);
@@ -91,23 +98,20 @@ CODE_SAMPLE
             return null;
         }
 
-        $classNameArg = $node->args[0]->value;
+        $callee = $this->resolveCallee($node->args[0]->value);
         $filterArg = $node->args[1] ?? null;
         $cacheArg = $node->args[2] ?? null;
         $sortArg = $node->args[3] ?? null;
 
-        $currentCall = new StaticCall($classNameArg, 'get');
+        $currentCall = new StaticCall($callee, 'get');
 
-        // 1. Cache handling (Defaults to true)
         $cacheValue = $cacheArg ? $cacheArg->value : $this->nodeFactory->createTrue();
         $currentCall = $this->nodeFactory->createMethodCall($currentCall, 'setUseCache', [new Arg($cacheValue)]);
 
-        // 2. Filter handling
         if ($filterArg && !$this->valueResolver->isNull($filterArg->value)) {
             $currentCall = $this->nodeFactory->createMethodCall($currentCall, 'filter', [$filterArg]);
         }
 
-        // 3. Sort handling
         if ($sortArg && !$this->valueResolver->isNull($sortArg->value)) {
             $currentCall = $this->nodeFactory->createMethodCall($currentCall, 'sort', [$sortArg]);
         }
@@ -121,10 +125,10 @@ CODE_SAMPLE
             return null;
         }
 
-        $classNameArg = $node->args[0]->value;
+        $callee = $this->resolveCallee($node->args[0]->value);
         $idArg = $node->args[1];
 
-        $getCall = new StaticCall($classNameArg, 'get');
+        $getCall = new StaticCall($callee, 'get');
         $setUseCacheCall = $this->nodeFactory->createMethodCall($getCall, 'setUseCache', [new Arg($this->nodeFactory->createTrue())]);
         $byIDCall = $this->nodeFactory->createMethodCall($setUseCacheCall, 'byID', [$idArg]);
 
