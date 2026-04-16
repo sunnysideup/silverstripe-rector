@@ -9,6 +9,7 @@ use PhpParser\Node\Expr\StaticCall;
 use PhpParser\Node\Arg;
 use PHPStan\Type\ObjectType;
 use Rector\Rector\AbstractRector;
+use Rector\PhpParser\Node\Value\ValueResolver;
 use Symplify\RuleDocGenerator\Contract\DocumentedRuleInterface;
 use Symplify\RuleDocGenerator\ValueObject\CodeSample\CodeSample;
 use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
@@ -18,6 +19,10 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class DataObjectStaticMethodsToFluentRector extends AbstractRector implements DocumentedRuleInterface
 {
+    public function __construct(
+        private readonly ValueResolver $valueResolver
+    ) {}
+
     public function getRuleDefinition(): RuleDefinition
     {
         return new RuleDefinition(
