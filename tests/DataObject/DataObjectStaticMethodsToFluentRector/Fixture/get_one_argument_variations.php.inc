@@ -6,7 +6,7 @@ namespace App {
 
     class MyObject extends DataObject {
         public function testVariations() {
-            // 1 Argument with self
+            // 1 Argument with self::class
             $a = DataObject::get_one(self::class);
             
             // 2 Arguments with Member::class
@@ -35,7 +35,7 @@ namespace App {
 
     class MyObject extends DataObject {
         public function testVariations() {
-            // 1 Argument with self
+            // 1 Argument with self::class
             $a = self::get()->setUseCache(true)->first();
             
             // 2 Arguments with Member::class
