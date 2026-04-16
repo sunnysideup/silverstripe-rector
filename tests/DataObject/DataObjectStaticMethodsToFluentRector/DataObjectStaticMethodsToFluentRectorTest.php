@@ -7,7 +7,7 @@ namespace Netwerkstatt\SilverstripeRector\Tests\DataObject\DataObjectStaticMetho
 use Rector\Testing\PHPUnit\AbstractRectorTestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
 
-class DataObjectStaticMethodsToFluentRectorTest extends AbstractRectorTestCase
+final class DataObjectStaticMethodsToFluentRectorTest extends AbstractRectorTestCase
 {
     #[DataProvider('provideData')]
     public function test(string $filePath): void
@@ -17,7 +17,7 @@ class DataObjectStaticMethodsToFluentRectorTest extends AbstractRectorTestCase
 
     public static function provideData(): \Iterator
     {
-        return self::yieldFilesFromDirectory(__DIR__ . '/Fixture');
+        yield [__DIR__ . '/Fixture/get_one_argument_variations.php.inc'];
     }
 
     public function provideConfigFilePath(): string

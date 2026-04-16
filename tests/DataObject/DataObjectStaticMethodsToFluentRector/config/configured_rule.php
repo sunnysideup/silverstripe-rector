@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
-use Netwerkstatt\SilverstripeRector\Rector\DataObject\DataObjectStaticMethodsToFluentRector;
 use Rector\Config\RectorConfig;
+use Netwerkstatt\SilverstripeRector\Rector\DataObject\DataObjectStaticMethodsToFluentRector;
 
-return static function (RectorConfig $rectorConfig): void {
-    $rectorConfig->rule(DataObjectStaticMethodsToFluentRector::class);
-};
+return RectorConfig::configure()
+    ->withRules([
+        DataObjectStaticMethodsToFluentRector::class,
+    ]);
