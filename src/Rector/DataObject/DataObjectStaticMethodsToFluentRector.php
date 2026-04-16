@@ -21,29 +21,21 @@ final class DataObjectStaticMethodsToFluentRector extends AbstractRector impleme
     public function getRuleDefinition(): RuleDefinition
     {
         return new RuleDefinition(
-            'Silverstripe 6.1: Replace DataObject static methods get_by_id(), get_one(), and delete_by_id() ' .
-            'with fluent equivalents.',
+            'Silverstripe 6.1: Replace DataObject static methods with fluent equivalents using Late Static Binding.',
             [
                 new CodeSample(
                     <<<'CODE_SAMPLE'
-DataObject::get_by_id($className, $id);
-DataObject::get_one($className, $filter);
-DataObject::delete_by_id($className, $id);
+DataObject::get_one(Member::class, ['Email' => $email], false, 'ID DESC');
 CODE_SAMPLE
                     ,
                     <<<'CODE_SAMPLE'
-DataObject::get($className)->setUseCache(true)->byID($id);
-DataObject::get($className)->setUseCache(true)->filter($filter)->first();
-DataObject::get($className)->setUseCache(true)->byID($id)->delete();
+Member::get()->setUseCache(false)->filter(['Email' => $email])->sort('ID DESC')->first();
 CODE_SAMPLE
                 ),
             ]
         );
     }
 
-    /**
-     * @return array<class-string<Node>>
-     */
     public function getNodeTypes(): array
     {
         return [StaticCall::class];
@@ -54,7 +46,7 @@ CODE_SAMPLE
      */
     public function refactor(Node $node): ?Node
     {
-        if (!$this->isObjectType($node->class, new ObjectType(\SilverStripe\ORM\DataObject::class))) {
+        if (!$this->isObjectType($node->class, new ObjectType('SilverStripe\ORM\DataObject'))) {
             return null;
         }
 
@@ -79,15 +71,11 @@ CODE_SAMPLE
             return null;
         }
 
-        $classNameArg = $node->args[0];
+        $classNameArg = $node->args[0]->value;
         $idArg = $node->args[1];
 
-        $getCall = new StaticCall(new Node\Name('DataObject'), 'get', [$classNameArg]);
-        $setUseCacheCall = $this->nodeFactory->createMethodCall(
-            $getCall,
-            'setUseCache',
-            [new Arg($this->nodeFactory->createTrue())]
-        );
+        $getCall = new StaticCall($classNameArg, 'get');
+        $setUseCacheCall = $this->nodeFactory->createMethodCall($getCall, 'setUseCache', [new Arg($this->nodeFactory->createTrue())]);
 
         return $this->nodeFactory->createMethodCall($setUseCacheCall, 'byID', [$idArg]);
     }
@@ -98,19 +86,25 @@ CODE_SAMPLE
             return null;
         }
 
-        $classNameArg = $node->args[0];
+        $classNameArg = $node->args[0]->value;
         $filterArg = $node->args[1] ?? null;
+        $cacheArg = $node->args[2] ?? null;
+        $sortArg = $node->args[3] ?? null;
 
-        $getCall = new StaticCall(new Node\Name('DataObject'), 'get', [$classNameArg]);
-        $setUseCacheCall = $this->nodeFactory->createMethodCall(
-            $getCall,
-            'setUseCache',
-            [new Arg($this->nodeFactory->createTrue())]
-        );
+        $currentCall = new StaticCall($classNameArg, 'get');
 
-        $currentCall = $setUseCacheCall;
-        if ($filterArg !== null) {
+        // 1. Cache handling (Defaults to true)
+        $cacheValue = $cacheArg ? $cacheArg->value : $this->nodeFactory->createTrue();
+        $currentCall = $this->nodeFactory->createMethodCall($currentCall, 'setUseCache', [new Arg($cacheValue)]);
+
+        // 2. Filter handling
+        if ($filterArg && !$this->valueResolver->isNull($filterArg->value)) {
             $currentCall = $this->nodeFactory->createMethodCall($currentCall, 'filter', [$filterArg]);
+        }
+
+        // 3. Sort handling
+        if ($sortArg && !$this->valueResolver->isNull($sortArg->value)) {
+            $currentCall = $this->nodeFactory->createMethodCall($currentCall, 'sort', [$sortArg]);
         }
 
         return $this->nodeFactory->createMethodCall($currentCall, 'first');
@@ -122,15 +116,11 @@ CODE_SAMPLE
             return null;
         }
 
-        $classNameArg = $node->args[0];
+        $classNameArg = $node->args[0]->value;
         $idArg = $node->args[1];
 
-        $getCall = new StaticCall(new Node\Name('DataObject'), 'get', [$classNameArg]);
-        $setUseCacheCall = $this->nodeFactory->createMethodCall(
-            $getCall,
-            'setUseCache',
-            [new Arg($this->nodeFactory->createTrue())]
-        );
+        $getCall = new StaticCall($classNameArg, 'get');
+        $setUseCacheCall = $this->nodeFactory->createMethodCall($getCall, 'setUseCache', [new Arg($this->nodeFactory->createTrue())]);
         $byIDCall = $this->nodeFactory->createMethodCall($setUseCacheCall, 'byID', [$idArg]);
 
         return $this->nodeFactory->createMethodCall($byIDCall, 'delete');
