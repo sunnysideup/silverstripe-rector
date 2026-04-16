@@ -25,9 +25,9 @@ class MyDataObject extends DataObject
 {
     public function doSomething()
     {
-        $obj = DataObject::get(self::class)->setUseCache(true)->byID(1);
-        $obj2 = DataObject::get(self::class)->setUseCache(true)->filter(['ID' => 2])->first();
-        DataObject::get(self::class)->setUseCache(true)->byID(3)->delete();
+        $obj = self::get()->setUseCache(true)->byID(1);
+        $obj2 = self::get()->setUseCache(true)->filter(['ID' => 2])->first();
+        self::get()->setUseCache(true)->byID(3)->delete();
     }
 }
 ?>
