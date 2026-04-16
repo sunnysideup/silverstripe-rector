@@ -23,5 +23,5 @@ class MyDataObject extends DataObject
 }
 
 $id = 123;
-$obj = DataObject::get(MyDataObject::class)->setUseCache(true)->byID($id);
+$obj = MyDataObject::get()->setUseCache(true)->byID($id);
 ?>

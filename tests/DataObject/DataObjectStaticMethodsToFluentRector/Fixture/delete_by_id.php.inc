@@ -3,8 +3,11 @@
 namespace Netwerkstatt\SilverstripeRector\Tests\DataObject\DataObjectStaticMethodsToFluentRector\Fixture;
 
 use SilverStripe\ORM\DataObject;
+class MyDataObject extends DataObject
+{
+}
 
-DataObject::delete_by_id(DataObject::class, 123);
+DataObject::delete_by_id(MyDataObject::class, 123);
 ?>
 -----
 <?php
@@ -12,6 +15,9 @@ DataObject::delete_by_id(DataObject::class, 123);
 namespace Netwerkstatt\SilverstripeRector\Tests\DataObject\DataObjectStaticMethodsToFluentRector\Fixture;
 
 use SilverStripe\ORM\DataObject;
+class MyDataObject extends DataObject
+{
+}
 
-DataObject::get(DataObject::class)->setUseCache(true)->byID(123)->delete();
+DataObject::get(MyDataObject::class)->byID(123)->delete();
 ?>
