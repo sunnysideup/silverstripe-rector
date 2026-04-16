@@ -15,6 +15,7 @@ use PhpParser\Node\Stmt\FileWithoutNamespace;
 use PhpParser\Node\Stmt\Namespace_;
 use PHPStan\Type\ObjectType;
 use Rector\Contract\PhpParser\Node\StmtsAwareInterface;
+use Rector\PhpParser\Enum\NodeGroup;
 use Rector\Rector\AbstractRector;
 use Symplify\RuleDocGenerator\ValueObject\CodeSample\CodeSample;
 use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
@@ -32,8 +33,7 @@ protected function getClassList()
 {
     return SiteTree::page_type_classes();
 }
-CODE_SAMPLE
-                    ,
+CODE_SAMPLE,
                     <<<'CODE_SAMPLE'
 protected function getClassList()
 {
@@ -49,7 +49,7 @@ CODE_SAMPLE
 
     public function getNodeTypes(): array
     {
-        return [StmtsAwareInterface::class];
+        return NodeGroup::STMTS_AWARE;
     }
 
     /**
@@ -93,7 +93,7 @@ CODE_SAMPLE
                 }
 
                 $foundTarget = true;
-                
+
                 // Mutate the tree in-place by returning the new variable
                 return new Variable('classes');
             });
