@@ -19,5 +19,5 @@ class MyDataObject extends DataObject
 {
 }
 
-DataObject::get(MyDataObject::class)->setUseCache(true)->byID(123)->delete();
+MyDataObject::get()->setUseCache(true)->byID(123)->delete();
 ?>
