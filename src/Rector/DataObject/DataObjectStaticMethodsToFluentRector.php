@@ -31,11 +31,10 @@ final class DataObjectStaticMethodsToFluentRector extends AbstractRector impleme
             [
                 new CodeSample(
                     <<<'CODE_SAMPLE'
-DataObject::get_one(self::class, ['Email' => $email]);
-CODE_SAMPLE
-                    ,
+DataObject::get_one(MyClass::class, ['Email' => $email]);
+CODE_SAMPLE,
                     <<<'CODE_SAMPLE'
-self::get()->setUseCache(true)->filter(['Email' => $email])->first();
+MyClass::get()->setUseCache(true)->filter(['Email' => $email])->first();
 CODE_SAMPLE
                 ),
             ]

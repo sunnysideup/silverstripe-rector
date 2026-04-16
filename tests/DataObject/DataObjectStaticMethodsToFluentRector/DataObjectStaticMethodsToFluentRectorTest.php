@@ -17,7 +17,7 @@ final class DataObjectStaticMethodsToFluentRectorTest extends AbstractRectorTest
 
     public static function provideData(): \Iterator
     {
-        yield [__DIR__ . '/Fixture/get_one_argument_variations.php.inc'];
+        yield [__DIR__ . '/Fixture'];
     }
 
     public function provideConfigFilePath(): string
