@@ -24,8 +24,8 @@ use SilverStripe\CMS\Model\SiteTree;
 function getByIdTest()
 {
     $id = 1;
-    $obj2 = SiteTree::get()->byID(123);
-    $obj3 = SiteTree::get()->byID($id);
-    $obj4 = MyPage::get()->byID($id);
+    $obj2 = \SilverStripe\CMS\Model\SiteTree::get()->byID(123);
+    $obj3 = \SilverStripe\CMS\Model\SiteTree::get()->byID($id);
+    $obj4 = \MyPage::get()->byID($id);
 }
 ?>
