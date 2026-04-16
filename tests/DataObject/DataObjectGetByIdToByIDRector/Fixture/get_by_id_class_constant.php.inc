@@ -28,6 +28,6 @@ class MyDataObject extends DataObject
 function getByIdTest()
 {
     $id = 1;
-    $obj1 = \Netwerkstatt\SilverstripeRector\Tests\DataObject\DataObjectGetByIdToByIDRector\Fixture\MyDataObject::get()->byID($id);
+    $obj1 = MyDataObject::get()->byID($id);
 }
 ?>
