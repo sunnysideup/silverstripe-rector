@@ -31,11 +31,11 @@ final class DataObjectStaticMethodsToFluentRector extends AbstractRector impleme
             [
                 new CodeSample(
                     <<<'CODE_SAMPLE'
-DataObject::get_one(Member::class, ['Email' => $email], false, 'ID DESC');
+DataObject::get_one(self::class, ['Email' => $email]);
 CODE_SAMPLE
                     ,
                     <<<'CODE_SAMPLE'
-Member::get()->setUseCache(false)->filter(['Email' => $email])->sort('ID DESC')->first();
+self::get()->setUseCache(true)->filter(['Email' => $email])->first();
 CODE_SAMPLE
                 ),
             ]
@@ -70,7 +70,6 @@ CODE_SAMPLE
 
     private function resolveCallee(Node $node): Node|Node\Name
     {
-        // If it's Member::class, we want just 'Member'
         if ($node instanceof ClassConstFetch && $this->isName($node->name, 'class')) {
             return $node->class;
         }
