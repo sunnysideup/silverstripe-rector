@@ -23,6 +23,11 @@ namespace App\Tasks {
         // Testing missing type but correct visibility
         protected $title = 'Another Task';
     }
+    class AnotherTask2 extends BuildTask
+    {
+        // Testing missing type but correct visibility
+        public string $title = 'Another Task';
+    }
 }
 -----
 <?php
@@ -50,4 +55,9 @@ namespace App\Tasks {
         // Testing missing type but correct visibility
         protected string $title = 'Another Task';
     }
+    class AnotherTask2 extends BuildTask
+    {
+        // Testing missing type but correct visibility
+        protected string $title = 'Another Task';
+    }    
 }
