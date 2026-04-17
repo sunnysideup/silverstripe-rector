@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Netwerkstatt\SilverstripeRector\Tests\DataObject\DataObjectStaticMethodsToFluentRector;
+namespace Netwerkstatt\SilverstripeRector\Tests\ORM\RemoveEmptyFilterRector;
 
-use Rector\Testing\PHPUnit\AbstractRectorTestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
+use Rector\Testing\PHPUnit\AbstractRectorTestCase;
 
-final class DataObjectStaticMethodsToFluentRectorTest extends AbstractRectorTestCase
+final class RemoveEmptyFilterRectorTest extends AbstractRectorTestCase
 {
     #[DataProvider('provideData')]
     public function test(string $filePath): void

@@ -9,7 +9,7 @@ function getByIdTest()
 {
     $id = 1;
     $obj2 = DataObject::get_by_id(SiteTree::class, 123);
-    $obj3 = DataObject::get_by_id('SilverStripe\CMS\Model\SiteTree', $id);
+    $obj3 = DataObject::get_by_id(SiteTree::class, $id);
     $obj4 = DataObject::get_by_id('MyPage', $id);
 }
 ?>
