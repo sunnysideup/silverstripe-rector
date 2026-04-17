@@ -31,4 +31,11 @@ return RectorConfig::configure()
             'n' => 'use $this->getOwner()->getRequest() instead.', // complex context change note
             'u' => false
         ],
+        // Edge case tests
+        [
+            'c' => 'SilverStripe\Security\PasswordValidator',
+            'm' => 'validate',
+            'n' => 'use checkPassword instead.',
+            'u' => false
+        ],
     ]);
