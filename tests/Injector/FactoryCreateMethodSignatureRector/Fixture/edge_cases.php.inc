@@ -52,7 +52,8 @@ namespace App\Factories {
     }
 
     // Edge case 2: No create method at all - should skip
-    class NoMethodFactory implements Factory {}
+    class NoMethodFactory implements Factory {
+    }
 
     // Edge case 3: Has create but wrong parameter name
     class WrongParamFactory implements Factory {

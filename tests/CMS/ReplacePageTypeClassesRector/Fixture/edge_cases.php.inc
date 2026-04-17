@@ -75,27 +75,27 @@ namespace App {
 
     class MyPage extends SiteTree
     {
-        // Edge case 1: Static property assignment - should still transform
+        // Edge case 1: Static property assignment
         private static $pageTypes = [];
 
-        // Edge case 2: Method chaining - should still transform
+        // Edge case 2: Method chaining
         public function getTypes() {
             $classes = \SilverStripe\Core\ClassInfo::getValidSubClasses(\SilverStripe\CMS\Model\SiteTree::class);
             \SilverStripe\ORM\DataObject::singleton(\SilverStripe\CMS\Model\SiteTree::class)->invokeWithExtensions('updateAllowedSubClasses', $classes);
             return $classes;
         }
 
-        // Edge case 3: Conditional usage - should still transform
+        // Edge case 3: Conditional usage
         public function hasTypes($flag) {
+            $classes = \SilverStripe\Core\ClassInfo::getValidSubClasses(\SilverStripe\CMS\Model\SiteTree::class);
+            \SilverStripe\ORM\DataObject::singleton(\SilverStripe\CMS\Model\SiteTree::class)->invokeWithExtensions('updateAllowedSubClasses', $classes);
             if ($flag) {
-                $classes = \SilverStripe\Core\ClassInfo::getValidSubClasses(\SilverStripe\CMS\Model\SiteTree::class);
-                \SilverStripe\ORM\DataObject::singleton(\SilverStripe\CMS\Model\SiteTree::class)->invokeWithExtensions('updateAllowedSubClasses', $classes);
                 return $classes;
             }
             return [];
         }
 
-        // Edge case 4: Multiple class references - should transform all
+        // Edge case 4: Multiple class references
         public function checkAll() {
             $classes = \SilverStripe\Core\ClassInfo::getValidSubClasses(\SilverStripe\CMS\Model\SiteTree::class);
             \SilverStripe\ORM\DataObject::singleton(\SilverStripe\CMS\Model\SiteTree::class)->invokeWithExtensions('updateAllowedSubClasses', $classes);

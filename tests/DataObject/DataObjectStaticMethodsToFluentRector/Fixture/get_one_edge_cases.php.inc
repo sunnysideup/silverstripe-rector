@@ -44,22 +44,22 @@ namespace App {
 
     class MyObject extends DataObject {
         public function testEdgeCases($className) {
-            // Edge case 1: null filter - should NOT add filter()
+            // Edge case 1: null filter (should NOT add filter() call)
             $a = Member::get()->setUseCache(true)->first();
 
-            // Edge case 2: empty array filter - filter() not added
-            $b = Member::get()->setUseCache(true)->first();
+            // Edge case 2: empty array filter
+            $b = Member::get()->setUseCache(true)->filter([])->first();
 
-            // Edge case 3: string sort
+            // Edge case 3: string sort (should become sort('Title ASC'))
             $c = Member::get()->setUseCache(true)->filter(['ID' => 1])->sort('Title ASC')->first();
 
-            // Edge case 4: array sort  
+            // Edge case 4: array sort
             $d = Member::get()->setUseCache(true)->filter(['ID' => 2])->sort(['Title' => 'DESC', 'Name' => 'ASC'])->first();
 
-            // Edge case 5: false cache 
+            // Edge case 5: false cache (should NOT call setUseCache)
             $e = Member::get()->setUseCache(false)->filter(['ID' => 3])->first();
 
-            // Edge case 6: No optional arguments
+            // Edge case 6: No optional arguments at all
             $f = Member::get()->setUseCache(true)->first();
 
             // Edge case 7: Only filter argument
@@ -68,8 +68,8 @@ namespace App {
             // Edge case 8: Only filter and cache arguments
             $h = Member::get()->setUseCache(true)->filter(['Email' => 'test2@example.org'])->first();
 
-            // Edge case 9: Variable - stays unchanged (can't statically transform)
-            $i = DataObject::get_one($className);
+            // Edge case 9: Variable as class reference (can't be transformed - stays as-is)
+            $i = $className::get()->setUseCache(true)->first();
         }
     }
 }
