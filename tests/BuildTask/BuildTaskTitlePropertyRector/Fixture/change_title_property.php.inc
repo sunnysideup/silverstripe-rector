@@ -59,5 +59,5 @@ namespace App\Tasks {
     {
         // Testing missing type but correct visibility
         protected string $title = 'Another Task';
-    }    
+    }
 }
