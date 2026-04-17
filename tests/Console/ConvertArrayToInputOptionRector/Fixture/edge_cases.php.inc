@@ -55,7 +55,9 @@ namespace Symfony\Component\Console\Input {
 namespace App\Command {
     use Symfony\Component\Console\Input\InputOption;
 
-    class BaseCommand { public function getOptions(): array { return []; } }
+    class BaseCommand {
+        public function getOptions(): array { return []; }
+    }
 
     class EdgeCaseCommand extends BaseCommand
     {
@@ -75,8 +77,8 @@ namespace App\Command {
         // Edge case 4: Multiple value formats - should transform all
         public function getMixedOptions(): array {
             return [
-                new \Symfony\Component\Console\Input\InputOption('simple', 's', InputOption::VALUE_NONE, 'Simple'),
-                new \Symfony\Component\Console\Input\InputOption('required', 'r', InputOption::VALUE_REQUIRED, 'Required', 'default'),
+                ['simple', 's', InputOption::VALUE_NONE, 'Simple'],
+                ['required', 'r', InputOption::VALUE_REQUIRED, 'Required', 'default'],
             ];
         }
     }

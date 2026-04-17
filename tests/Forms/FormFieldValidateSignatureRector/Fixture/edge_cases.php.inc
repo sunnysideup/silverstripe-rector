@@ -53,8 +53,8 @@ namespace App\Forms {
 
     class MyField extends FormField
     {
-        // Edge case 1: Uses $valid variable - should still use $valid after transform
-        public function validate()
+        // Edge case 1: Using $valid as variable name (should work correctly with rector)
+        public function validate(): \SilverStripe\ORM\ValidationResult
         {
             $valid = parent::validate();
             if (!$valid) {
@@ -66,8 +66,8 @@ namespace App\Forms {
 
     class MyField2 extends FormField
     {
-        // Edge case 2: Multiple calls to validationError - all transformed to $valid
-        public function validate()
+        // Edge case 2: Multiple calls to validationError
+        public function validate(): \SilverStripe\ORM\ValidationResult
         {
             $valid = parent::validate();
             $valid->addError('Error 1', 'required');
@@ -78,8 +78,8 @@ namespace App\Forms {
 
     class MyField3 extends FormField
     {
-        // Edge case 3: No calls - just change signature
-        public function validate()
+        // Edge case 3: No calls to validationError - just change signature
+        public function validate(): \SilverStripe\ORM\ValidationResult
         {
             return parent::validate();
         }

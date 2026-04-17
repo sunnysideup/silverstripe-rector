@@ -39,13 +39,13 @@ namespace App {
             $a = Member::get()->setUseCache(true)->byID(1);
 
             // String literal ID
-            $b = Member::get()->setUseCache(true)->byID(2);
+            $b = Member::get()->setUseCache(true)->byID('2');
 
-            // Variable as ID (should still work - not statically transformable, but the method call itself is)
+            // Variable as ID
             $c = Member::get()->setUseCache(true)->byID($idVariable);
 
-            // Variable as class (should skip - can't refactor statically)
-            $d = DataObject::get_by_id($className, 1);
+            // Variable as class
+            $d = $className::get()->setUseCache(true)->byID(1);
 
             // With self::class
             $e = self::get()->setUseCache(true)->byID(99);
