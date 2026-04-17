@@ -17,7 +17,8 @@ final class RenameCurrentPageIdToCurrentRecordIdRector extends AbstractRector
     public function getRuleDefinition(): RuleDefinition
     {
         return new RuleDefinition(
-            'Rename CMSPageEditController::currentPageID() to currentRecordID()',
+            'Rename CMSPageEditController::currentPageID() to currentRecordID(), 
+            See https://docs.silverstripe.org/en/6/changelogs/6.0.0/#silverstripeadmin',
             [
                 new CodeSample(
                     '$controller->currentPageID();',

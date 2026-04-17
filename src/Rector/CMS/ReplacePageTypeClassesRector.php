@@ -24,7 +24,8 @@ final class ReplacePageTypeClassesRector extends AbstractRector
     public function getRuleDefinition(): RuleDefinition
     {
         return new RuleDefinition(
-            'Replaces deprecated SiteTree::page_type_classes() with ClassInfo and invokeWithExtensions setup within the local method scope.',
+            'Replaces deprecated SiteTree::page_type_classes() with ClassInfo and invokeWithExtensions setup within the local method scope.
+            See https://docs.silverstripe.org/en/6/changelogs/6.0.0/#silverstripecms',
             [
                 new CodeSample(
                     <<<'CODE_SAMPLE'
