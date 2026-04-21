@@ -6,12 +6,13 @@ use Netwerkstatt\SilverstripeRector\Rector\BuildTask\BuildTaskTitlePropertyRecto
 use Netwerkstatt\SilverstripeRector\Rector\BuildTask\BuildTaskToExecuteRector;
 use Netwerkstatt\SilverstripeRector\Rector\CMS\RenameCurrentPageIdToCurrentRecordIdRector;
 use Netwerkstatt\SilverstripeRector\Rector\CMS\ReplacePageTypeClassesRector;
-use Netwerkstatt\SilverstripeRector\Rector\DataObject\DataObjectDebugReturnTypeRector;
 use Netwerkstatt\SilverstripeRector\Rector\Console\ConvertArrayToInputOptionRector;
 use Netwerkstatt\SilverstripeRector\Rector\Control\AddParentConstructToControllerRector;
 use Netwerkstatt\SilverstripeRector\Rector\Control\ReplaceHasCurrWithCurrRector;
+use Netwerkstatt\SilverstripeRector\Rector\DataObject\DataObjectDebugReturnTypeRector;
 use Netwerkstatt\SilverstripeRector\Rector\DataObject\DataObjectGetByIdToByIDRector;
 use Netwerkstatt\SilverstripeRector\Rector\Forms\FormFieldValueToGetValueRector;
+use Netwerkstatt\SilverstripeRector\Rector\Forms\FormFieldCompositeDatabaseFieldsReturnTypeRector;
 use Netwerkstatt\SilverstripeRector\Rector\Injector\FactoryCreateMethodSignatureRector;
 use Netwerkstatt\SilverstripeRector\Rector\Misc\ModelDataExistsReturnTypeRector;
 use Netwerkstatt\SilverstripeRector\Rector\ORM\AddStringReturnTypeToForTemplateRector;
@@ -213,6 +214,8 @@ return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->rule(BuildTaskToExecuteRector::class);
     $rectorConfig->rule(DataObjectGetToClassGetRector::class);
     $rectorConfig->rule(DataObjectDebugReturnTypeRector::class);
+    $rectorConfig->rule(FormFieldCompositeDatabaseFieldsReturnTypeRector::class);
+    $rectorConfig->rule(FormFieldValueToGetValueRector::class);
     $rectorConfig->rule(RenameCurrentPageIdToCurrentRecordIdRector::class);
     $rectorConfig->rule(ReplacePageTypeClassesRector::class);
     $rectorConfig->rule(ConvertArrayToInputOptionRector::class);
