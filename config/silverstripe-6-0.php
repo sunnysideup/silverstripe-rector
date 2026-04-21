@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Netwerkstatt\SilverstripeRector\Rector\BuildTask\BuildTaskTitlePropertyRector;
+use Netwerkstatt\SilverstripeRector\Rector\BuildTask\BuildTaskToExecuteRector;
 use Netwerkstatt\SilverstripeRector\Rector\CMS\RenameCurrentPageIdToCurrentRecordIdRector;
 use Netwerkstatt\SilverstripeRector\Rector\CMS\ReplacePageTypeClassesRector;
 use Netwerkstatt\SilverstripeRector\Rector\Console\ConvertArrayToInputOptionRector;
@@ -208,6 +209,7 @@ return static function (RectorConfig $rectorConfig): void {
         ),
     ]);
     $rectorConfig->rule(BuildTaskTitlePropertyRector::class);
+    $rectorConfig->rule(BuildTaskToExecuteRector::class);
     $rectorConfig->rule(DataObjectGetToClassGetRector::class);
     $rectorConfig->rule(RenameCurrentPageIdToCurrentRecordIdRector::class);
     $rectorConfig->rule(ReplacePageTypeClassesRector::class);
