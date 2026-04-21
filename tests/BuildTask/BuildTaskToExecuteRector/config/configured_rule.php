@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Netwerkstatt\SilverstripeRector\Rector\BuildTasks\BuildTaskToExecuteRector;
+use Netwerkstatt\SilverstripeRector\Rector\BuildTask\BuildTaskToExecuteRector;
 use Rector\Config\RectorConfig;
 
 return RectorConfig::configure()
