@@ -1,6 +1,22 @@
 <?php
 
 declare(strict_types=1);
+
+use Netwerkstatt\SilverstripeRector\Rector\BuildTask\BuildTaskTitlePropertyRector;
+use Netwerkstatt\SilverstripeRector\Rector\BuildTask\BuildTaskToExecuteRector;
+use Netwerkstatt\SilverstripeRector\Rector\CMS\RenameCurrentPageIdToCurrentRecordIdRector;
+use Netwerkstatt\SilverstripeRector\Rector\CMS\ReplacePageTypeClassesRector;
+use Netwerkstatt\SilverstripeRector\Rector\Console\ConvertArrayToInputOptionRector;
+use Netwerkstatt\SilverstripeRector\Rector\Control\AddParentConstructToControllerRector;
+use Netwerkstatt\SilverstripeRector\Rector\Control\ReplaceHasCurrWithCurrRector;
+use Netwerkstatt\SilverstripeRector\Rector\DataObject\DataObjectGetByIdToByIDRector;
+use Netwerkstatt\SilverstripeRector\Rector\Forms\FormFieldValueToGetValueRector;
+use Netwerkstatt\SilverstripeRector\Rector\Injector\FactoryCreateMethodSignatureRector;
+use Netwerkstatt\SilverstripeRector\Rector\Misc\ModelDataExistsReturnTypeRector;
+use Netwerkstatt\SilverstripeRector\Rector\ORM\AddStringReturnTypeToForTemplateRector;
+use Netwerkstatt\SilverstripeRector\Rector\ORM\AddUnionReturnTypeToPrepValueForDBRector;
+use Netwerkstatt\SilverstripeRector\Rector\ORM\AddVoidReturnTypeToSaveIntoRector;
+
 use Netwerkstatt\SilverstripeRector\Rector\ORM\DBFieldScaffoldFormFieldSignatureRector;
 use Netwerkstatt\SilverstripeRector\Rector\Control\ReplaceHasCurrWithCurrRector;
 use Netwerkstatt\SilverstripeRector\Rector\DataObject\DataObjectGetByIdToByIDRector;
@@ -272,5 +288,10 @@ return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->rule(AddStringReturnTypeToForTemplateRector::class);
     $rectorConfig->rule(AddUnionReturnTypeToPrepValueForDBRector::class);
     $rectorConfig->rule(AddVoidReturnTypeToSaveIntoRector::class);
-
+    $rectorConfig->rule(ModelDataExistsReturnTypeRector::class);
+    $rectorConfig->rule(DBFieldAddToQuerySignatureRector::class);
+    $rectorConfig->rule(DBFieldSetValueSignatureRector::class);
+    $rectorConfig->rule(DBFieldScaffoldFormFieldSignatureRector::class);
+    $rectorConfig->rule(BuildTaskToExecuteRector::class);
+  
 };
