@@ -22,16 +22,22 @@ namespace App\Tasks {
 
     class ExistingReturnTask extends BuildTask {
         public function run($request) {
-            return 0;
+            return 1;
         }
     }
 
     class LogicTask extends BuildTask {
         public function run($request) {
-            if (true) {
-                return 1;
+            if (mt_rand(0, 1)) {
+                return 2;
             }
             return 0;
+        }
+    }
+
+    class SubclassedTask extends StandardTask {
+        public function run($request) {
+            parent::run($request);
         }
     }
 
@@ -69,15 +75,22 @@ namespace App\Tasks {
 
     class ExistingReturnTask extends BuildTask {
         protected function execute(\Symfony\Component\Console\Input\InputInterface $input, \SilverStripe\Console\PolyOutput $output): int {
-            return 0;
+            return 1;
         }
     }
 
     class LogicTask extends BuildTask {
         protected function execute(\Symfony\Component\Console\Input\InputInterface $input, \SilverStripe\Console\PolyOutput $output): int {
-            if (true) {
-                return 1;
+            if (mt_rand(0, 1)) {
+                return 2;
             }
+            return 0;
+        }
+    }
+
+    class SubclassedTask extends StandardTask {
+        protected function execute(\Symfony\Component\Console\Input\InputInterface $input, \SilverStripe\Console\PolyOutput $output): int {
+            parent::run($request);
             return 0;
         }
     }
