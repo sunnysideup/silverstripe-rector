@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Netwerkstatt\SilverstripeRector\Tests\BuildTasks\BuildTaskToExecuteRector;
+namespace Netwerkstatt\SilverstripeRector\Tests\BuildTask\BuildTaskToExecuteRector;
 
 use Rector\Testing\PHPUnit\AbstractRectorTestCase;
 use PHPUnit\Framework\Attributes\DataProvider;

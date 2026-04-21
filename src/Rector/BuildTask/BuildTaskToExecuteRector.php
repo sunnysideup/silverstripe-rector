@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Netwerkstatt\SilverstripeRector\Rector\BuildTasks;
+namespace Netwerkstatt\SilverstripeRector\Rector\BuildTask;
 
 use PhpParser\Node;
 use PhpParser\Node\Stmt\Class_;
@@ -15,7 +15,7 @@ use Symplify\RuleDocGenerator\ValueObject\CodeSample\CodeSample;
 use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 
 /**
- * @see \Netwerkstatt\SilverstripeRector\Tests\BuildTasks\BuildTaskToExecuteRector\BuildTaskToExecuteRectorTest
+ * @see \Netwerkstatt\SilverstripeRector\Tests\BuildTask\BuildTaskToExecuteRector\BuildTaskToExecuteRectorTest
  */
 final class BuildTaskToExecuteRector extends AbstractRector
 {
