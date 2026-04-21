@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Netwerkstatt\SilverstripeRector\Rector\Dev;
+namespace Netwerkstatt\SilverstripeRector\Rector\BuildTasks;
 
 use PhpParser\Node;
 use PhpParser\Node\Stmt\Class_;
@@ -11,20 +11,16 @@ use PhpParser\Node\Stmt\Return_;
 use PhpParser\Node\Scalar\Int_;
 use PhpParser\Modifiers;
 use PHPStan\Type\ObjectType;
+use Rector\NodeTypeResolver\Node\AttributeKey;
 use Rector\Rector\AbstractRector;
-use Rector\PhpParser\Node\BetterNodeFinder;
 use Symplify\RuleDocGenerator\ValueObject\CodeSample\CodeSample;
 use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 
 /**
- * @see \Netwerkstatt\SilverstripeRector\Tests\Dev\BuildTaskToExecuteRector\BuildTaskToExecuteRectorTest
+ * @see \Netwerkstatt\SilverstripeRector\Tests\BuildTasks\BuildTaskToExecuteRector\BuildTaskToExecuteRectorTest
  */
 final class BuildTaskToExecuteRector extends AbstractRector
 {
-    public function __construct(
-        private readonly BetterNodeFinder $betterNodeFinder
-    ) {}
-
     public function getRuleDefinition(): RuleDefinition
     {
         return new RuleDefinition('Changes BuildTask run() to protected execute() with proper CLI types', [
@@ -66,8 +62,18 @@ CODE_SAMPLE
             return null;
         }
 
+        // Use attributes to find the parent class in Rector 2.x
         $class = $this->betterNodeFinder->findParentType($node, Class_::class);
-        if (!$class || !$this->isObjectType($class, new ObjectType('SilverStripe\Dev\BuildTask'))) {
+        // If findParentType is completely missing in your specific build, 
+        // we use the attribute directly:
+        if (!$class) {
+            $class = $node->getAttribute(AttributeKey::PARENT_NODE);
+            while ($class instanceof Node && !$class instanceof Class_) {
+                $class = $class->getAttribute(AttributeKey::PARENT_NODE);
+            }
+        }
+
+        if (!$class instanceof Class_ || !$this->isObjectType($class, new ObjectType('SilverStripe\Dev\BuildTask'))) {
             return null;
         }
 
@@ -75,7 +81,7 @@ CODE_SAMPLE
         $node->name = new Node\Identifier('execute');
         $node->flags = Modifiers::PROTECTED;
 
-        // 2. Set Parameters (InputInterface $input, PolyOutput $output)
+        // 2. Set Parameters
         $node->params = [
             new Node\Param(new Node\Variable('input'), null, new Node\Name\FullyQualified('Symfony\Component\Console\Input\InputInterface')),
             new Node\Param(new Node\Variable('output'), null, new Node\Name\FullyQualified('SilverStripe\Console\PolyOutput')),
@@ -84,8 +90,10 @@ CODE_SAMPLE
         // 3. Set Return Type
         $node->returnType = new Node\Identifier('int');
 
-        // 4. Ensure return statement in body to satisfy 'int' return type
-        if ($node->stmts !== null) {
+        // 4. Handle body and return type
+        if ($node->stmts === null) {
+            $node->stmts = [new Return_(new Int_(0))];
+        } else {
             $hasReturn = false;
             foreach ($node->stmts as $stmt) {
                 if ($stmt instanceof Return_) {

@@ -20,7 +20,7 @@ namespace App\Tasks {
         }
     }
 
-    class ExistingReturnTask extends BuildTask {
+    class ReturnOneTask extends BuildTask {
         public function run($request) {
             return 1;
         }
@@ -28,22 +28,20 @@ namespace App\Tasks {
 
     class LogicTask extends BuildTask {
         public function run($request) {
-            if (mt_rand(0, 1)) {
+            if (isset($request)) {
                 return 2;
             }
             return 0;
         }
     }
 
-    class SubclassedTask extends StandardTask {
-        public function run($request) {
-            parent::run($request);
-        }
+    class EmptyTask extends BuildTask {
+        public function run($request) {}
     }
 
     class NonTask {
         public function run($request) {
-            // Should not change
+            return 'not changed';
         }
     }
 }
@@ -73,7 +71,7 @@ namespace App\Tasks {
         }
     }
 
-    class ExistingReturnTask extends BuildTask {
+    class ReturnOneTask extends BuildTask {
         protected function execute(\Symfony\Component\Console\Input\InputInterface $input, \SilverStripe\Console\PolyOutput $output): int {
             return 1;
         }
@@ -81,23 +79,22 @@ namespace App\Tasks {
 
     class LogicTask extends BuildTask {
         protected function execute(\Symfony\Component\Console\Input\InputInterface $input, \SilverStripe\Console\PolyOutput $output): int {
-            if (mt_rand(0, 1)) {
+            if (isset($request)) {
                 return 2;
             }
             return 0;
         }
     }
 
-    class SubclassedTask extends StandardTask {
+    class EmptyTask extends BuildTask {
         protected function execute(\Symfony\Component\Console\Input\InputInterface $input, \SilverStripe\Console\PolyOutput $output): int {
-            parent::run($request);
             return 0;
         }
     }
 
     class NonTask {
         public function run($request) {
-            // Should not change
+            return 'not changed';
         }
     }
 }
