@@ -74,8 +74,8 @@ CODE_SAMPLE
 
             // 2. Set Parameters
             $method->params = [
-                new Node\Param(new Node\Variable('input'), null, new Node\Name\FullyQualified('Symfony\Component\Console\Input\InputInterface')),
-                new Node\Param(new Node\Variable('output'), null, new Node\Name\FullyQualified('SilverStripe\Console\PolyOutput')),
+                new Node\Param(new Node\Expr\Variable('input'), null, new Node\Name\FullyQualified('Symfony\Component\Console\Input\InputInterface')),
+                new Node\Param(new Node\Expr\Variable('output'), null, new Node\Name\FullyQualified('SilverStripe\Console\PolyOutput')),
             ];
 
             // 3. Set Return Type
