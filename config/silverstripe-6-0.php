@@ -1,6 +1,8 @@
 <?php
 
 declare(strict_types=1);
+use Netwerkstatt\SilverstripeRector\Rector\DataObject\DataObjectDebugReturnTypeRector;
+use Netwerkstatt\SilverstripeRector\Rector\Forms\FormFieldCompositeDatabaseFieldsReturnTypeRector;
 
 use Netwerkstatt\SilverstripeRector\Rector\BuildTask\BuildTaskTitlePropertyRector;
 use Netwerkstatt\SilverstripeRector\Rector\BuildTask\BuildTaskToExecuteRector;
@@ -298,6 +300,14 @@ return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->rule(DBFieldSetValueSignatureRector::class);
     $rectorConfig->rule(DBFieldScaffoldFormFieldSignatureRector::class);
     $rectorConfig->rule(ModelDataExistsReturnTypeRector::class);
- 
+     $rectorConfig->rule(ModelDataExistsReturnTypeRector::class);
+    $rectorConfig->rule(DBFieldAddToQuerySignatureRector::class);
+    $rectorConfig->rule(DBFieldSetValueSignatureRector::class);
+    $rectorConfig->rule(DBFieldScaffoldFormFieldSignatureRector::class);
+    $rectorConfig->rule(DataObjectDebugReturnTypeRector::class);
+    $rectorConfig->rule(FormFieldCompositeDatabaseFieldsReturnTypeRector::class);
+    $rectorConfig->rule(FormFieldValueToGetValueRector::class);
+
+     $rectorConfig->rule(BuildTaskToExecuteRector::class);
  
 };
