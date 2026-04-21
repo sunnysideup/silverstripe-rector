@@ -1,5 +1,9 @@
 <?php
 
+namespace SilverStripe\Forms {
+    class FormField {}
+}
+
 namespace App\Forms {
     class StandardField extends \SilverStripe\Forms\FormField {
         public function compositeDatabaseFields() {
@@ -45,6 +49,10 @@ namespace App\Forms {
 }
 -----
 <?php
+
+namespace SilverStripe\Forms {
+    class FormField {}
+}
 
 namespace App\Forms {
     class StandardField extends \SilverStripe\Forms\FormField {
