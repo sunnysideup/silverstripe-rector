@@ -6,12 +6,10 @@ namespace Netwerkstatt\SilverstripeRector\Rector\BuildTasks;
 
 use PhpParser\Node;
 use PhpParser\Node\Stmt\Class_;
-use PhpParser\Node\Stmt\ClassMethod;
 use PhpParser\Node\Stmt\Return_;
 use PhpParser\Node\Scalar\Int_;
 use PhpParser\Modifiers;
 use PHPStan\Type\ObjectType;
-use Rector\NodeTypeResolver\Node\AttributeKey;
 use Rector\Rector\AbstractRector;
 use Symplify\RuleDocGenerator\ValueObject\CodeSample\CodeSample;
 use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
@@ -50,63 +48,59 @@ CODE_SAMPLE
      */
     public function getNodeTypes(): array
     {
-        return [ClassMethod::class];
+        // Target the Class itself, not the method, to avoid upwards traversal
+        return [Class_::class];
     }
 
     /**
-     * @param ClassMethod $node
+     * @param Class_ $node
      */
     public function refactor(Node $node): ?Node
     {
-        if (! $this->isName($node->name, 'run')) {
+        if (!$this->isObjectType($node, new ObjectType('SilverStripe\Dev\BuildTask'))) {
             return null;
         }
 
-        // Use attributes to find the parent class in Rector 2.x
-        $class = $this->betterNodeFinder->findParentType($node, Class_::class);
-        // If findParentType is completely missing in your specific build, 
-        // we use the attribute directly:
-        if (!$class) {
-            $class = $node->getAttribute(AttributeKey::PARENT_NODE);
-            while ($class instanceof Node && !$class instanceof Class_) {
-                $class = $class->getAttribute(AttributeKey::PARENT_NODE);
+        $hasChanged = false;
+
+        foreach ($node->getMethods() as $method) {
+            if (!$this->isName($method->name, 'run')) {
+                continue;
             }
-        }
 
-        if (!$class instanceof Class_ || !$this->isObjectType($class, new ObjectType('SilverStripe\Dev\BuildTask'))) {
-            return null;
-        }
+            // 1. Rename and visibility
+            $method->name = new Node\Identifier('execute');
+            $method->flags = Modifiers::PROTECTED;
 
-        // 1. Rename and visibility
-        $node->name = new Node\Identifier('execute');
-        $node->flags = Modifiers::PROTECTED;
+            // 2. Set Parameters
+            $method->params = [
+                new Node\Param(new Node\Variable('input'), null, new Node\Name\FullyQualified('Symfony\Component\Console\Input\InputInterface')),
+                new Node\Param(new Node\Variable('output'), null, new Node\Name\FullyQualified('SilverStripe\Console\PolyOutput')),
+            ];
 
-        // 2. Set Parameters
-        $node->params = [
-            new Node\Param(new Node\Variable('input'), null, new Node\Name\FullyQualified('Symfony\Component\Console\Input\InputInterface')),
-            new Node\Param(new Node\Variable('output'), null, new Node\Name\FullyQualified('SilverStripe\Console\PolyOutput')),
-        ];
+            // 3. Set Return Type
+            $method->returnType = new Node\Identifier('int');
 
-        // 3. Set Return Type
-        $node->returnType = new Node\Identifier('int');
+            // 4. Handle body and return type compliance
+            if ($method->stmts === null) {
+                $method->stmts = [new Return_(new Int_(0))];
+            } else {
+                $hasReturn = false;
+                foreach ($method->stmts as $stmt) {
+                    if ($stmt instanceof Return_) {
+                        $hasReturn = true;
+                        break;
+                    }
+                }
 
-        // 4. Handle body and return type
-        if ($node->stmts === null) {
-            $node->stmts = [new Return_(new Int_(0))];
-        } else {
-            $hasReturn = false;
-            foreach ($node->stmts as $stmt) {
-                if ($stmt instanceof Return_) {
-                    $hasReturn = true;
-                    break;
+                if (!$hasReturn) {
+                    $method->stmts[] = new Return_(new Int_(0));
                 }
             }
 
-            if (!$hasReturn) {
-                $node->stmts[] = new Return_(new Int_(0));
-            }
+            $hasChanged = true;
         }
 
-        return $node;
+        return $hasChanged ? $node : null;
     }
 }
