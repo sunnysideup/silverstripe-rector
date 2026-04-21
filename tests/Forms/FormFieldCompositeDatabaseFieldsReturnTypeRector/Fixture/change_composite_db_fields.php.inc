@@ -1,39 +1,37 @@
 <?php
 
 namespace App\Forms {
-    use SilverStripe\Forms\FormField;
-
-    class StandardField extends FormField {
+    class StandardField extends \SilverStripe\Forms\FormField {
         public function compositeDatabaseFields() {
             return ['SubField' => 'Varchar'];
         }
     }
 
-    class ProtectedField extends FormField {
+    class ProtectedField extends \SilverStripe\Forms\FormField {
         protected function compositeDatabaseFields() {
             return ['Amount' => 'Currency'];
         }
     }
 
-    class PrivateField extends FormField {
+    class PrivateField extends \SilverStripe\Forms\FormField {
         private function compositeDatabaseFields() {
             return ['Code' => 'Int'];
         }
     }
 
-    class MissingReturnField extends FormField {
+    class MissingReturnField extends \SilverStripe\Forms\FormField {
         public function compositeDatabaseFields() {
             // Did nothing here
         }
     }
 
-    class AlreadyCorrectField extends FormField {
+    class AlreadyCorrectField extends \SilverStripe\Forms\FormField {
         public function compositeDatabaseFields(): array {
             return ['Already' => 'Correct'];
         }
     }
 
-    class IncorrectTypeField extends FormField {
+    class IncorrectTypeField extends \SilverStripe\Forms\FormField {
         public function compositeDatabaseFields(): string {
             return ['Changed' => 'Type'];
         }
@@ -49,40 +47,38 @@ namespace App\Forms {
 <?php
 
 namespace App\Forms {
-    use SilverStripe\Forms\FormField;
-
-    class StandardField extends FormField {
+    class StandardField extends \SilverStripe\Forms\FormField {
         public function compositeDatabaseFields(): array {
             return ['SubField' => 'Varchar'];
         }
     }
 
-    class ProtectedField extends FormField {
+    class ProtectedField extends \SilverStripe\Forms\FormField {
         public function compositeDatabaseFields(): array {
             return ['Amount' => 'Currency'];
         }
     }
 
-    class PrivateField extends FormField {
+    class PrivateField extends \SilverStripe\Forms\FormField {
         public function compositeDatabaseFields(): array {
             return ['Code' => 'Int'];
         }
     }
 
-    class MissingReturnField extends FormField {
+    class MissingReturnField extends \SilverStripe\Forms\FormField {
         public function compositeDatabaseFields(): array {
             // Did nothing here
             return [];
         }
     }
 
-    class AlreadyCorrectField extends FormField {
+    class AlreadyCorrectField extends \SilverStripe\Forms\FormField {
         public function compositeDatabaseFields(): array {
             return ['Already' => 'Correct'];
         }
     }
 
-    class IncorrectTypeField extends FormField {
+    class IncorrectTypeField extends \SilverStripe\Forms\FormField {
         public function compositeDatabaseFields(): array {
             return ['Changed' => 'Type'];
         }
