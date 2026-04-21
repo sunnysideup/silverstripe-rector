@@ -59,8 +59,7 @@ namespace App\Tasks {
     }
 
     class NoParamsTask extends BuildTask {
-        protected function execute(\Symfony\Component\Console\Input\InputInterface $input, \SilverStripe\Console\PolyOutput $output): int
-        {
+        protected function execute(\Symfony\Component\Console\Input\InputInterface $input, \SilverStripe\Console\PolyOutput $output): int {
             echo "No Params";
             return 0;
         }
