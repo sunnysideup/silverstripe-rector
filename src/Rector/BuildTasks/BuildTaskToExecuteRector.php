@@ -33,7 +33,8 @@ CODE_SAMPLE
                 ,
                 <<<'CODE_SAMPLE'
 class MyTask extends \SilverStripe\Dev\BuildTask {
-    protected function execute(\Symfony\Component\Console\Input\InputInterface $input, \SilverStripe\Console\PolyOutput $output): int {
+    protected function execute(\Symfony\Component\Console\Input\InputInterface $input, \SilverStripe\Console\PolyOutput $output): int
+    {
         echo "done";
         return 0;
     }

@@ -51,34 +51,39 @@ namespace App\Tasks {
 namespace App\Tasks {
     use SilverStripe\Dev\BuildTask;
     class StandardTask extends BuildTask {
-        protected function execute(\Symfony\Component\Console\Input\InputInterface $input, \SilverStripe\Console\PolyOutput $output): int {
+        protected function execute(\Symfony\Component\Console\Input\InputInterface $input, \SilverStripe\Console\PolyOutput $output): int
+        {
             echo "Standard";
             return 0;
         }
     }
 
     class NoParamsTask extends BuildTask {
-        protected function execute(\Symfony\Component\Console\Input\InputInterface $input, \SilverStripe\Console\PolyOutput $output): int {
+        protected function execute(\Symfony\Component\Console\Input\InputInterface $input, \SilverStripe\Console\PolyOutput $output): int
+        {
             echo "No Params";
             return 0;
         }
     }
 
     class TypeHintedTask extends BuildTask {
-        protected function execute(\Symfony\Component\Console\Input\InputInterface $input, \SilverStripe\Console\PolyOutput $output): int {
+        protected function execute(\Symfony\Component\Console\Input\InputInterface $input, \SilverStripe\Console\PolyOutput $output): int
+        {
             echo "Type Hinted";
             return 0;
         }
     }
 
     class ReturnOneTask extends BuildTask {
-        protected function execute(\Symfony\Component\Console\Input\InputInterface $input, \SilverStripe\Console\PolyOutput $output): int {
+        protected function execute(\Symfony\Component\Console\Input\InputInterface $input, \SilverStripe\Console\PolyOutput $output): int
+        {
             return 1;
         }
     }
 
     class LogicTask extends BuildTask {
-        protected function execute(\Symfony\Component\Console\Input\InputInterface $input, \SilverStripe\Console\PolyOutput $output): int {
+        protected function execute(\Symfony\Component\Console\Input\InputInterface $input, \SilverStripe\Console\PolyOutput $output): int
+        {
             if (isset($request)) {
                 return 2;
             }
@@ -87,7 +92,8 @@ namespace App\Tasks {
     }
 
     class EmptyTask extends BuildTask {
-        protected function execute(\Symfony\Component\Console\Input\InputInterface $input, \SilverStripe\Console\PolyOutput $output): int {
+        protected function execute(\Symfony\Component\Console\Input\InputInterface $input, \SilverStripe\Console\PolyOutput $output): int
+        {
             return 0;
         }
     }
