@@ -5,12 +5,14 @@ declare(strict_types=1);
 namespace Netwerkstatt\SilverstripeRector\Rector\Dev;
 
 use PhpParser\Node;
+use PhpParser\Node\Stmt\Class_;
 use PhpParser\Node\Stmt\ClassMethod;
 use PhpParser\Node\Stmt\Return_;
 use PhpParser\Node\Scalar\Int_;
 use PhpParser\Modifiers;
 use PHPStan\Type\ObjectType;
 use Rector\Rector\AbstractRector;
+use Rector\PhpParser\Node\BetterNodeFinder;
 use Symplify\RuleDocGenerator\ValueObject\CodeSample\CodeSample;
 use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 
@@ -19,6 +21,10 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class BuildTaskToExecuteRector extends AbstractRector
 {
+    public function __construct(
+        private readonly BetterNodeFinder $betterNodeFinder
+    ) {}
+
     public function getRuleDefinition(): RuleDefinition
     {
         return new RuleDefinition('Changes BuildTask run() to protected execute() with proper CLI types', [
@@ -60,7 +66,7 @@ CODE_SAMPLE
             return null;
         }
 
-        $class = $this->betterNodeFinder->findParentType($node, \PhpParser\Node\Stmt\Class_::class);
+        $class = $this->betterNodeFinder->findParentType($node, Class_::class);
         if (!$class || !$this->isObjectType($class, new ObjectType('SilverStripe\Dev\BuildTask'))) {
             return null;
         }
@@ -69,7 +75,7 @@ CODE_SAMPLE
         $node->name = new Node\Identifier('execute');
         $node->flags = Modifiers::PROTECTED;
 
-        // 2. Set Parameters
+        // 2. Set Parameters (InputInterface $input, PolyOutput $output)
         $node->params = [
             new Node\Param(new Node\Variable('input'), null, new Node\Name\FullyQualified('Symfony\Component\Console\Input\InputInterface')),
             new Node\Param(new Node\Variable('output'), null, new Node\Name\FullyQualified('SilverStripe\Console\PolyOutput')),
@@ -78,7 +84,7 @@ CODE_SAMPLE
         // 3. Set Return Type
         $node->returnType = new Node\Identifier('int');
 
-        // 4. Ensure return statement in body
+        // 4. Ensure return statement in body to satisfy 'int' return type
         if ($node->stmts !== null) {
             $hasReturn = false;
             foreach ($node->stmts as $stmt) {
