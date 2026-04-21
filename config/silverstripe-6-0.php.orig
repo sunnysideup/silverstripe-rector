@@ -1,17 +1,24 @@
 <?php
 
 declare(strict_types=1);
-<<<<<<< HEAD
-use Netwerkstatt\SilverstripeRector\Rector\ORM\DBFieldScaffoldFormFieldSignatureRector;
-=======
 
 use Netwerkstatt\SilverstripeRector\Rector\BuildTask\BuildTaskTitlePropertyRector;
 use Netwerkstatt\SilverstripeRector\Rector\BuildTask\BuildTaskToExecuteRector;
 use Netwerkstatt\SilverstripeRector\Rector\CMS\RenameCurrentPageIdToCurrentRecordIdRector;
 use Netwerkstatt\SilverstripeRector\Rector\CMS\ReplacePageTypeClassesRector;
+use Netwerkstatt\SilverstripeRector\Rector\DataObject\DataObjectDebugReturnTypeRector;
 use Netwerkstatt\SilverstripeRector\Rector\Console\ConvertArrayToInputOptionRector;
 use Netwerkstatt\SilverstripeRector\Rector\Control\AddParentConstructToControllerRector;
->>>>>>> a989472 (ENH: add rector rule DataObjectDebugReturnTypeRector)
+use Netwerkstatt\SilverstripeRector\Rector\Control\ReplaceHasCurrWithCurrRector;
+use Netwerkstatt\SilverstripeRector\Rector\DataObject\DataObjectGetByIdToByIDRector;
+use Netwerkstatt\SilverstripeRector\Rector\Forms\FormFieldValueToGetValueRector;
+use Netwerkstatt\SilverstripeRector\Rector\Injector\FactoryCreateMethodSignatureRector;
+use Netwerkstatt\SilverstripeRector\Rector\Misc\ModelDataExistsReturnTypeRector;
+use Netwerkstatt\SilverstripeRector\Rector\ORM\AddStringReturnTypeToForTemplateRector;
+use Netwerkstatt\SilverstripeRector\Rector\ORM\AddUnionReturnTypeToPrepValueForDBRector;
+use Netwerkstatt\SilverstripeRector\Rector\ORM\AddVoidReturnTypeToSaveIntoRector;
+
+use Netwerkstatt\SilverstripeRector\Rector\ORM\DBFieldScaffoldFormFieldSignatureRector;
 use Netwerkstatt\SilverstripeRector\Rector\Control\ReplaceHasCurrWithCurrRector;
 use Netwerkstatt\SilverstripeRector\Rector\DataObject\DataObjectGetByIdToByIDRector;
 use Netwerkstatt\SilverstripeRector\Rector\ORM\DBFieldSetValueSignatureRector;
@@ -266,8 +273,8 @@ return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->rule(DBFieldSetValueSignatureRector::class);
     $rectorConfig->rule(DBFieldScaffoldFormFieldSignatureRector::class);
     $rectorConfig->rule(BuildTaskTitlePropertyRector::class);
-    $rectorConfig->rule(BuildTaskToExecuteRector::class);
     $rectorConfig->rule(DataObjectGetToClassGetRector::class);
+<<<<<<< HEAD
     $rectorConfig->rule(ModelDataExistsReturnTypeRector::class);
     $rectorConfig->rule(DBFieldAddToQuerySignatureRector::class);
     $rectorConfig->rule(DBFieldSetValueSignatureRector::class);
@@ -276,6 +283,9 @@ return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->rule(DBFieldAddToQuerySignatureRector::class);
     $rectorConfig->rule(DBFieldSetValueSignatureRector::class);
     $rectorConfig->rule(DBFieldScaffoldFormFieldSignatureRector::class);
+=======
+    $rectorConfig->rule(DataObjectDebugReturnTypeRector::class);
+>>>>>>> 79869ba (ENH: add rector rule FormFieldCompositeDatabaseFieldsReturnTypeRector)
     $rectorConfig->rule(RenameCurrentPageIdToCurrentRecordIdRector::class);
     $rectorConfig->rule(ReplacePageTypeClassesRector::class);
     $rectorConfig->rule(ConvertArrayToInputOptionRector::class);
@@ -283,5 +293,10 @@ return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->rule(AddStringReturnTypeToForTemplateRector::class);
     $rectorConfig->rule(AddUnionReturnTypeToPrepValueForDBRector::class);
     $rectorConfig->rule(AddVoidReturnTypeToSaveIntoRector::class);
-
+    $rectorConfig->rule(ModelDataExistsReturnTypeRector::class);
+    $rectorConfig->rule(DBFieldAddToQuerySignatureRector::class);
+    $rectorConfig->rule(DBFieldSetValueSignatureRector::class);
+    $rectorConfig->rule(DBFieldScaffoldFormFieldSignatureRector::class);
+    $rectorConfig->rule(BuildTaskToExecuteRector::class);
+  
 };
