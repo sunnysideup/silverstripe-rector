@@ -231,11 +231,5 @@ CODE_SAMPLE,
         return $this->matchesTypeAgainstConfiguredClass($receiverType, (string) $change['c']);
     }
 
-// private function resolveCalledMethodName(MethodCall|NullsafeMethodCall|StaticCall $call): ?string - see Trait
 
-    // private function appendTodoDocCommentSafely(Node $node, string $todoLine): bool - see Trait
-
-// private function isUnknownType(Type $type): bool - see Trait
-
-// private function matchesTypeAgainstConfiguredClass(Type $type, string $configuredClass): bool
 }
