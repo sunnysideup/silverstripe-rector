@@ -23,6 +23,9 @@ use Rector\Rector\AbstractRector;
 use Symplify\RuleDocGenerator\ValueObject\CodeSample\CodeSample;
 use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 
+/**
+ * @see \Netwerkstatt\SilverstripeRector\Tests\BuildTask\MigrateTaskRunToPolyExecutionRector\MigrateTaskRunToPolyExecutionRectorTest
+ */
 final class MigrateTaskRunToPolyExecutionRector extends AbstractRector
 {
     public function getRuleDefinition(): RuleDefinition
@@ -39,7 +42,7 @@ CODE
 $task = MyTask::create();
 $definition = new \Symfony\Component\Console\Input\InputDefinition($task->getOptions());
 $input = new \Symfony\Component\Console\Input\ArrayInput(['MyParam' => true], $definition);
-$output = \SilverStripe\PolyExecution\PolyOutput::create('ansi');
+$output = \SilverStripe\PolyExecution\PolyOutput::create(\SilverStripe\PolyExecution\PolyOutput::FORMAT_ANSI);
 $task->run($input, $output);
 CODE
             ),
@@ -159,26 +162,7 @@ CODE
 
     private function isTaskType(Node $expr): bool
     {
-        if ($this->isObjectType($expr, new ObjectType('SilverStripe\Dev\BuildTask')) ||
-            $this->isObjectType($expr, new ObjectType('App\Tasks\MyTask'))) {
-            return true;
-        }
-
-        if ($expr instanceof StaticCall && $this->isName($expr->name, 'create') && $expr->class instanceof Node\Name) {
-            $className = $this->getName($expr->class);
-            if ($className === 'MyTask' || str_ends_with($className, 'Task')) {
-                return true;
-            }
-        }
-
-        if ($expr instanceof New_ && $expr->class instanceof Node\Name) {
-            $className = $this->getName($expr->class);
-            if ($className === 'MyTask' || str_ends_with($className, 'Task')) {
-                return true;
-            }
-        }
-
-        return false;
+        return $this->isObjectType($expr, new ObjectType('SilverStripe\Dev\BuildTask'));
     }
 
     /**
