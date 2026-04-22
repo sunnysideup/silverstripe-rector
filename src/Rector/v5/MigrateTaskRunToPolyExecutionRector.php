@@ -48,7 +48,6 @@ CODE
 
     public function getNodeTypes(): array
     {
-        // Target nodes that contain an array of statements
         return [
             ClassMethod::class,
             Function_::class,
@@ -68,12 +67,10 @@ CODE
 
         $newStmts = [];
         $hasChanged = false;
-        
-        // Map: $varName => ['isTask' => bool, 'setterIndices' => [ int $newStmtsIndex => ArrayItem ]]
         $taskVars = []; 
 
         foreach ($node->stmts as $stmt) {
-            $isRunCall = false;
+            $handled = false;
 
             if ($stmt instanceof Expression) {
                 $expr = $stmt->expr;
@@ -96,7 +93,6 @@ CODE
 
                     if ($varName && $methodName) {
                         if (!isset($taskVars[$varName])) {
-                            // Initialise if injected via parameter (e.g., test 10)
                             $taskVars[$varName] = [
                                 'isTask' => $this->isTaskType($expr->var),
                                 'setterIndices' => []
@@ -108,14 +104,15 @@ CODE
                                 $key = substr($methodName, 3);
                                 $args = $expr->getArgs();
                                 if (isset($args[0])) {
-                                    $currentIndex = count($newStmts); // Where this statement will sit in $newStmts
-                                    $taskVars[$varName]['setterIndices'][$currentIndex] = new ArrayItem($args[0]->value, new String_($key));
+                                    $newStmts[] = $stmt;
+                                    // Use array_key_last to guarantee exact index mapping
+                                    $taskVars[$varName]['setterIndices'][array_key_last($newStmts)] = new ArrayItem($args[0]->value, new String_($key));
+                                    $handled = true;
                                 }
                             } elseif ($methodName === 'run') {
-                                $isRunCall = true;
                                 $params = array_values($taskVars[$varName]['setterIndices']);
                                 
-                                // Cleanse setters from our new array
+                                // Safely unset setters using tracked absolute indices
                                 foreach (array_keys($taskVars[$varName]['setterIndices']) as $idx) {
                                     unset($newStmts[$idx]);
                                 }
@@ -125,34 +122,33 @@ CODE
                                     $newStmts[] = $replNode;
                                 }
 
-                                // Reset for potential variable reuse
                                 $taskVars[$varName]['setterIndices'] = [];
+                                $handled = true;
                                 $hasChanged = true;
                             }
                         }
                     }
                 } 
-                // 3. Track Inline Method Calls: (new MyTask())->run() or MyTask::create()->run()
+                // 3. Track Inline Method Calls
                 elseif ($expr instanceof MethodCall && ($expr->var instanceof New_ || $expr->var instanceof StaticCall)) {
                     $methodName = $this->getName($expr->name);
                     if ($methodName === 'run' && $this->isTaskType($expr->var)) {
-                        $isRunCall = true;
                         $replacementNodes = $this->generatePolyExecutionNodes($expr->var, [], clone $expr);
                         foreach ($replacementNodes as $replNode) {
                             $newStmts[] = $replNode;
                         }
+                        $handled = true;
                         $hasChanged = true;
                     }
                 }
             }
 
-            if (!$isRunCall) {
+            if (!$handled) {
                 $newStmts[] = $stmt;
             }
         }
 
         if ($hasChanged) {
-            // array_values strictly re-indexes the array cleanly after unset() gaps
             $node->stmts = array_values($newStmts);
             return $node;
         }
@@ -162,13 +158,11 @@ CODE
 
     private function isTaskType(Node $expr): bool
     {
-        // 1. Trust PHPStan Types First
         if ($this->isObjectType($expr, new ObjectType('SilverStripe\Dev\BuildTask')) ||
             $this->isObjectType($expr, new ObjectType('App\Tasks\MyTask'))) {
             return true;
         }
 
-        // 2. Fallback for Static Call blindness in test fixtures (MyTask::create())
         if ($expr instanceof StaticCall && $this->isName($expr->name, 'create') && $expr->class instanceof Node\Name) {
             $className = $this->getName($expr->class);
             if ($className === 'MyTask' || str_ends_with($className, 'Task')) {
@@ -176,7 +170,6 @@ CODE
             }
         }
 
-        // 3. Fallback for explicit New_ instantiation
         if ($expr instanceof New_ && $expr->class instanceof Node\Name) {
             $className = $this->getName($expr->class);
             if ($className === 'MyTask' || str_ends_with($className, 'Task')) {
@@ -201,13 +194,11 @@ CODE
 
         $nodes = [];
 
-        // $definition = new InputDefinition($task->getOptions());
         $nodes[] = new Expression(new Assign($definitionVar, new New_(
             new Node\Name\FullyQualified('Symfony\Component\Console\Input\InputDefinition'),
             [new Node\Arg(new MethodCall($taskExpr, 'getOptions'))]
         )));
 
-        // $input = new ArrayInput([...], $definition);
         $nodes[] = new Expression(new Assign($inputVar, new New_(
             new Node\Name\FullyQualified('Symfony\Component\Console\Input\ArrayInput'),
             [
@@ -216,14 +207,12 @@ CODE
             ]
         )));
 
-        // $output = PolyOutput::create(PolyOutput::FORMAT_ANSI);
         $nodes[] = new Expression(new Assign($outputVar, new StaticCall(
             new Node\Name\FullyQualified('SilverStripe\PolyExecution\PolyOutput'),
             'create',
             [new Node\Arg(new Node\Expr\ClassConstFetch(new Node\Name\FullyQualified('SilverStripe\PolyExecution\PolyOutput'), 'FORMAT_ANSI'))]
         )));
 
-        // $task->run($input, $output);
         $originalRunCall->args = [
             new Node\Arg($inputVar),
             new Node\Arg($outputVar)
