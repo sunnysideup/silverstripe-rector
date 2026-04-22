@@ -131,7 +131,8 @@ namespace {
     use SilverStripe\Core\Injector\Injector;
 
     // 1. Standard
-    function test() {
+    function test()
+    {
         $task = new MyTask();
         $definition = new \Symfony\Component\Console\Input\InputDefinition($task->getOptions());
         $input = new \Symfony\Component\Console\Input\ArrayInput(['MyParam' => true], $definition);
@@ -140,7 +141,8 @@ namespace {
     }
 
     // 2. Multiple Params
-    function testMultipleParams() {
+    function testMultipleParams()
+    {
         $task = MyTask::create();
         $definition = new \Symfony\Component\Console\Input\InputDefinition($task->getOptions());
         $input = new \Symfony\Component\Console\Input\ArrayInput(['MyParam' => 'foo', 'Another' => 123], $definition);
@@ -149,7 +151,8 @@ namespace {
     }
 
     // 3. No Params
-    function testNoParams() {
+    function testNoParams()
+    {
         $task = new MyTask();
         $definition = new \Symfony\Component\Console\Input\InputDefinition($task->getOptions());
         $input = new \Symfony\Component\Console\Input\ArrayInput([], $definition);
@@ -158,7 +161,8 @@ namespace {
     }
 
     // 4. Different Variable
-    function testDifferentVariable() {
+    function testDifferentVariable()
+    {
         $t = new MyTask();
         $definition = new \Symfony\Component\Console\Input\InputDefinition($t->getOptions());
         $input = new \Symfony\Component\Console\Input\ArrayInput(['MyParam' => false], $definition);
@@ -167,7 +171,8 @@ namespace {
     }
 
     // 5. Mixed Scope (Echo in middle)
-    function testMixedScope() {
+    function testMixedScope()
+    {
         $task = new MyTask();
         echo "middle";
         $definition = new \Symfony\Component\Console\Input\InputDefinition($task->getOptions());
@@ -177,7 +182,8 @@ namespace {
     }
 
     // 6. Expression in Method
-    function testExpressionInMethod() {
+    function testExpressionInMethod()
+    {
         $task = MyTask::create();
         $definition = new \Symfony\Component\Console\Input\InputDefinition($task->getOptions());
         $input = new \Symfony\Component\Console\Input\ArrayInput(['MyParam' => filter_var('true', FILTER_VALIDATE_BOOLEAN)], $definition);
@@ -186,7 +192,8 @@ namespace {
     }
 
     // 7. Re-assignment (Prevents bleeding params)
-    function testReassignment() {
+    function testReassignment()
+    {
         $task = new MyTask();
         $definition = new \Symfony\Component\Console\Input\InputDefinition($task->getOptions());
         $input = new \Symfony\Component\Console\Input\ArrayInput(['MyParam' => 'first'], $definition);
@@ -201,7 +208,8 @@ namespace {
     }
 
     // 8. Ignoring unrelated methods
-    function testUnrelatedMethods() {
+    function testUnrelatedMethods()
+    {
         $task = new MyTask();
         $task->doSomethingElse();
         $definition = new \Symfony\Component\Console\Input\InputDefinition($task->getOptions());
@@ -211,7 +219,8 @@ namespace {
     }
 
     // 9. Passing variables to setters
-    function testVariableArguments() {
+    function testVariableArguments()
+    {
         $task = new MyTask();
         $myVar = 'dynamic';
         $definition = new \Symfony\Component\Console\Input\InputDefinition($task->getOptions());
@@ -221,7 +230,8 @@ namespace {
     }
 
     // 10. Task passed as method argument
-    function testTaskAsArgument(MyTask $injectedTask) {
+    function testTaskAsArgument(MyTask $injectedTask)
+    {
         $definition = new \Symfony\Component\Console\Input\InputDefinition($injectedTask->getOptions());
         $input = new \Symfony\Component\Console\Input\ArrayInput(['MyParam' => 'injected'], $definition);
         $output = \SilverStripe\PolyExecution\PolyOutput::create(\SilverStripe\PolyExecution\PolyOutput::FORMAT_ANSI);
@@ -229,7 +239,8 @@ namespace {
     }
 
     // 11. Property assignment (Should be ignored but not crash)
-    function testPropertyAssignment() {
+    function testPropertyAssignment()
+    {
         $task = new MyTask();
         $task->MyParam = true;
         $definition = new \Symfony\Component\Console\Input\InputDefinition($task->getOptions());
@@ -239,7 +250,8 @@ namespace {
     }
 
     // 12. Complex method call in setter
-    function testMethodCallArgument() {
+    function testMethodCallArgument()
+    {
         $task = new MyTask();
         $definition = new \Symfony\Component\Console\Input\InputDefinition($task->getOptions());
         $input = new \Symfony\Component\Console\Input\ArrayInput(['MyParam' => Injector::inst()->get('SomeService')->getValue()], $definition);
@@ -248,7 +260,8 @@ namespace {
     }
 
     // 13. Inline Instantiation (No variable tracking possible, but run should upgrade)
-    function testInlineInstantiation() {
+    function testInlineInstantiation()
+    {
         $definition = new \Symfony\Component\Console\Input\InputDefinition((new MyTask())->getOptions());
         $input = new \Symfony\Component\Console\Input\ArrayInput([], $definition);
         $output = \SilverStripe\PolyExecution\PolyOutput::create(\SilverStripe\PolyExecution\PolyOutput::FORMAT_ANSI);
