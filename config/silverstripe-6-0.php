@@ -2,8 +2,11 @@
 
 declare(strict_types=1);
 
+use Netwerkstatt\SilverstripeRector\Rector\BuildTask\BuildTaskSegmentToCommandNameRector;
 use Netwerkstatt\SilverstripeRector\Rector\BuildTask\BuildTaskTitlePropertyRector;
+use Netwerkstatt\SilverstripeRector\Rector\BuildTask\MigrateTaskRunToPolyExecutionRector;
 use Netwerkstatt\SilverstripeRector\Rector\BuildTask\BuildTaskToExecuteRector;
+use Netwerkstatt\SilverstripeRector\Rector\BuildTask\PolyCommandGetOptionsPublicRector;
 use Netwerkstatt\SilverstripeRector\Rector\CMS\RenameCurrentPageIdToCurrentRecordIdRector;
 use Netwerkstatt\SilverstripeRector\Rector\CMS\ReplacePageTypeClassesRector;
 use Netwerkstatt\SilverstripeRector\Rector\Console\ConvertArrayToInputOptionRector;
@@ -11,6 +14,7 @@ use Netwerkstatt\SilverstripeRector\Rector\Control\AddParentConstructToControlle
 use Netwerkstatt\SilverstripeRector\Rector\Control\ReplaceHasCurrWithCurrRector;
 use Netwerkstatt\SilverstripeRector\Rector\DataObject\DataObjectDebugReturnTypeRector;
 use Netwerkstatt\SilverstripeRector\Rector\DataObject\DataObjectGetByIdToByIDRector;
+use Netwerkstatt\SilverstripeRector\Rector\Forms\FormFieldValidateSignatureRector;
 use Netwerkstatt\SilverstripeRector\Rector\Forms\FormFieldValueToGetValueRector;
 use Netwerkstatt\SilverstripeRector\Rector\Forms\FormFieldCompositeDatabaseFieldsReturnTypeRector;
 use Netwerkstatt\SilverstripeRector\Rector\Injector\FactoryCreateMethodSignatureRector;
@@ -210,12 +214,16 @@ return static function (RectorConfig $rectorConfig): void {
             'SCHEMA_HEADER'
         ),
     ]);
+    $rectorConfig->rule(BuildTaskSegmentToCommandNameRector::class);
     $rectorConfig->rule(BuildTaskTitlePropertyRector::class);
+    $rectorConfig->rule(MigrateTaskRunToPolyExecutionRector::class);
     $rectorConfig->rule(BuildTaskToExecuteRector::class);
+    $rectorConfig->rule(PolyCommandGetOptionsPublicRector::class);
     $rectorConfig->rule(DataObjectGetToClassGetRector::class);
     $rectorConfig->rule(DataObjectDebugReturnTypeRector::class);
-    $rectorConfig->rule(FormFieldCompositeDatabaseFieldsReturnTypeRector::class);
+    $rectorConfig->rule(FormFieldValidateSignatureRector::class);
     $rectorConfig->rule(FormFieldValueToGetValueRector::class);
+    $rectorConfig->rule(FormFieldCompositeDatabaseFieldsReturnTypeRector::class);
     $rectorConfig->rule(RenameCurrentPageIdToCurrentRecordIdRector::class);
     $rectorConfig->rule(ReplacePageTypeClassesRector::class);
     $rectorConfig->rule(ConvertArrayToInputOptionRector::class);

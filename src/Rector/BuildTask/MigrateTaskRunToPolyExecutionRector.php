@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Netwerkstatt\SilverstripeRector\Rector\v5;
+namespace Netwerkstatt\SilverstripeRector\Rector\BuildTask;
 
 use PhpParser\Node;
 use PhpParser\Node\Expr\Assign;
