@@ -12,419 +12,610 @@ class ChangedParameterTypeChanges implements ChangeListInterface
 {
     use MethodChangeHelper;
 
-    private const LIST = [
-        ['c' => 'AdminRootController', 'm' => 'add_rule_for_controller', 'n' => 'Changed type of parameter $controllerClass in AdminRootController::add_rule_for_controller() from dynamic to string'],
-        ['c' => 'LeftAndMain', 'm' => 'jsonError', 'n' => 'Changed type of parameter $errorCode in LeftAndMain::jsonError() from dynamic to int'],
-        ['c' => 'LeftAndMain', 'm' => 'jsonError', 'n' => 'Changed type of parameter $errorMessage in LeftAndMain::jsonError() from dynamic to string'],
-        ['c' => 'LeftAndMain', 'm' => 'getSchemaResponse', 'n' => 'Changed type of parameter $errors in LeftAndMain::getSchemaResponse() from SilverStripe\\ORM\\ValidationResult to ValidationResult|null'],
-        ['c' => 'LeftAndMain', 'm' => 'getSchemaResponse', 'n' => 'Changed type of parameter $extraData in LeftAndMain::getSchemaResponse() from dynamic to array'],
-        ['c' => 'LeftAndMain', 'm' => 'getSchemaResponse', 'n' => 'Changed type of parameter $form in LeftAndMain::getSchemaResponse() from dynamic to Form|null'],
-        ['c' => 'LeftAndMain', 'm' => 'getSchemaResponse', 'n' => 'Changed type of parameter $schemaID in LeftAndMain::getSchemaResponse() from dynamic to string'],
-        ['c' => 'LeftAndMain', 'm' => 'getTemplatesWithSuffix', 'n' => 'Changed type of parameter $suffix in LeftAndMain::getTemplatesWithSuffix() from dynamic to string'],
+            private const LIST = [
+        // AdminRootController
+        'c' => 'AdminRootController', 'm' => 'add_rule_for_controller', 'p' => 0, 't' => 'string', 'n' => 'Changed type of parameter $controllerClass from dynamic to string', [cite: 1]
 
-        ['c' => 'AssetFormFactory', 'm' => 'getFormActions', 'n' => 'Changed type of parameter $controller in AssetFormFactory::getFormActions() from RequestHandler to RequestHandler|null'],
-        ['c' => 'AssetFormFactory', 'm' => 'getFormFields', 'n' => 'Changed type of parameter $controller in AssetFormFactory::getFormFields() from RequestHandler to RequestHandler|null'],
-        ['c' => 'AssetFormFactory', 'm' => 'getValidator', 'n' => 'Changed type of parameter $controller in AssetFormFactory::getValidator() from RequestHandler to RequestHandler|null'],
-        ['c' => 'FileSearchFormFactory', 'm' => 'getFormFields', 'n' => 'Changed type of parameter $controller in FileSearchFormFactory::getFormFields() from RequestHandler to RequestHandler|null'],
-        ['c' => 'ThumbnailGenerator', 'm' => 'generateLink', 'n' => 'Changed type of parameter $thumbnail in ThumbnailGenerator::generateLink() from AssetContainer to AssetContainer|null'],
+        // AssetFormFactory
+        // 'c' => 'AssetFormFactory', 'm' => 'getFormActions', 'p' => 0, 't' => 'RequestHandler|null', 'n' => 'Changed type of parameter $controller from RequestHandler to RequestHandler|null', [cite: 3]
+        // 'c' => 'AssetFormFactory', 'm' => 'getFormFields', 'p' => 0, 't' => 'RequestHandler|null', 'n' => 'Changed type of parameter $controller from RequestHandler to RequestHandler|null', [cite: 3]
+        // 'c' => 'AssetFormFactory', 'm' => 'getValidator', 'p' => 0, 't' => 'RequestHandler|null', 'n' => 'Changed type of parameter $controller from RequestHandler to RequestHandler|null', [cite: 3]
 
-        ['c' => 'Image_Backend', 'm' => '__construct', 'n' => 'Changed type of parameter $assetContainer in Image_Backend::__construct() from AssetContainer to AssetContainer|null'],
-        ['c' => 'InterventionBackend', 'm' => 'setAssetContainer', 'n' => 'Changed type of parameter $assetContainer in InterventionBackend::setAssetContainer() from dynamic to AssetContainer|null'],
-        ['c' => 'Image_Backend', 'm' => 'paddedResize', 'n' => 'Changed type of parameter $backgroundColor in Image_Backend::paddedResize() from dynamic to string'],
-        ['c' => 'InterventionBackend', 'm' => 'setCache', 'n' => 'Changed type of parameter $cache in InterventionBackend::setCache() from dynamic to Psr\\SimpleCache\\CacheInterface'],
-        ['c' => 'DBFile', 'm' => 'setAllowedCategories', 'n' => 'Changed type of parameter $categories in DBFile::setAllowedCategories() from dynamic to array|string'],
-        ['c' => 'Image_Backend', 'm' => 'writeToStore', 'n' => 'Changed type of parameter $config in Image_Backend::writeToStore() from dynamic to array'],
-        ['c' => 'DBFile', 'm' => 'assertFilenameValid', 'n' => 'Changed type of parameter $filename in DBFile::assertFilenameValid() from dynamic to string'],
-        ['c' => 'DBFile', 'm' => 'isValidFilename', 'n' => 'Changed type of parameter $filename in DBFile::isValidFilename() from dynamic to string'],
-        ['c' => 'DBFile', 'm' => 'validateFilename', 'n' => 'Changed type of parameter $filename in DBFile::validateFilename() from dynamic to string|null'],
-        ['c' => 'Image_Backend', 'm' => 'writeToStore', 'n' => 'Changed type of parameter $filename in Image_Backend::writeToStore() from dynamic to string'],
-        ['c' => 'DBFile', 'm' => 'getSourceURL', 'n' => 'Changed type of parameter $grant in DBFile::getSourceURL() from dynamic to bool'],
-        ['c' => 'Image_Backend', 'm' => 'writeToStore', 'n' => 'Changed type of parameter $hash in Image_Backend::writeToStore() from dynamic to string|null'],
-        ['c' => 'InterventionBackend', 'm' => 'getDimensionCacheKey', 'n' => 'Changed type of parameter $hash in InterventionBackend::getDimensionCacheKey() from dynamic to string'],
-        ['c' => 'InterventionBackend', 'm' => 'getErrorCacheKey', 'n' => 'Changed type of parameter $hash in InterventionBackend::getErrorCacheKey() from dynamic to string'],
-        ['c' => 'InterventionBackend', 'm' => 'hasFailed', 'n' => 'Changed type of parameter $hash in InterventionBackend::hasFailed() from dynamic to string'],
-        ['c' => 'InterventionBackend', 'm' => 'markFailed', 'n' => 'Changed type of parameter $hash in InterventionBackend::markFailed() from dynamic to string'],
-        ['c' => 'InterventionBackend', 'm' => 'markSuccess', 'n' => 'Changed type of parameter $hash in InterventionBackend::markSuccess() from dynamic to string'],
-        ['c' => 'InterventionBackend', 'm' => 'warmCache', 'n' => 'Changed type of parameter $hash in InterventionBackend::warmCache() from dynamic to string'],
-        ['c' => 'Image_Backend', 'm' => 'crop', 'n' => 'Changed type of parameter $height in Image_Backend::crop() from dynamic to int'],
-        ['c' => 'Image_Backend', 'm' => 'croppedResize', 'n' => 'Changed type of parameter $height in Image_Backend::croppedResize() from dynamic to int'],
-        ['c' => 'Image_Backend', 'm' => 'paddedResize', 'n' => 'Changed type of parameter $height in Image_Backend::paddedResize() from dynamic to string'],
-        ['c' => 'Image_Backend', 'm' => 'resize', 'n' => 'Changed type of parameter $height in Image_Backend::resize() from dynamic to int'],
-        ['c' => 'Image_Backend', 'm' => 'resizeByHeight', 'n' => 'Changed type of parameter $height in Image_Backend::resizeByHeight() from dynamic to int'],
-        ['c' => 'Image_Backend', 'm' => 'resizeRatio', 'n' => 'Changed type of parameter $height in Image_Backend::resizeRatio() from dynamic to int'],
-        ['c' => 'Image_Backend', 'm' => 'crop', 'n' => 'Changed type of parameter $left in Image_Backend::crop() from dynamic to int'],
-        ['c' => 'InterventionBackend', 'm' => 'setImageManager', 'n' => 'Changed type of parameter $manager in InterventionBackend::setImageManager() from dynamic to Intervention\\Image\\ImageManager'],
-        ['c' => 'LocalFilesystemAdapter', 'm' => '__construct', 'n' => 'Changed type of parameter $mimeTypeDetector in LocalFilesystemAdapter::__construct() from League\\MimeTypeDetection\\MimeTypeDetector to League\\MimeTypeDetection\\MimeTypeDetector|null'],
-        ['c' => 'DBFile', 'm' => 'setOriginal', 'n' => 'Changed type of parameter $original in DBFile::setOriginal() from dynamic to AssetContainer'],
-        ['c' => 'FileLinkTracking', 'm' => 'setFileParser', 'n' => 'Changed type of parameter $parser in FileLinkTracking::setFileParser() from FileLinkTrackingParser to FileLinkTrackingParser|null'],
-        ['c' => 'Filesystem', 'm' => '__construct', 'n' => 'Changed type of parameter $pathNormalizer in Filesystem::__construct() from League\\Flysystem\\PathNormalizer to League\\Flysystem\\PathNormalizer|null'],
-        ['c' => 'Image_Backend', 'm' => 'loadFrom', 'n' => 'Changed type of parameter $path in Image_Backend::loadFrom() from dynamic to string'],
-        ['c' => 'Image_Backend', 'm' => 'writeTo', 'n' => 'Changed type of parameter $path in Image_Backend::writeTo() from dynamic to string'],
-        ['c' => 'InterventionBackend', 'm' => 'setTempPath', 'n' => 'Changed type of parameter $path in InterventionBackend::setTempPath() from dynamic to string'],
-        ['c' => 'Image_Backend', 'm' => 'setQuality', 'n' => 'Changed type of parameter $quality in Image_Backend::setQuality() from dynamic to int'],
-        ['c' => 'InterventionBackend', 'm' => 'markFailed', 'n' => 'Changed type of parameter $reason in InterventionBackend::markFailed() from dynamic to string'],
-        ['c' => 'InterventionBackend', 'm' => 'getResourceDimensions', 'n' => 'Changed type of parameter $resource in InterventionBackend::getResourceDimensions() from Intervention\\Image\\Image to Intervention\\Image\\Interfaces\\ImageInterface'],
-        ['c' => 'InterventionBackend', 'm' => 'isStreamReadable', 'n' => 'Changed type of parameter $stream in InterventionBackend::isStreamReadable() from dynamic to mixed'],
-        ['c' => 'Image_Backend', 'm' => 'crop', 'n' => 'Changed type of parameter $top in Image_Backend::crop() from dynamic to int'],
-        ['c' => 'Image_Backend', 'm' => 'paddedResize', 'n' => 'Changed type of parameter $transparencyPercent in Image_Backend::paddedResize() from dynamic to int'],
-        ['c' => 'Image_Backend', 'm' => 'resizeRatio', 'n' => 'Changed type of parameter $useAsMinimum in Image_Backend::resizeRatio() from dynamic to bool'],
-        ['c' => 'Image_Backend', 'm' => 'writeToStore', 'n' => 'Changed type of parameter $variant in Image_Backend::writeToStore() from dynamic to string|null'],
-        ['c' => 'InterventionBackend', 'm' => 'getDimensionCacheKey', 'n' => 'Changed type of parameter $variant in InterventionBackend::getDimensionCacheKey() from dynamic to string|null'],
-        ['c' => 'InterventionBackend', 'm' => 'getErrorCacheKey', 'n' => 'Changed type of parameter $variant in InterventionBackend::getErrorCacheKey() from dynamic to string|null'],
-        ['c' => 'InterventionBackend', 'm' => 'hasFailed', 'n' => 'Changed type of parameter $variant in InterventionBackend::hasFailed() from dynamic to string|null'],
-        ['c' => 'InterventionBackend', 'm' => 'markFailed', 'n' => 'Changed type of parameter $variant in InterventionBackend::markFailed() from dynamic to string|null'],
-        ['c' => 'InterventionBackend', 'm' => 'markSuccess', 'n' => 'Changed type of parameter $variant in InterventionBackend::markSuccess() from dynamic to string|null'],
-        ['c' => 'InterventionBackend', 'm' => 'warmCache', 'n' => 'Changed type of parameter $variant in InterventionBackend::warmCache() from dynamic to string|null'],
-        ['c' => 'LocalFilesystemAdapter', 'm' => '__construct', 'n' => 'Changed type of parameter $visibility in LocalFilesystemAdapter::__construct() from League\\Flysystem\\UnixVisibility\\VisibilityConverter to League\\Flysystem\\UnixVisibility\\VisibilityConverter|null'],
-        ['c' => 'Image_Backend', 'm' => 'crop', 'n' => 'Changed type of parameter $width in Image_Backend::crop() from dynamic to int'],
-        ['c' => 'Image_Backend', 'm' => 'croppedResize', 'n' => 'Changed type of parameter $width in Image_Backend::croppedResize() from dynamic to int'],
-        ['c' => 'Image_Backend', 'm' => 'paddedResize', 'n' => 'Changed type of parameter $width in Image_Backend::paddedResize() from dynamic to string'],
-        ['c' => 'Image_Backend', 'm' => 'resize', 'n' => 'Changed type of parameter $width in Image_Backend::resize() from dynamic to int'],
-        ['c' => 'Image_Backend', 'm' => 'resizeByWidth', 'n' => 'Changed type of parameter $width in Image_Backend::resizeByWidth() from dynamic to int'],
-        ['c' => 'Image_Backend', 'm' => 'resizeRatio', 'n' => 'Changed type of parameter $width in Image_Backend::resizeRatio() from dynamic to int'],
+        // Authenticator
+        // 'c' => 'Authenticator', 'm' => 'authenticate', 'p' => 0, 't' => 'ValidationResult|null', 'n' => 'Changed type of parameter $result from SilverStripe\\ORM\\ValidationResult to ValidationResult|null', [cite: 76]
+        // 'c' => 'Authenticator', 'm' => 'checkPassword', 'p' => 0, 't' => 'ValidationResult|null', 'n' => 'Changed type of parameter $result from SilverStripe\\ORM\\ValidationResult to ValidationResult|null', [cite: 76]
 
-        ['c' => 'BlogPostFilter', 'm' => 'augmentLoadLazyFields', 'n' => 'Changed type of parameter $dataQuery in BlogPostFilter::augmentLoadLazyFields() from DataQuery to DataQuery|null'],
+        // BasicAuth
+        // 'c' => 'BasicAuth', 'm' => 'protect_site_if_necessary', 'p' => 0, 't' => 'HTTPRequest|null', 'n' => 'Changed type of parameter $request from HTTPRequest to HTTPRequest|null', [cite: 68]
 
-        ['c' => 'SiteTree', 'm' => 'getStatusFlags', 'n' => 'Changed type of parameter $cached in SiteTree::getStatusFlags() from dynamic to bool'],
-        ['c' => 'VirtualPage', 'm' => '__get', 'n' => 'Changed type of parameter $field in VirtualPage::__get() from dynamic to string'],
-        ['c' => 'VirtualPage', 'm' => 'castingHelper', 'n' => 'Changed type of parameter $field in VirtualPage::castingHelper() from dynamic to string'],
-        ['c' => 'VirtualPage', 'm' => 'getField', 'n' => 'Changed type of parameter $field in VirtualPage::getField() from dynamic to string'],
-        ['c' => 'VirtualPage', 'm' => 'hasField', 'n' => 'Changed type of parameter $field in VirtualPage::hasField() from dynamic to string'],
-        ['c' => 'SiteTree', 'm' => 'canAddChildren', 'n' => 'Changed type of parameter $member in SiteTree::canAddChildren() from dynamic to Member|null'],
-        ['c' => 'CMSMain', 'm' => 'getTreeNodeClasses', 'n' => 'Changed type of parameter $node in CMSMain::getTreeNodeClasses() from SiteTree to DataObject'],
-        ['c' => 'CMSMain', 'm' => 'getCMSEditLinkForManagedDataObject', 'n' => 'Changed type of parameter $obj in CMSMain::getCMSEditLinkForManagedDataObject() from SiteTree to DataObject'],
-        ['c' => 'SiteTreeLinkTracking', 'm' => 'setParser', 'n' => 'Changed type of parameter $parser in SiteTreeLinkTracking::setParser() from SiteTreeLinkTracking_Parser to SiteTreeLinkTracking_Parser|null'],
-        ['c' => 'CMSMain', 'm' => 'getArchiveWarningMessage', 'n' => 'Changed type of parameter $record in CMSMain::getArchiveWarningMessage() from dynamic to DataObject'],
-        ['c' => 'VirtualPage', 'm' => 'getViewerTemplates', 'n' => 'Changed type of parameter $suffix in VirtualPage::getViewerTemplates() from dynamic to string'],
+        // BlogPostFilter
+        // 'c' => 'BlogPostFilter', 'm' => 'augmentLoadLazyFields', 'p' => 0, 't' => 'DataQuery|null', 'n' => 'Changed type of parameter $dataQuery from DataQuery to DataQuery|null', [cite: 18]
 
-        ['c' => 'DBString', 'm' => 'LimitCharacters', 'n' => 'Changed type of parameter $add in DBString::LimitCharacters() from dynamic to string|false'],
-        ['c' => 'DBString', 'm' => 'LimitCharactersToClosestWord', 'n' => 'Changed type of parameter $add in DBString::LimitCharactersToClosestWord() from dynamic to string|false'],
-        ['c' => 'DBString', 'm' => 'LimitWordCount', 'n' => 'Changed type of parameter $add in DBString::LimitWordCount() from dynamic to string|false'],
-        ['c' => 'DBText', 'm' => 'Summary', 'n' => 'Changed type of parameter $add in DBText::Summary() from dynamic to string|false'],
-        ['c' => 'DBMoney', 'm' => 'setAmount', 'n' => 'Changed type of parameter $amount in DBMoney::setAmount() from dynamic to mixed'],
-        ['c' => 'DBField', 'm' => 'create_field', 'n' => 'Changed type of parameter $args in DBField::create_field() from dynamic to mixed'],
-        ['c' => 'SSViewer', 'm' => 'process', 'n' => 'Changed type of parameter $arguments in SSViewer::process() from dynamic to array'],
-        ['c' => 'DBPrimaryKey', 'm' => 'setAutoIncrement', 'n' => 'Changed type of parameter $autoIncrement in DBPrimaryKey::setAutoIncrement() from dynamic to bool'],
-        ['c' => 'DBClassNameTrait', 'm' => '__construct', 'n' => 'Changed type of parameter $baseClass in DBClassNameTrait::__construct() from dynamic to string|null'],
-        ['c' => 'DBClassNameTrait', 'm' => 'setBaseClass', 'n' => 'Changed type of parameter $baseClass in DBClassNameTrait::setBaseClass() from dynamic to string|null'],
-        ['c' => 'SSViewer', 'm' => 'get_templates_by_class', 'n' => 'Changed type of parameter $baseClass in SSViewer::get_templates_by_class() from dynamic to string|null'],
-        ['c' => 'Email', 'm' => 'setBody', 'n' => 'Changed type of parameter $body in Email::setBody() from Symfony\\Component\\Mime\\Part\\AbstractPart|string to Symfony\\Component\\Mime\\Part\\AbstractPart|string|null'],
-        ['c' => 'ClassManifest', 'm' => '__construct', 'n' => 'Changed type of parameter $cacheFactory in ClassManifest::__construct() from CacheFactory to CacheFactory|null'],
-        ['c' => 'CoreConfigFactory', 'm' => '__construct', 'n' => 'Changed type of parameter $cacheFactory in CoreConfigFactory::__construct() from CacheFactory to CacheFactory|null'],
-        ['c' => 'ModuleManifest', 'm' => '__construct', 'n' => 'Changed type of parameter $cacheFactory in ModuleManifest::__construct() from CacheFactory to CacheFactory|null'],
-        ['c' => 'ThemeManifest', 'm' => '__construct', 'n' => 'Changed type of parameter $cacheFactory in ThemeManifest::__construct() from CacheFactory to CacheFactory|null'],
-        ['c' => 'InheritedPermissions', 'm' => '__construct', 'n' => 'Changed type of parameter $cache in InheritedPermissions::__construct() from Psr\\SimpleCache\\CacheInterface to Psr\\SimpleCache\\CacheInterface|null'],
-        ['c' => 'DBDatetime', 'm' => 'withFixedNow', 'n' => 'Changed type of parameter $callback in DBDatetime::withFixedNow() from dynamic to callable'],
-        ['c' => 'Form', 'm' => 'sessionError', 'n' => 'Changed type of parameter $cast in Form::sessionError() from dynamic to string'],
-        ['c' => 'Form', 'm' => 'sessionFieldError', 'n' => 'Changed type of parameter $cast in Form::sessionFieldError() from dynamic to string'],
-        ['c' => 'Form', 'm' => 'sessionMessage', 'n' => 'Changed type of parameter $cast in Form::sessionMessage() from dynamic to string'],
-        ['c' => 'DBText', 'm' => 'ContextSummary', 'n' => 'Changed type of parameter $characters in DBText::ContextSummary() from dynamic to int'],
-        ['c' => 'SSViewer', 'm' => 'get_templates_by_class', 'n' => 'Changed type of parameter $classOrObject in SSViewer::get_templates_by_class() from dynamic to string|object'],
-        ['c' => 'HTTP', 'm' => 'urlRewriter', 'n' => 'Changed type of parameter $code in HTTP::urlRewriter() from dynamic to callable'],
-        ['c' => 'DataList', 'm' => 'columnUnique', 'n' => 'Changed type of parameter $colName in DataList::columnUnique() from dynamic to string'],
-        ['c' => 'EagerLoadedList', 'm' => 'columnUnique', 'n' => 'Changed type of parameter $colName in EagerLoadedList::columnUnique() from dynamic to string'],
-        ['c' => 'HTMLEditorConfig', 'm' => 'set_config', 'n' => 'Changed type of parameter $config in HTMLEditorConfig::set_config() from HTMLEditorConfig to HTMLEditorConfig|null'],
-        ['c' => 'Form', 'm' => 'setController', 'n' => 'Changed type of parameter $controller in Form::setController() from RequestHandler to RequestHandler|null'],
-        ['c' => 'FormFactory', 'm' => 'getForm', 'n' => 'Changed type of parameter $controller in FormFactory::getForm() from RequestHandler to RequestHandler|null'],
-        ['c' => 'Cookie_Backend', 'm' => '__construct', 'n' => 'Changed type of parameter $cookies in Cookie_Backend::__construct() from dynamic to array'],
-        ['c' => 'DBMoney', 'm' => 'setCurrency', 'n' => 'Changed type of parameter $currency in DBMoney::setCurrency() from dynamic to string|null'],
-        ['c' => 'FieldList', 'm' => 'removeByName', 'n' => 'Changed type of parameter $dataFieldOnly in FieldList::removeByName() from dynamic to bool'],
-        ['c' => 'FieldList', 'm' => 'replaceField', 'n' => 'Changed type of parameter $dataFieldOnly in FieldList::replaceField() from dynamic to bool'],
-        ['c' => 'DBComposite', 'm' => 'bindTo', 'n' => 'Changed type of parameter $dataObject in DBComposite::bindTo() from dynamic to DataObject'],
-        ['c' => 'DBField', 'm' => 'saveInto', 'n' => 'Changed type of parameter $dataObject in DBField::saveInto() from dynamic to ModelData'],
-        ['c' => 'Email', 'm' => 'setData', 'n' => 'Changed type of parameter $data in Email::setData() from array|SilverStripe\\View\\ViewableData to array|ModelData'],
-        ['c' => 'FieldList', 'm' => 'setValues', 'n' => 'Changed type of parameter $data in FieldList::setValues() from dynamic to array'],
-        ['c' => 'Form', 'm' => 'loadDataFrom', 'n' => 'Changed type of parameter $data in Form::loadDataFrom() from dynamic to object|array'],
-        ['c' => 'DBDate', 'm' => 'getCustomFormatter', 'n' => 'Changed type of parameter $dateLength in DBDate::getCustomFormatter() from dynamic to int'],
-        ['c' => 'DBDate', 'm' => 'getFormatter', 'n' => 'Changed type of parameter $dateLength in DBDate::getFormatter() from dynamic to int'],
-        ['c' => 'DateField', 'm' => 'internalToFrontend', 'n' => 'Changed type of parameter $date in DateField::internalToFrontend() from dynamic to mixed'],
-        ['c' => 'DateField', 'm' => 'tidyInternal', 'n' => 'Changed type of parameter $date in DateField::tidyInternal() from dynamic to mixed'],
-        ['c' => 'DBDatetime', 'm' => 'set_mock_now', 'n' => 'Changed type of parameter $datetime in DBDatetime::set_mock_now() from dynamic to DBDatetime|string'],
-        ['c' => 'DatetimeField', 'm' => 'internalToFrontend', 'n' => 'Changed type of parameter $datetime in DatetimeField::internalToFrontend() from dynamic to mixed'],
-        ['c' => 'DatetimeField', 'm' => 'tidyInternal', 'n' => 'Changed type of parameter $datetime in DatetimeField::tidyInternal() from dynamic to mixed'],
-        ['c' => 'DBField', 'm' => 'setDefaultValue', 'n' => 'Changed type of parameter $defaultValue in DBField::setDefaultValue() from dynamic to mixed'],
-        ['c' => 'DBEnum', 'm' => 'setDefault', 'n' => 'Changed type of parameter $default in DBEnum::setDefault() from dynamic to string|null'],
-        ['c' => 'CookieAuthenticationHandler', 'm' => 'setDeviceCookieName', 'n' => 'Changed type of parameter $deviceCookieName in CookieAuthenticationHandler::setDeviceCookieName() from dynamic to string'],
-        ['c' => 'Cookie', 'm' => 'force_expiry', 'n' => 'Changed type of parameter $domain in Cookie::force_expiry() from dynamic to string|null'],
-        ['c' => 'Cookie', 'm' => 'set', 'n' => 'Changed type of parameter $domain in Cookie::set() from dynamic to string|null'],
-        ['c' => 'CookieJar', 'm' => 'outputCookie', 'n' => 'Changed type of parameter $domain in CookieJar::outputCookie() from dynamic to string|null'],
-        ['c' => 'Cookie_Backend', 'm' => 'forceExpiry', 'n' => 'Changed type of parameter $domain in Cookie_Backend::forceExpiry() from dynamic to string|null'],
-        ['c' => 'Cookie_Backend', 'm' => 'set', 'n' => 'Changed type of parameter $domain in Cookie_Backend::set() from dynamic to string|null'],
-        ['c' => 'DBEnum', 'm' => 'formField', 'n' => 'Changed type of parameter $emptyString in DBEnum::formField() from dynamic to string|null'],
-        ['c' => 'DBEnum', 'm' => 'setEnum', 'n' => 'Changed type of parameter $enum in DBEnum::setEnum() from dynamic to string|array'],
-        ['c' => 'TestMailer', 'm' => 'send', 'n' => 'Changed type of parameter $envelope in TestMailer::send() from Symfony\\Component\\Mailer\\Envelope to Symfony\\Component\\Mailer\\Envelope|null'],
-        ['c' => 'Cookie', 'm' => 'set', 'n' => 'Changed type of parameter $expiry in Cookie::set() from dynamic to int|float'],
-        ['c' => 'CookieJar', 'm' => 'outputCookie', 'n' => 'Changed type of parameter $expiry in CookieJar::outputCookie() from dynamic to int'],
-        ['c' => 'Cookie_Backend', 'm' => 'set', 'n' => 'Changed type of parameter $expiry in Cookie_Backend::set() from dynamic to int|float'],
-        ['c' => 'Form', 'm' => 'loadDataFrom', 'n' => 'Changed type of parameter $fieldList in Form::loadDataFrom() from dynamic to array'],
-        ['c' => 'DataList', 'm' => 'dbObject', 'n' => 'Changed type of parameter $fieldName in DataList::dbObject() from dynamic to string'],
-        ['c' => 'DataObject', 'm' => 'dbObject', 'n' => 'Changed type of parameter $fieldName in DataObject::dbObject() from dynamic to string'],
-        ['c' => 'DataObjectInterface', 'm' => '__get', 'n' => 'Changed type of parameter $fieldName in DataObjectInterface::__get() from dynamic to string'],
-        ['c' => 'FieldList', 'm' => 'removeByName', 'n' => 'Changed type of parameter $fieldName in FieldList::removeByName() from dynamic to string|array'],
-        ['c' => 'FieldList', 'm' => 'removeFieldFromTab', 'n' => 'Changed type of parameter $fieldName in FieldList::removeFieldFromTab() from dynamic to string'],
-        ['c' => 'FieldList', 'm' => 'renameField', 'n' => 'Changed type of parameter $fieldName in FieldList::renameField() from dynamic to string'],
-        ['c' => 'FieldList', 'm' => 'replaceField', 'n' => 'Changed type of parameter $fieldName in FieldList::replaceField() from dynamic to string'],
-        ['c' => 'Form', 'm' => 'sessionFieldError', 'n' => 'Changed type of parameter $fieldName in Form::sessionFieldError() from dynamic to string'],
-        ['c' => 'Relation', 'm' => 'dbObject', 'n' => 'Changed type of parameter $fieldName in Relation::dbObject() from dynamic to string'],
-        ['c' => 'FieldList', 'm' => 'changeFieldOrder', 'n' => 'Changed type of parameter $fieldNames in FieldList::changeFieldOrder() from dynamic to array|string'],
-        ['c' => 'DBComposite', 'm' => 'dbObject', 'n' => 'Changed type of parameter $field in DBComposite::dbObject() from dynamic to string'],
-        ['c' => 'FieldList', 'm' => 'addFieldToTab', 'n' => 'Changed type of parameter $field in FieldList::addFieldToTab() from dynamic to FormField'],
-        ['c' => 'FieldList', 'm' => 'fieldPosition', 'n' => 'Changed type of parameter $field in FieldList::fieldPosition() from dynamic to string|FormField'],
-        ['c' => 'FieldList', 'm' => 'makeFieldReadonly', 'n' => 'Changed type of parameter $field in FieldList::makeFieldReadonly() from dynamic to string|array|FormField'],
-        ['c' => 'FieldList', 'm' => 'setContainerField', 'n' => 'Changed type of parameter $field in FieldList::setContainerField() from dynamic to CompositeField|null'],
-        ['c' => 'FieldList', 'm' => 'addFieldsToTab', 'n' => 'Changed type of parameter $fields in FieldList::addFieldsToTab() from dynamic to array'],
-        ['c' => 'FieldList', 'm' => 'removeFieldsFromTab', 'n' => 'Changed type of parameter $fields in FieldList::removeFieldsFromTab() from dynamic to array'],
-        ['c' => 'FieldList', 'm' => 'setForm', 'n' => 'Changed type of parameter $form in FieldList::setForm() from dynamic to Form'],
-        ['c' => 'FormSchema', 'm' => 'getMultipartSchema', 'n' => 'Changed type of parameter $form in FormSchema::getMultipartSchema() from Form to Form|null'],
-        ['c' => 'DBDate', 'm' => 'Format', 'n' => 'Changed type of parameter $format in DBDate::Format() from dynamic to string'],
-        ['c' => 'DBTime', 'm' => 'Format', 'n' => 'Changed type of parameter $format in DBTime::Format() from dynamic to string'],
-        ['c' => 'FieldList', 'm' => 'fieldNameError', 'n' => 'Changed type of parameter $functionName in FieldList::fieldNameError() from dynamic to string'],
-        ['c' => 'DBEnum', 'm' => 'enumValues', 'n' => 'Changed type of parameter $hasEmpty in DBEnum::enumValues() from dynamic to bool'],
-        ['c' => 'DBEnum', 'm' => 'formField', 'n' => 'Changed type of parameter $hasEmpty in DBEnum::formField() from dynamic to bool'],
-        ['c' => 'DBText', 'm' => 'ContextSummary', 'n' => 'Changed type of parameter $highlight in DBText::ContextSummary() from dynamic to bool'],
-        ['c' => 'Cookie', 'm' => 'force_expiry', 'n' => 'Changed type of parameter $httpOnly in Cookie::force_expiry() from dynamic to bool'],
-        ['c' => 'Cookie', 'm' => 'set', 'n' => 'Changed type of parameter $httpOnly in Cookie::set() from dynamic to bool'],
-        ['c' => 'CookieJar', 'm' => 'outputCookie', 'n' => 'Changed type of parameter $httpOnly in CookieJar::outputCookie() from dynamic to bool'],
-        ['c' => 'Cookie_Backend', 'm' => 'forceExpiry', 'n' => 'Changed type of parameter $httpOnly in Cookie_Backend::forceExpiry() from dynamic to bool'],
-        ['c' => 'Cookie_Backend', 'm' => 'set', 'n' => 'Changed type of parameter $httpOnly in Cookie_Backend::set() from dynamic to bool'],
-        ['c' => 'HTMLEditorConfig', 'm' => 'set_active_identifier', 'n' => 'Changed type of parameter $identifier in HTMLEditorConfig::set_active_identifier() from dynamic to string'],
-        ['c' => 'HTMLEditorConfig', 'm' => 'set_config', 'n' => 'Changed type of parameter $identifier in HTMLEditorConfig::set_config() from dynamic to string'],
-        ['c' => 'SSViewer', 'm' => 'includeRequirements', 'n' => 'Changed type of parameter $incl in SSViewer::includeRequirements() from dynamic to bool'],
-        ['c' => 'DBDate', 'm' => 'DayOfMonth', 'n' => 'Changed type of parameter $includeOrdinal in DBDate::DayOfMonth() from dynamic to bool'],
-        ['c' => 'Cookie', 'm' => 'get', 'n' => 'Changed type of parameter $includeUnsent in Cookie::get() from dynamic to bool'],
-        ['c' => 'Cookie', 'm' => 'get_all', 'n' => 'Changed type of parameter $includeUnsent in Cookie::get_all() from dynamic to bool'],
-        ['c' => 'Cookie_Backend', 'm' => 'get', 'n' => 'Changed type of parameter $includeUnsent in Cookie_Backend::get() from dynamic to bool'],
-        ['c' => 'Cookie_Backend', 'm' => 'getAll', 'n' => 'Changed type of parameter $includeUnsent in Cookie_Backend::getAll() from dynamic to bool'],
-        ['c' => 'FieldList', 'm' => 'addFieldToTab', 'n' => 'Changed type of parameter $insertBefore in FieldList::addFieldToTab() from dynamic to string|null'],
-        ['c' => 'FieldList', 'm' => 'addFieldsToTab', 'n' => 'Changed type of parameter $insertBefore in FieldList::addFieldsToTab() from dynamic to string|null'],
-        ['c' => 'SSListContains', 'm' => 'checkIfItemEvaluatesRemainingMatches', 'n' => 'Changed type of parameter $item in SSListContains::checkIfItemEvaluatesRemainingMatches() from SilverStripe\\View\\ViewableData to ModelData'],
-        ['c' => 'SSViewer', 'm' => 'process', 'n' => 'Changed type of parameter $item in SSViewer::process() from dynamic to mixed'],
-        ['c' => 'HTMLEditorConfig', 'm' => 'getOption', 'n' => 'Changed type of parameter $key in HTMLEditorConfig::getOption() from dynamic to string'],
-        ['c' => 'HTMLEditorConfig', 'm' => 'setOption', 'n' => 'Changed type of parameter $key in HTMLEditorConfig::setOption() from dynamic to string'],
-        ['c' => 'DBText', 'm' => 'ContextSummary', 'n' => 'Changed type of parameter $keywords in DBText::ContextSummary() from dynamic to string|null'],
-        ['c' => 'DBString', 'm' => 'LimitCharacters', 'n' => 'Changed type of parameter $limit in DBString::LimitCharacters() from dynamic to int'],
-        ['c' => 'DBString', 'm' => 'LimitCharactersToClosestWord', 'n' => 'Changed type of parameter $limit in DBString::LimitCharactersToClosestWord() from dynamic to int'],
-        ['c' => 'SearchContext', 'm' => 'getQuery', 'n' => 'Changed type of parameter $limit in SearchContext::getQuery() from dynamic to int|array|null'],
-        ['c' => 'DBDate', 'm' => 'getCustomFormatter', 'n' => 'Changed type of parameter $locale in DBDate::getCustomFormatter() from dynamic to string|null'],
-        ['c' => 'DBMoney', 'm' => 'setLocale', 'n' => 'Changed type of parameter $locale in DBMoney::setLocale() from dynamic to string'],
-        ['c' => 'DefaultCacheFactory', 'm' => '__construct', 'n' => 'Changed type of parameter $logger in DefaultCacheFactory::__construct() from Psr\\Log\\LoggerInterface to Psr\\Log\\LoggerInterface|null'],
-        ['c' => 'DBField', 'm' => 'writeToManipulation', 'n' => 'Changed type of parameter $manipulation in DBField::writeToManipulation() from dynamic to array'],
-        ['c' => 'DBClassNameTrait', 'm' => 'setValue', 'n' => 'Changed type of parameter $markChanged in DBClassNameTrait::setValue() from dynamic to bool'],
-        ['c' => 'DBField', 'm' => 'setValue', 'n' => 'Changed type of parameter $markChanged in DBField::setValue() from dynamic to bool'],
-        ['c' => 'DBMoney', 'm' => 'setAmount', 'n' => 'Changed type of parameter $markChanged in DBMoney::setAmount() from dynamic to bool'],
-        ['c' => 'DBMoney', 'm' => 'setCurrency', 'n' => 'Changed type of parameter $markChanged in DBMoney::setCurrency() from dynamic to bool'],
-        ['c' => 'DBPolymorphicForeignKey', 'm' => 'setClassValue', 'n' => 'Changed type of parameter $markChanged in DBPolymorphicForeignKey::setClassValue() from dynamic to bool'],
-        ['c' => 'DBPolymorphicForeignKey', 'm' => 'setIDValue', 'n' => 'Changed type of parameter $markChanged in DBPolymorphicForeignKey::setIDValue() from dynamic to bool'],
-        ['c' => 'ConfirmedPasswordField', 'm' => 'setMaxLength', 'n' => 'Changed type of parameter $maxLength in ConfirmedPasswordField::setMaxLength() from dynamic to int'],
-        ['c' => 'DBText', 'm' => 'LimitSentences', 'n' => 'Changed type of parameter $maxSentences in DBText::LimitSentences() from dynamic to int'],
-        ['c' => 'DBText', 'm' => 'Summary', 'n' => 'Changed type of parameter $maxWords in DBText::Summary() from dynamic to int'],
-        ['c' => 'WithinRangeFilter', 'm' => 'setMax', 'n' => 'Changed type of parameter $max in WithinRangeFilter::setMax() from dynamic to mixed'],
-        ['c' => 'ChangePasswordHandler', 'm' => 'setSessionToken', 'n' => 'Changed type of parameter $member in ChangePasswordHandler::setSessionToken() from dynamic to Member'],
-        ['c' => 'DBDate', 'm' => 'FormatFromSettings', 'n' => 'Changed type of parameter $member in DBDate::FormatFromSettings() from dynamic to Member|null'],
-        ['c' => 'DBTime', 'm' => 'FormatFromSettings', 'n' => 'Changed type of parameter $member in DBTime::FormatFromSettings() from dynamic to Member|null'],
-        ['c' => 'DefaultPermissionChecker', 'm' => 'canCreate', 'n' => 'Changed type of parameter $member in DefaultPermissionChecker::canCreate() from Member to Member|null'],
-        ['c' => 'DefaultPermissionChecker', 'm' => 'canDelete', 'n' => 'Changed type of parameter $member in DefaultPermissionChecker::canDelete() from Member to Member|null'],
-        ['c' => 'DefaultPermissionChecker', 'm' => 'canEdit', 'n' => 'Changed type of parameter $member in DefaultPermissionChecker::canEdit() from Member to Member|null'],
-        ['c' => 'DefaultPermissionChecker', 'm' => 'canView', 'n' => 'Changed type of parameter $member in DefaultPermissionChecker::canView() from Member to Member|null'],
-        ['c' => 'InheritedPermissions', 'm' => 'batchPermissionCheck', 'n' => 'Changed type of parameter $member in InheritedPermissions::batchPermissionCheck() from Member to Member|null'],
-        ['c' => 'InheritedPermissions', 'm' => 'batchPermissionCheckForStage', 'n' => 'Changed type of parameter $member in InheritedPermissions::batchPermissionCheckForStage() from Member to Member|null'],
-        ['c' => 'InheritedPermissions', 'm' => 'checkDefaultPermissions', 'n' => 'Changed type of parameter $member in InheritedPermissions::checkDefaultPermissions() from Member to Member|null'],
-        ['c' => 'MemberAuthenticator', 'm' => 'authenticateMember', 'n' => 'Changed type of parameter $member in MemberAuthenticator::authenticateMember() from Member to Member|null'],
-        ['c' => 'PermissionChecker', 'm' => 'canDelete', 'n' => 'Changed type of parameter $member in PermissionChecker::canDelete() from Member to Member|null'],
-        ['c' => 'PermissionChecker', 'm' => 'canDeleteMultiple', 'n' => 'Changed type of parameter $member in PermissionChecker::canDeleteMultiple() from Member to Member|null'],
-        ['c' => 'PermissionChecker', 'm' => 'canEdit', 'n' => 'Changed type of parameter $member in PermissionChecker::canEdit() from Member to Member|null'],
-        ['c' => 'PermissionChecker', 'm' => 'canEditMultiple', 'n' => 'Changed type of parameter $member in PermissionChecker::canEditMultiple() from Member to Member|null'],
-        ['c' => 'PermissionChecker', 'm' => 'canView', 'n' => 'Changed type of parameter $member in PermissionChecker::canView() from Member to Member|null'],
-        ['c' => 'PermissionChecker', 'm' => 'canViewMultiple', 'n' => 'Changed type of parameter $member in PermissionChecker::canViewMultiple() from Member to Member|null'],
-        ['c' => 'MemcachedCacheFactory', 'm' => '__construct', 'n' => 'Changed type of parameter $memcachedClient in MemcachedCacheFactory::__construct() from Memcached to Psr\\Log\\LoggerInterface|null'],
-        ['c' => 'Form', 'm' => 'loadDataFrom', 'n' => 'Changed type of parameter $mergeStrategy in Form::loadDataFrom() from dynamic to int'],
-        ['c' => 'Form', 'm' => 'sessionError', 'n' => 'Changed type of parameter $message in Form::sessionError() from dynamic to string'],
-        ['c' => 'Form', 'm' => 'sessionFieldError', 'n' => 'Changed type of parameter $message in Form::sessionFieldError() from dynamic to string'],
-        ['c' => 'Form', 'm' => 'sessionMessage', 'n' => 'Changed type of parameter $message in Form::sessionMessage() from dynamic to string'],
-        ['c' => 'ConfirmedPasswordField', 'm' => 'setMinLength', 'n' => 'Changed type of parameter $minLength in ConfirmedPasswordField::setMinLength() from dynamic to int'],
-        ['c' => 'WithinRangeFilter', 'm' => 'setMin', 'n' => 'Changed type of parameter $min in WithinRangeFilter::setMin() from dynamic to mixed'],
-        ['c' => 'i18nTextCollector', 'm' => 'collectFromEntityProviders', 'n' => 'Changed type of parameter $module in i18nTextCollector::collectFromEntityProviders() from Module to Module|null'],
-        ['c' => 'Cookie', 'm' => 'force_expiry', 'n' => 'Changed type of parameter $name in Cookie::force_expiry() from dynamic to string'],
-        ['c' => 'Cookie', 'm' => 'get', 'n' => 'Changed type of parameter $name in Cookie::get() from dynamic to string'],
-        ['c' => 'Cookie', 'm' => 'set', 'n' => 'Changed type of parameter $name in Cookie::set() from dynamic to string'],
-        ['c' => 'CookieJar', 'm' => 'outputCookie', 'n' => 'Changed type of parameter $name in CookieJar::outputCookie() from dynamic to string'],
-        ['c' => 'Cookie_Backend', 'm' => 'forceExpiry', 'n' => 'Changed type of parameter $name in Cookie_Backend::forceExpiry() from dynamic to string'],
-        ['c' => 'Cookie_Backend', 'm' => 'get', 'n' => 'Changed type of parameter $name in Cookie_Backend::get() from dynamic to string'],
-        ['c' => 'Cookie_Backend', 'm' => 'set', 'n' => 'Changed type of parameter $name in Cookie_Backend::set() from dynamic to string'],
-        ['c' => 'DBClassNameTrait', 'm' => '__construct', 'n' => 'Changed type of parameter $name in DBClassNameTrait::__construct() from dynamic to string|null'],
-        ['c' => 'DBEnum', 'm' => 'formField', 'n' => 'Changed type of parameter $name in DBEnum::formField() from dynamic to string|null'],
-        ['c' => 'DBField', 'm' => 'create_field', 'n' => 'Changed type of parameter $name in DBField::create_field() from dynamic to string|null'],
-        ['c' => 'DBField', 'm' => 'defaultSearchFilter', 'n' => 'Changed type of parameter $name in DBField::defaultSearchFilter() from dynamic to string|null'],
-        ['c' => 'DBField', 'm' => 'setName', 'n' => 'Changed type of parameter $name in DBField::setName() from dynamic to string'],
-        ['c' => 'FieldList', 'm' => 'dataFieldByName', 'n' => 'Changed type of parameter $name in FieldList::dataFieldByName() from dynamic to string'],
-        ['c' => 'FieldList', 'm' => 'fieldByName', 'n' => 'Changed type of parameter $name in FieldList::fieldByName() from dynamic to string'],
-        ['c' => 'FieldList', 'm' => 'renameField', 'n' => 'Changed type of parameter $newFieldTitle in FieldList::renameField() from dynamic to string'],
-        ['c' => 'FieldList', 'm' => 'replaceField', 'n' => 'Changed type of parameter $newField in FieldList::replaceField() from dynamic to FormField'],
-        ['c' => 'DBString', 'm' => 'LimitWordCount', 'n' => 'Changed type of parameter $numWords in DBString::LimitWordCount() from dynamic to int'],
-        ['c' => 'DBClassNameTrait', 'm' => '__construct', 'n' => 'Changed type of parameter $options in DBClassNameTrait::__construct() from dynamic to array'],
-        ['c' => 'HTMLEditorConfig', 'm' => 'setOptions', 'n' => 'Changed type of parameter $options in HTMLEditorConfig::setOptions() from dynamic to array'],
-        ['c' => 'DBField', 'm' => 'scaffoldFormField', 'n' => 'Changed type of parameter $params in DBField::scaffoldFormField() from dynamic to array'],
-        ['c' => 'SSViewer', 'm' => '__construct', 'n' => 'Changed type of parameter $parser in SSViewer::__construct() from SilverStripe\\View\\TemplateParser to TemplateEngine|null'],
-        ['c' => 'Cookie', 'm' => 'force_expiry', 'n' => 'Changed type of parameter $path in Cookie::force_expiry() from dynamic to string|null'],
-        ['c' => 'Cookie', 'm' => 'set', 'n' => 'Changed type of parameter $path in Cookie::set() from dynamic to string|null'],
-        ['c' => 'CookieJar', 'm' => 'outputCookie', 'n' => 'Changed type of parameter $path in CookieJar::outputCookie() from dynamic to string|null'],
-        ['c' => 'Cookie_Backend', 'm' => 'forceExpiry', 'n' => 'Changed type of parameter $path in Cookie_Backend::forceExpiry() from dynamic to string|null'],
-        ['c' => 'Cookie_Backend', 'm' => 'set', 'n' => 'Changed type of parameter $path in Cookie_Backend::set() from dynamic to string|null'],
-        ['c' => 'DBDate', 'm' => 'getCustomFormatter', 'n' => 'Changed type of parameter $pattern in DBDate::getCustomFormatter() from dynamic to string|null'],
-        ['c' => 'DataObject', 'm' => 'flushCache', 'n' => 'Changed type of parameter $persistent in DataObject::flushCache() from dynamic to bool'],
-        ['c' => 'DBText', 'm' => 'ContextSummary', 'n' => 'Changed type of parameter $prefix in DBText::ContextSummary() from dynamic to string|false'],
-        ['c' => 'DBHTMLText', 'm' => 'setProcessShortcodes', 'n' => 'Changed type of parameter $process in DBHTMLText::setProcessShortcodes() from dynamic to bool'],
-        ['c' => 'DBHTMLVarchar', 'm' => 'setProcessShortcodes', 'n' => 'Changed type of parameter $process in DBHTMLVarchar::setProcessShortcodes() from dynamic to bool'],
-        ['c' => 'DBField', 'm' => 'addToQuery', 'n' => 'Changed type of parameter $query in DBField::addToQuery() from dynamic to SQLSelect'],
-        ['c' => 'DBClassNameTrait', 'm' => 'setValue', 'n' => 'Changed type of parameter $record in DBClassNameTrait::setValue() from dynamic to null|array|ModelData'],
-        ['c' => 'DBField', 'm' => 'setValue', 'n' => 'Changed type of parameter $record in DBField::setValue() from dynamic to null|array|ModelData'],
-        ['c' => 'BasicAuth', 'm' => 'protect_site_if_necessary', 'n' => 'Changed type of parameter $request in BasicAuth::protect_site_if_necessary() from HTTPRequest to HTTPRequest|null'],
-        ['c' => 'BuildTask', 'm' => 'run', 'n' => 'Changed type of parameter $request in BuildTask::run() from dynamic to Symfony\\Component\\Console\\Input\\InputInterface'],
-        ['c' => 'CanonicalURLMiddleware', 'm' => 'getOrValidateRequest', 'n' => 'Changed type of parameter $request in CanonicalURLMiddleware::getOrValidateRequest() from HTTPRequest to HTTPRequest|null'],
-        ['c' => 'CanonicalURLMiddleware', 'm' => 'throwRedirectIfNeeded', 'n' => 'Changed type of parameter $request in CanonicalURLMiddleware::throwRedirectIfNeeded() from HTTPRequest to HTTPRequest|null'],
-        ['c' => 'Debug', 'm' => 'create_debug_view', 'n' => 'Changed type of parameter $request in Debug::create_debug_view() from HTTPRequest to HTTPRequest|null'],
-        ['c' => 'Debug', 'm' => 'dump', 'n' => 'Changed type of parameter $request in Debug::dump() from HTTPRequest to HTTPRequest|null'],
-        ['c' => 'Debug', 'm' => 'endshow', 'n' => 'Changed type of parameter $request in Debug::endshow() from HTTPRequest to HTTPRequest|null'],
-        ['c' => 'Debug', 'm' => 'message', 'n' => 'Changed type of parameter $request in Debug::message() from HTTPRequest to HTTPRequest|null'],
-        ['c' => 'Debug', 'm' => 'show', 'n' => 'Changed type of parameter $request in Debug::show() from HTTPRequest to HTTPRequest|null'],
-        ['c' => 'Debug', 'm' => 'supportsHTML', 'n' => 'Changed type of parameter $request in Debug::supportsHTML() from HTTPRequest to HTTPRequest|null'],
-        ['c' => 'Debug', 'm' => 'text', 'n' => 'Changed type of parameter $request in Debug::text() from HTTPRequest to HTTPRequest|null'],
-        ['c' => 'Director', 'm' => 'absoluteBaseURLWithAuth', 'n' => 'Changed type of parameter $request in Director::absoluteBaseURLWithAuth() from HTTPRequest to HTTPRequest|null'],
-        ['c' => 'Director', 'm' => 'currentRequest', 'n' => 'Changed type of parameter $request in Director::currentRequest() from HTTPRequest to HTTPRequest|null'],
-        ['c' => 'Director', 'm' => 'forceSSL', 'n' => 'Changed type of parameter $request in Director::forceSSL() from HTTPRequest to HTTPRequest|null'],
-        ['c' => 'Director', 'm' => 'forceWWW', 'n' => 'Changed type of parameter $request in Director::forceWWW() from HTTPRequest to HTTPRequest|null'],
-        ['c' => 'Director', 'm' => 'host', 'n' => 'Changed type of parameter $request in Director::host() from HTTPRequest to HTTPRequest|null'],
-        ['c' => 'Director', 'm' => 'hostName', 'n' => 'Changed type of parameter $request in Director::hostName() from HTTPRequest to HTTPRequest|null'],
-        ['c' => 'Director', 'm' => 'is_ajax', 'n' => 'Changed type of parameter $request in Director::is_ajax() from HTTPRequest to HTTPRequest|null'],
-        ['c' => 'Director', 'm' => 'is_https', 'n' => 'Changed type of parameter $request in Director::is_https() from HTTPRequest to HTTPRequest|null'],
-        ['c' => 'Director', 'm' => 'port', 'n' => 'Changed type of parameter $request in Director::port() from HTTPRequest to HTTPRequest|null'],
-        ['c' => 'Director', 'm' => 'protocol', 'n' => 'Changed type of parameter $request in Director::protocol() from HTTPRequest to HTTPRequest|null'],
-        ['c' => 'Director', 'm' => 'protocolAndHost', 'n' => 'Changed type of parameter $request in Director::protocolAndHost() from HTTPRequest to HTTPRequest|null'],
-        ['c' => 'IdentityStore', 'm' => 'logIn', 'n' => 'Changed type of parameter $request in IdentityStore::logIn() from HTTPRequest to HTTPRequest|null'],
-        ['c' => 'IdentityStore', 'm' => 'logOut', 'n' => 'Changed type of parameter $request in IdentityStore::logOut() from HTTPRequest to HTTPRequest|null'],
-        ['c' => 'Member', 'm' => 'afterMemberLoggedOut', 'n' => 'Changed type of parameter $request in Member::afterMemberLoggedOut() from HTTPRequest to HTTPRequest|null'],
-        ['c' => 'Member', 'm' => 'beforeMemberLoggedOut', 'n' => 'Changed type of parameter $request in Member::beforeMemberLoggedOut() from HTTPRequest to HTTPRequest|null'],
-        ['c' => 'Session', 'm' => 'destroy', 'n' => 'Changed type of parameter $request in Session::destroy() from HTTPRequest to HTTPRequest|null'],
-        ['c' => 'i18nTextCollectorTask', 'm' => 'getIsMerge', 'n' => 'Changed type of parameter $request in i18nTextCollectorTask::getIsMerge() from dynamic to Symfony\\Component\\Console\\Input\\InputInterface'],
-        ['c' => 'CanonicalURLMiddleware', 'm' => 'hasBasicAuthPrompt', 'n' => 'Changed type of parameter $response in CanonicalURLMiddleware::hasBasicAuthPrompt() from HTTPResponse to HTTPResponse|null'],
-        ['c' => 'PjaxResponseNegotiator', 'm' => '__construct', 'n' => 'Changed type of parameter $response in PjaxResponseNegotiator::__construct() from HTTPResponse to HTTPResponse|null'],
-        ['c' => 'Authenticator', 'm' => 'authenticate', 'n' => 'Changed type of parameter $result in Authenticator::authenticate() from SilverStripe\\ORM\\ValidationResult to ValidationResult|null'],
-        ['c' => 'Authenticator', 'm' => 'checkPassword', 'n' => 'Changed type of parameter $result in Authenticator::checkPassword() from SilverStripe\\ORM\\ValidationResult to ValidationResult|null'],
-        ['c' => 'FormSchema', 'm' => 'getMultipartSchema', 'n' => 'Changed type of parameter $result in FormSchema::getMultipartSchema() from SilverStripe\\ORM\\ValidationResult to ValidationResult|null'],
-        ['c' => 'LoginHandler', 'm' => 'checkLogin', 'n' => 'Changed type of parameter $result in LoginHandler::checkLogin() from SilverStripe\\ORM\\ValidationResult to ValidationResult|null'],
-        ['c' => 'Member', 'm' => 'validateCanLogin', 'n' => 'Changed type of parameter $result in Member::validateCanLogin() from SilverStripe\\ORM\\ValidationResult to ValidationResult|null'],
-        ['c' => 'MemberAuthenticator', 'm' => 'authenticateMember', 'n' => 'Changed type of parameter $result in MemberAuthenticator::authenticateMember() from SilverStripe\\ORM\\ValidationResult to ValidationResult|null'],
-        ['c' => 'SSViewer', 'm' => 'setRewriteHashLinks', 'n' => 'Changed type of parameter $rewrite in SSViewer::setRewriteHashLinks() from dynamic to null|bool|string'],
-        ['c' => 'SSViewer', 'm' => 'setRewriteHashLinksDefault', 'n' => 'Changed type of parameter $rewrite in SSViewer::setRewriteHashLinksDefault() from dynamic to null|bool|string'],
-        ['c' => 'Cookie', 'm' => 'force_expiry', 'n' => 'Changed type of parameter $secure in Cookie::force_expiry() from dynamic to bool'],
-        ['c' => 'Cookie', 'm' => 'set', 'n' => 'Changed type of parameter $secure in Cookie::set() from dynamic to bool'],
-        ['c' => 'CookieJar', 'm' => 'outputCookie', 'n' => 'Changed type of parameter $secure in CookieJar::outputCookie() from dynamic to bool'],
-        ['c' => 'Cookie_Backend', 'm' => 'forceExpiry', 'n' => 'Changed type of parameter $secure in Cookie_Backend::forceExpiry() from dynamic to bool'],
-        ['c' => 'Cookie_Backend', 'm' => 'set', 'n' => 'Changed type of parameter $secure in Cookie_Backend::set() from dynamic to bool'],
-        ['c' => 'Factory', 'm' => 'create', 'n' => 'Changed type of parameter $service in Factory::create() from dynamic to string'],
-        ['c' => 'DBLocale', 'm' => 'Nice', 'n' => 'Changed type of parameter $showNative in DBLocale::Nice() from dynamic to bool'],
-        ['c' => 'ConfirmedPasswordField', 'm' => 'setRequireExistingPassword', 'n' => 'Changed type of parameter $show in ConfirmedPasswordField::setRequireExistingPassword() from dynamic to bool'],
-        ['c' => 'DBField', 'm' => 'create_field', 'n' => 'Changed type of parameter $spec in DBField::create_field() from dynamic to string'],
-        ['c' => 'Convert', 'm' => 'linkIfMatch', 'n' => 'Changed type of parameter $string in Convert::linkIfMatch() from dynamic to string'],
-        ['c' => 'DBText', 'm' => 'ContextSummary', 'n' => 'Changed type of parameter $suffix in DBText::ContextSummary() from dynamic to string|false'],
-        ['c' => 'SSViewer', 'm' => 'get_templates_by_class', 'n' => 'Changed type of parameter $suffix in SSViewer::get_templates_by_class() from dynamic to string'],
-        ['c' => 'FieldList', 'm' => 'addFieldToTab', 'n' => 'Changed type of parameter $tabName in FieldList::addFieldToTab() from dynamic to string'],
-        ['c' => 'FieldList', 'm' => 'addFieldsToTab', 'n' => 'Changed type of parameter $tabName in FieldList::addFieldsToTab() from dynamic to string'],
-        ['c' => 'FieldList', 'm' => 'findOrMakeTab', 'n' => 'Changed type of parameter $tabName in FieldList::findOrMakeTab() from dynamic to string'],
-        ['c' => 'FieldList', 'm' => 'findTab', 'n' => 'Changed type of parameter $tabName in FieldList::findTab() from dynamic to string'],
-        ['c' => 'FieldList', 'm' => 'removeFieldFromTab', 'n' => 'Changed type of parameter $tabName in FieldList::removeFieldFromTab() from dynamic to string'],
-        ['c' => 'FieldList', 'm' => 'removeFieldsFromTab', 'n' => 'Changed type of parameter $tabName in FieldList::removeFieldsFromTab() from dynamic to string'],
-        ['c' => 'DBField', 'm' => 'setTable', 'n' => 'Changed type of parameter $tableName in DBField::setTable() from dynamic to string'],
-        ['c' => 'SSViewer', 'm' => '__construct', 'n' => 'Changed type of parameter $templates in SSViewer::__construct() from dynamic to string|array'],
-        ['c' => 'HTMLEditorConfig', 'm' => 'setThemes', 'n' => 'Changed type of parameter $themes in HTMLEditorConfig::setThemes() from dynamic to array'],
-        ['c' => 'SSViewer', 'm' => 'add_themes', 'n' => 'Changed type of parameter $themes in SSViewer::add_themes() from dynamic to array'],
-        ['c' => 'SSViewer', 'm' => 'set_themes', 'n' => 'Changed type of parameter $themes in SSViewer::set_themes() from dynamic to array'],
-        ['c' => 'DBDate', 'm' => 'getCustomFormatter', 'n' => 'Changed type of parameter $timeLength in DBDate::getCustomFormatter() from dynamic to int'],
-        ['c' => 'DBDate', 'm' => 'getFormatter', 'n' => 'Changed type of parameter $timeLength in DBDate::getFormatter() from dynamic to int'],
-        ['c' => 'DBTime', 'm' => 'getFormatter', 'n' => 'Changed type of parameter $timeLength in DBTime::getFormatter() from dynamic to int'],
-        ['c' => 'DBDatetime', 'm' => 'withFixedNow', 'n' => 'Changed type of parameter $time in DBDatetime::withFixedNow() from dynamic to DBDatetime|string'],
-        ['c' => 'TimeField', 'm' => 'internalToFrontend', 'n' => 'Changed type of parameter $time in TimeField::internalToFrontend() from dynamic to mixed'],
-        ['c' => 'TimeField', 'm' => 'tidyInternal', 'n' => 'Changed type of parameter $time in TimeField::tidyInternal() from dynamic to mixed'],
-        ['c' => 'DBEnum', 'm' => 'formField', 'n' => 'Changed type of parameter $title in DBEnum::formField() from dynamic to string|null'],
-        ['c' => 'DBField', 'm' => 'scaffoldFormField', 'n' => 'Changed type of parameter $title in DBField::scaffoldFormField() from dynamic to string|null'],
-        ['c' => 'DBField', 'm' => 'scaffoldSearchField', 'n' => 'Changed type of parameter $title in DBField::scaffoldSearchField() from dynamic to string|null'],
-        ['c' => 'FieldList', 'm' => 'findOrMakeTab', 'n' => 'Changed type of parameter $title in FieldList::findOrMakeTab() from dynamic to string|null'],
-        ['c' => 'CookieAuthenticationHandler', 'm' => 'setTokenCookieName', 'n' => 'Changed type of parameter $tokenCookieName in CookieAuthenticationHandler::setTokenCookieName() from dynamic to string'],
-        ['c' => 'CookieAuthenticationHandler', 'm' => 'setTokenCookieSecure', 'n' => 'Changed type of parameter $tokenCookieSecure in CookieAuthenticationHandler::setTokenCookieSecure() from dynamic to bool'],
-        ['c' => 'ChangePasswordHandler', 'm' => 'setSessionToken', 'n' => 'Changed type of parameter $token in ChangePasswordHandler::setSessionToken() from dynamic to string'],
-        ['c' => 'FieldList', 'm' => 'transform', 'n' => 'Changed type of parameter $trans in FieldList::transform() from dynamic to FormTransformation'],
-        ['c' => 'Form', 'm' => 'sessionError', 'n' => 'Changed type of parameter $type in Form::sessionError() from dynamic to string'],
-        ['c' => 'Form', 'm' => 'sessionFieldError', 'n' => 'Changed type of parameter $type in Form::sessionFieldError() from dynamic to string'],
-        ['c' => 'Form', 'm' => 'sessionMessage', 'n' => 'Changed type of parameter $type in Form::sessionMessage() from dynamic to string'],
-        ['c' => 'Form', 'm' => 'setValidator', 'n' => 'Changed type of parameter $validator in Form::setValidator() from SilverStripe\\Forms\\Validator to Validator|null'],
-        ['c' => 'Member', 'm' => 'set_password_validator', 'n' => 'Changed type of parameter $validator in Member::set_password_validator() from SilverStripe\\Security\\PasswordValidator to PasswordValidator|null'],
-        ['c' => 'Cookie', 'm' => 'set', 'n' => 'Changed type of parameter $value in Cookie::set() from dynamic to string|false'],
-        ['c' => 'CookieJar', 'm' => 'outputCookie', 'n' => 'Changed type of parameter $value in CookieJar::outputCookie() from dynamic to string|false'],
-        ['c' => 'Cookie_Backend', 'm' => 'set', 'n' => 'Changed type of parameter $value in Cookie_Backend::set() from dynamic to string|false'],
-        ['c' => 'DBClassNameTrait', 'm' => 'setValue', 'n' => 'Changed type of parameter $value in DBClassNameTrait::setValue() from dynamic to mixed'],
-        ['c' => 'DBDate', 'm' => 'parseDate', 'n' => 'Changed type of parameter $value in DBDate::parseDate() from dynamic to mixed'],
-        ['c' => 'DBEnum', 'm' => 'formField', 'n' => 'Changed type of parameter $value in DBEnum::formField() from dynamic to string|null'],
-        ['c' => 'DBField', 'm' => 'create_field', 'n' => 'Changed type of parameter $value in DBField::create_field() from dynamic to mixed'],
-        ['c' => 'DBField', 'm' => 'prepValueForDB', 'n' => 'Changed type of parameter $value in DBField::prepValueForDB() from dynamic to mixed'],
-        ['c' => 'DBField', 'm' => 'setValue', 'n' => 'Changed type of parameter $value in DBField::setValue() from dynamic to mixed'],
-        ['c' => 'DBHTMLText', 'm' => 'whitelistContent', 'n' => 'Changed type of parameter $value in DBHTMLText::whitelistContent() from dynamic to mixed'],
-        ['c' => 'DBPolymorphicForeignKey', 'm' => 'setClassValue', 'n' => 'Changed type of parameter $value in DBPolymorphicForeignKey::setClassValue() from dynamic to string'],
-        ['c' => 'DBPolymorphicForeignKey', 'm' => 'setIDValue', 'n' => 'Changed type of parameter $value in DBPolymorphicForeignKey::setIDValue() from dynamic to int'],
-        ['c' => 'DBString', 'm' => 'setNullifyEmpty', 'n' => 'Changed type of parameter $value in DBString::setNullifyEmpty() from dynamic to bool'],
-        ['c' => 'DBTime', 'm' => 'parseTime', 'n' => 'Changed type of parameter $value in DBTime::parseTime() from dynamic to mixed'],
-        ['c' => 'HTMLEditorConfig', 'm' => 'setOption', 'n' => 'Changed type of parameter $value in HTMLEditorConfig::setOption() from dynamic to mixed'],
-        ['c' => 'NumericField', 'm' => 'cast', 'n' => 'Changed type of parameter $value in NumericField::cast() from dynamic to mixed'],
-        ['c' => 'DBHTMLText', 'm' => 'setWhitelist', 'n' => 'Changed type of parameter $whitelist in DBHTMLText::setWhitelist() from dynamic to string|array'],
+        // BuildTask
+        'c' => 'BuildTask', 'm' => 'run', 'p' => 0, 't' => 'Symfony\\Component\\Console\\Input\\InputInterface', 'n' => 'Changed type of parameter $request from dynamic to Symfony\\Component\\Console\\Input\\InputInterface', [cite: 69]
 
-        ['c' => 'FieldFilterInterface', 'm' => 'apply', 'n' => 'Changed type of parameter $list in FieldFilterInterface::apply() from SilverStripe\\ORM\\Filterable to SS_List'],
-        ['c' => 'CanViewPermission', 'm' => 'listPermissionCheck', 'n' => 'Changed type of parameter $obj in CanViewPermission::listPermissionCheck() from SilverStripe\\ORM\\Filterable to SS_List'],
+        // CMSMain
+        // 'c' => 'CMSMain', 'm' => 'getTreeNodeClasses', 'p' => 0, 't' => 'DataObject', 'n' => 'Changed type of parameter $node from SiteTree to DataObject', [cite: 20]
+        // 'c' => 'CMSMain', 'm' => 'getCMSEditLinkForManagedDataObject', 'p' => 0, 't' => 'DataObject', 'n' => 'Changed type of parameter $obj from SiteTree to DataObject', [cite: 20]
+        // 'c' => 'CMSMain', 'm' => 'getArchiveWarningMessage', 'p' => 0, 't' => 'DataObject', 'n' => 'Changed type of parameter $record from dynamic to DataObject', [cite: 21]
 
-        ['c' => 'GridFieldSiteTreeAddNewButton', 'm' => 'getAllowedChildren', 'n' => 'Changed type of parameter $parent in GridFieldSiteTreeAddNewButton::getAllowedChildren() from SiteTree to SiteTree|null'],
+        // CanViewPermission
+        // 'c' => 'CanViewPermission', 'm' => 'listPermissionCheck', 'p' => 0, 't' => 'SS_List', 'n' => 'Changed type of parameter $obj from SilverStripe\\ORM\\Filterable to SS_List', [cite: 94]
 
-        ['c' => 'RealMeService', 'm' => 'getAuth', 'n' => 'Changed type of parameter $request in RealMeService::getAuth() from HTTPRequest to HTTPRequest|null'],
+        // CanonicalURLMiddleware
+        // 'c' => 'CanonicalURLMiddleware', 'm' => 'getOrValidateRequest', 'p' => 0, 't' => 'HTTPRequest|null', 'n' => 'Changed type of parameter $request from HTTPRequest to HTTPRequest|null', [cite: 69]
+        // 'c' => 'CanonicalURLMiddleware', 'm' => 'throwRedirectIfNeeded', 'p' => 0, 't' => 'HTTPRequest|null', 'n' => 'Changed type of parameter $request from HTTPRequest to HTTPRequest|null', [cite: 69]
+        // 'c' => 'CanonicalURLMiddleware', 'm' => 'hasBasicAuthPrompt', 'p' => 0, 't' => 'HTTPResponse|null', 'n' => 'Changed type of parameter $response from HTTPResponse to HTTPResponse|null', [cite: 76]
 
-        ['c' => 'LeftAndMainSubsites', 'm' => 'alternateAccessCheck', 'n' => 'Changed type of parameter $member in LeftAndMainSubsites::alternateAccessCheck() from Member to Member|null'],
-        ['c' => 'LeftAndMainSubsites', 'm' => 'canAccess', 'n' => 'Changed type of parameter $member in LeftAndMainSubsites::canAccess() from Member to Member|null'],
+        // ChangePasswordHandler
+        'c' => 'ChangePasswordHandler', 'm' => 'setSessionToken', 'p' => 0, 't' => 'Member', 'n' => 'Changed type of parameter $member from dynamic to Member', [cite: 53]
+        'c' => 'ChangePasswordHandler', 'm' => 'setSessionToken', 'p' => 1, 't' => 'string', 'n' => 'Changed type of parameter $token from dynamic to string', [cite: 87]
 
-        ['c' => 'EditableFileField', 'm' => 'getFolderPermissionString', 'n' => 'Changed type of parameter $folder in EditableFileField::getFolderPermissionString() from Folder to Folder|null'],
-        ['c' => 'UserDefinedFormController', 'm' => 'index', 'n' => 'Changed type of parameter $request in UserDefinedFormController::index() from HTTPRequest to HTTPRequest|null'],
+        // ClassManifest
+        // 'c' => 'ClassManifest', 'm' => '__construct', 'p' => 0, 't' => 'CacheFactory|null', 'n' => 'Changed type of parameter $cacheFactory from CacheFactory to CacheFactory|null', [cite: 24]
 
-        ['c' => 'Versioned', 'm' => 'get_by_stage', 'n' => 'Changed type of parameter $class in Versioned::get_by_stage() from dynamic to string'],
-        ['c' => 'Versioned', 'm' => 'get_including_deleted', 'n' => 'Changed type of parameter $class in Versioned::get_including_deleted() from dynamic to string'],
-        ['c' => 'Versioned', 'm' => 'get_by_stage', 'n' => 'Changed type of parameter $containerClass in Versioned::get_by_stage() from dynamic to string'],
-        ['c' => 'Versioned', 'm' => 'augmentLoadLazyFields', 'n' => 'Changed type of parameter $dataQuery in Versioned::augmentLoadLazyFields() from DataQuery to DataQuery|null'],
-        ['c' => 'Versioned', 'm' => 'get_by_stage', 'n' => 'Changed type of parameter $filter in Versioned::get_by_stage() from dynamic to string|array'],
-        ['c' => 'Versioned', 'm' => 'get_including_deleted', 'n' => 'Changed type of parameter $filter in Versioned::get_including_deleted() from dynamic to string|array'],
-        ['c' => 'Versioned', 'm' => 'get_by_stage', 'n' => 'Changed type of parameter $limit in Versioned::get_by_stage() from dynamic to string|array|null'],
-        ['c' => 'Versioned', 'm' => 'get_by_stage', 'n' => 'Changed type of parameter $sort in Versioned::get_by_stage() from dynamic to string|array|null'],
-        ['c' => 'Versioned', 'm' => 'get_including_deleted', 'n' => 'Changed type of parameter $sort in Versioned::get_including_deleted() from dynamic to string'],
-        ['c' => 'Versioned', 'm' => 'get_by_stage', 'n' => 'Changed type of parameter $stage in Versioned::get_by_stage() from dynamic to string'],
+        // ConfirmedPasswordField
+        'c' => 'ConfirmedPasswordField', 'm' => 'setMaxLength', 'p' => 0, 't' => 'int', 'n' => 'Changed type of parameter $maxLength from dynamic to int', [cite: 52]
+        'c' => 'ConfirmedPasswordField', 'm' => 'setRequireExistingPassword', 'p' => 0, 't' => 'bool', 'n' => 'Changed type of parameter $show from dynamic to bool', [cite: 80]
+        'c' => 'ConfirmedPasswordField', 'm' => 'setMinLength', 'p' => 0, 't' => 'int', 'n' => 'Changed type of parameter $minLength from dynamic to int', [cite: 59]
 
-        ['c' => 'DataObjectVersionFormFactory', 'm' => 'getFormActions', 'n' => 'Changed type of parameter $controller in DataObjectVersionFormFactory::getFormActions() from RequestHandler to RequestHandler|null'],
-        ['c' => 'DataObjectVersionFormFactory', 'm' => 'getFormFields', 'n' => 'Changed type of parameter $controller in DataObjectVersionFormFactory::getFormFields() from RequestHandler to RequestHandler|null'],
-        ['c' => 'HistoryViewerController', 'm' => 'compareForm', 'n' => 'Changed type of parameter $request in HistoryViewerController::compareForm() from HTTPRequest to HTTPRequest|null'],
-        ['c' => 'HistoryViewerController', 'm' => 'versionForm', 'n' => 'Changed type of parameter $request in HistoryViewerController::versionForm() from HTTPRequest to HTTPRequest|null'],
+        // Convert
+        'c' => 'Convert', 'm' => 'linkIfMatch', 'p' => 0, 't' => 'string', 'n' => 'Changed type of parameter $string from dynamic to string', [cite: 80]
 
-        ['c' => 'CredentialRepositoryProviderTrait', 'm' => 'getCredentialRepository', 'n' => 'Changed type of parameter $registeredMethod in CredentialRepositoryProviderTrait::getCredentialRepository() from RegisteredMethod to RegisteredMethod|null'],
-        ['c' => 'VerifyHandler', 'm' => 'getCredentialRequestOptions', 'n' => 'Changed type of parameter $registeredMethod in VerifyHandler::getCredentialRequestOptions() from RegisteredMethod to RegisteredMethod|null'],
+        // Cookie
+        'c' => 'Cookie', 'm' => 'force_expiry', 'p' => 0, 't' => 'string', 'n' => 'Changed type of parameter $name from dynamic to string', [cite: 59]
+        // 'c' => 'Cookie', 'm' => 'force_expiry', 'p' => 1, 't' => 'string|null', 'n' => 'Changed type of parameter $path from dynamic to string|null', [cite: 65]
+        // 'c' => 'Cookie', 'm' => 'force_expiry', 'p' => 2, 't' => 'string|null', 'n' => 'Changed type of parameter $domain from dynamic to string|null', [cite: 34]
+        'c' => 'Cookie', 'm' => 'force_expiry', 'p' => 3, 't' => 'bool', 'n' => 'Changed type of parameter $secure from dynamic to bool', [cite: 78]
+        'c' => 'Cookie', 'm' => 'force_expiry', 'p' => 4, 't' => 'bool', 'n' => 'Changed type of parameter $httpOnly from dynamic to bool', [cite: 43]
+        'c' => 'Cookie', 'm' => 'get', 'p' => 0, 't' => 'string', 'n' => 'Changed type of parameter $name from dynamic to string', [cite: 60]
+        'c' => 'Cookie', 'm' => 'get', 'p' => 1, 't' => 'bool', 'n' => 'Changed type of parameter $includeUnsent from dynamic to bool', [cite: 46]
+        'c' => 'Cookie', 'm' => 'get_all', 'p' => 0, 't' => 'bool', 'n' => 'Changed type of parameter $includeUnsent from dynamic to bool', [cite: 46]
+        'c' => 'Cookie', 'm' => 'set', 'p' => 0, 't' => 'string', 'n' => 'Changed type of parameter $name from dynamic to string', [cite: 60]
+        // 'c' => 'Cookie', 'm' => 'set', 'p' => 1, 't' => 'string|false', 'n' => 'Changed type of parameter $value from dynamic to string|false', [cite: 89]
+        'c' => 'Cookie', 'm' => 'set', 'p' => 2, 't' => 'int|float', 'n' => 'Changed type of parameter $expiry from dynamic to int|float', [cite: 36]
+        // 'c' => 'Cookie', 'm' => 'set', 'p' => 3, 't' => 'string|null', 'n' => 'Changed type of parameter $path from dynamic to string|null', [cite: 65]
+        // 'c' => 'Cookie', 'm' => 'set', 'p' => 4, 't' => 'string|null', 'n' => 'Changed type of parameter $domain from dynamic to string|null', [cite: 34]
+        'c' => 'Cookie', 'm' => 'set', 'p' => 5, 't' => 'bool', 'n' => 'Changed type of parameter $secure from dynamic to bool', [cite: 78]
+        'c' => 'Cookie', 'm' => 'set', 'p' => 6, 't' => 'bool', 'n' => 'Changed type of parameter $httpOnly from dynamic to bool', [cite: 43]
 
-        ['c' => 'WorkflowTemplate', 'm' => 'createAction', 'n' => 'Changed type of parameter $definition in WorkflowTemplate::createAction() from WorkflowDefinition to WorkflowDefinition|null'],
-        ['c' => 'WorkflowInstance', 'm' => 'beginWorkflow', 'n' => 'Changed type of parameter $for in WorkflowInstance::beginWorkflow() from DataObject to DataObject|null'],
-        ['c' => 'NotifyUsersWorkflowAction', 'm' => 'getMemberFields', 'n' => 'Changed type of parameter $member in NotifyUsersWorkflowAction::getMemberFields() from Member to Member|null'],
+        // CookieAuthenticationHandler
+        'c' => 'CookieAuthenticationHandler', 'm' => 'setDeviceCookieName', 'p' => 0, 't' => 'string', 'n' => 'Changed type of parameter $deviceCookieName from dynamic to string', [cite: 33]
+        'c' => 'CookieAuthenticationHandler', 'm' => 'setTokenCookieName', 'p' => 0, 't' => 'string', 'n' => 'Changed type of parameter $tokenCookieName from dynamic to string', [cite: 87]
+        'c' => 'CookieAuthenticationHandler', 'm' => 'setTokenCookieSecure', 'p' => 0, 't' => 'bool', 'n' => 'Changed type of parameter $tokenCookieSecure from dynamic to bool', [cite: 87]
 
-        ['c' => 'GridFieldNestedForm', 'm' => 'handleNestedItem', 'n' => 'Changed type of parameter $record in GridFieldNestedForm::handleNestedItem() from SilverStripe\\View\\ViewableData|null to ModelData|null'],
-        ['c' => 'GridFieldNestedForm', 'm' => 'toggleNestedItem', 'n' => 'Changed type of parameter $record in GridFieldNestedForm::toggleNestedItem() from SilverStripe\\View\\ViewableData|null to ModelData|null'],
+        // CookieJar
+        'c' => 'CookieJar', 'm' => 'outputCookie', 'p' => 0, 't' => 'string', 'n' => 'Changed type of parameter $name from dynamic to string', [cite: 60]
+        // 'c' => 'CookieJar', 'm' => 'outputCookie', 'p' => 1, 't' => 'string|false', 'n' => 'Changed type of parameter $value from dynamic to string|false', [cite: 89]
+        'c' => 'CookieJar', 'm' => 'outputCookie', 'p' => 2, 't' => 'int', 'n' => 'Changed type of parameter $expiry from dynamic to int', [cite: 36]
+        // 'c' => 'CookieJar', 'm' => 'outputCookie', 'p' => 3, 't' => 'string|null', 'n' => 'Changed type of parameter $path from dynamic to string|null', [cite: 65]
+        // 'c' => 'CookieJar', 'm' => 'outputCookie', 'p' => 4, 't' => 'string|null', 'n' => 'Changed type of parameter $domain from dynamic to string|null', [cite: 34]
+        'c' => 'CookieJar', 'm' => 'outputCookie', 'p' => 5, 't' => 'bool', 'n' => 'Changed type of parameter $secure from dynamic to bool', [cite: 79]
+        'c' => 'CookieJar', 'm' => 'outputCookie', 'p' => 6, 't' => 'bool', 'n' => 'Changed type of parameter $httpOnly from dynamic to bool', [cite: 44]
 
-        ['c' => 'QueuedJobService', 'm' => 'setRunAsUser', 'n' => 'Changed type of parameter $originalUser in QueuedJobService::setRunAsUser() from Member to Member|null'],
-        ['c' => 'QueuedJobService', 'm' => 'unsetRunAsUser', 'n' => 'Changed type of parameter $originalUser in QueuedJobService::unsetRunAsUser() from Member to Member|null'],
-        ['c' => 'QueuedJobService', 'm' => 'unsetRunAsUser', 'n' => 'Changed type of parameter $runAsUser in QueuedJobService::unsetRunAsUser() from Member to Member|null'],
+        // Cookie_Backend
+        'c' => 'Cookie_Backend', 'm' => '__construct', 'p' => 0, 't' => 'array', 'n' => 'Changed type of parameter $cookies from dynamic to array', [cite: 29]
+        'c' => 'Cookie_Backend', 'm' => 'forceExpiry', 'p' => 0, 't' => 'string', 'n' => 'Changed type of parameter $name from dynamic to string', [cite: 60]
+        // 'c' => 'Cookie_Backend', 'm' => 'forceExpiry', 'p' => 1, 't' => 'string|null', 'n' => 'Changed type of parameter $path from dynamic to string|null', [cite: 66]
+        // 'c' => 'Cookie_Backend', 'm' => 'forceExpiry', 'p' => 2, 't' => 'string|null', 'n' => 'Changed type of parameter $domain from dynamic to string|null', [cite: 34]
+        'c' => 'Cookie_Backend', 'm' => 'forceExpiry', 'p' => 3, 't' => 'bool', 'n' => 'Changed type of parameter $secure from dynamic to bool', [cite: 79]
+        'c' => 'Cookie_Backend', 'm' => 'forceExpiry', 'p' => 4, 't' => 'bool', 'n' => 'Changed type of parameter $httpOnly from dynamic to bool', [cite: 44]
+        'c' => 'Cookie_Backend', 'm' => 'get', 'p' => 0, 't' => 'string', 'n' => 'Changed type of parameter $name from dynamic to string', [cite: 61]
+        'c' => 'Cookie_Backend', 'm' => 'get', 'p' => 1, 't' => 'bool', 'n' => 'Changed type of parameter $includeUnsent from dynamic to bool', [cite: 46]
+        'c' => 'Cookie_Backend', 'm' => 'getAll', 'p' => 0, 't' => 'bool', 'n' => 'Changed type of parameter $includeUnsent from dynamic to bool', [cite: 46]
+        'c' => 'Cookie_Backend', 'm' => 'set', 'p' => 0, 't' => 'string', 'n' => 'Changed type of parameter $name from dynamic to string', [cite: 61]
+        // 'c' => 'Cookie_Backend', 'm' => 'set', 'p' => 1, 't' => 'string|false', 'n' => 'Changed type of parameter $value from dynamic to string|false', [cite: 90]
+        'c' => 'Cookie_Backend', 'm' => 'set', 'p' => 2, 't' => 'int|float', 'n' => 'Changed type of parameter $expiry from dynamic to int|float', [cite: 36]
+        // 'c' => 'Cookie_Backend', 'm' => 'set', 'p' => 3, 't' => 'string|null', 'n' => 'Changed type of parameter $path from dynamic to string|null', [cite: 66]
+        // 'c' => 'Cookie_Backend', 'm' => 'set', 'p' => 4, 't' => 'string|null', 'n' => 'Changed type of parameter $domain from dynamic to string|null', [cite: 35]
+        'c' => 'Cookie_Backend', 'm' => 'set', 'p' => 5, 't' => 'bool', 'n' => 'Changed type of parameter $secure from dynamic to bool', [cite: 79]
+        'c' => 'Cookie_Backend', 'm' => 'set', 'p' => 6, 't' => 'bool', 'n' => 'Changed type of parameter $httpOnly from dynamic to bool', [cite: 44]
 
-        ['c' => 'FluentExtension', 'm' => 'getDataQueryLocale', 'n' => 'Changed type of parameter $dataQuery in FluentExtension::getDataQueryLocale() from DataQuery to DataQuery|null'],
-        ['c' => 'FluentFilteredExtension', 'm' => 'getDataQueryLocale', 'n' => 'Changed type of parameter $dataQuery in FluentFilteredExtension::getDataQueryLocale() from DataQuery to DataQuery|null'],
-        ['c' => 'FluentIsolatedExtension', 'm' => 'getDataQueryLocale', 'n' => 'Changed type of parameter $dataQuery in FluentIsolatedExtension::getDataQueryLocale() from DataQuery to DataQuery|null'],
-        ['c' => 'FluentSiteTreeExtension', 'm' => 'updateStatusFlags', 'n' => 'Changed type of parameter $flags in FluentSiteTreeExtension::updateStatusFlags() from dynamic to array'],
-        ['c' => 'LocalDateTime', 'm' => 'setLocalValue', 'n' => 'Changed type of parameter $timezone in LocalDateTime::setLocalValue() from dynamic to string|null'],
-        ['c' => 'LocalDateTime', 'm' => 'setLocalValue', 'n' => 'Changed type of parameter $value in LocalDateTime::setLocalValue() from dynamic to string'],
+        // CoreConfigFactory
+        // 'c' => 'CoreConfigFactory', 'm' => '__construct', 'p' => 0, 't' => 'CacheFactory|null', 'n' => 'Changed type of parameter $cacheFactory from CacheFactory to CacheFactory|null', [cite: 25]
 
+        // CredentialRepositoryProviderTrait
+        // 'c' => 'CredentialRepositoryProviderTrait', 'm' => 'getCredentialRepository', 'p' => 0, 't' => 'RegisteredMethod|null', 'n' => 'Changed type of parameter $registeredMethod from RegisteredMethod to RegisteredMethod|null', [cite: 99]
+
+        // DBClassNameTrait
+        // 'c' => 'DBClassNameTrait', 'm' => '__construct', 'p' => 0, 't' => 'string|null', 'n' => 'Changed type of parameter $name from dynamic to string|null', [cite: 61]
+        // 'c' => 'DBClassNameTrait', 'm' => '__construct', 'p' => 1, 't' => 'string|null', 'n' => 'Changed type of parameter $baseClass from dynamic to string|null', [cite: 23]
+        'c' => 'DBClassNameTrait', 'm' => '__construct', 'p' => 2, 't' => 'array', 'n' => 'Changed type of parameter $options from dynamic to array', [cite: 64]
+        // 'c' => 'DBClassNameTrait', 'm' => 'setBaseClass', 'p' => 0, 't' => 'string|null', 'n' => 'Changed type of parameter $baseClass from dynamic to string|null', [cite: 24]
+        'c' => 'DBClassNameTrait', 'm' => 'setValue', 'p' => 0, 't' => 'mixed', 'n' => 'Changed type of parameter $value from dynamic to mixed', [cite: 90]
+        // 'c' => 'DBClassNameTrait', 'm' => 'setValue', 'p' => 1, 't' => 'null|array|ModelData', 'n' => 'Changed type of parameter $record from dynamic to null|array|ModelData', [cite: 68]
+        'c' => 'DBClassNameTrait', 'm' => 'setValue', 'p' => 2, 't' => 'bool', 'n' => 'Changed type of parameter $markChanged from dynamic to bool', [cite: 50]
+
+        // DBComposite
+        'c' => 'DBComposite', 'm' => 'bindTo', 'p' => 0, 't' => 'DataObject', 'n' => 'Changed type of parameter $dataObject from dynamic to DataObject', [cite: 30]
+        'c' => 'DBComposite', 'm' => 'dbObject', 'p' => 0, 't' => 'string', 'n' => 'Changed type of parameter $field from dynamic to string', [cite: 39]
+
+        // DBDate
+        'c' => 'DBDate', 'm' => 'DayOfMonth', 'p' => 0, 't' => 'bool', 'n' => 'Changed type of parameter $includeOrdinal from dynamic to bool', [cite: 45]
+        'c' => 'DBDate', 'm' => 'Format', 'p' => 0, 't' => 'string', 'n' => 'Changed type of parameter $format from dynamic to string', [cite: 42]
+        // 'c' => 'DBDate', 'm' => 'FormatFromSettings', 'p' => 0, 't' => 'Member|null', 'n' => 'Changed type of parameter $member from dynamic to Member|null', [cite: 53]
+        // 'c' => 'DBDate', 'm' => 'getCustomFormatter', 'p' => 0, 't' => 'string|null', 'n' => 'Changed type of parameter $pattern from dynamic to string|null', [cite: 66]
+        // 'c' => 'DBDate', 'm' => 'getCustomFormatter', 'p' => 1, 't' => 'string|null', 'n' => 'Changed type of parameter $locale from dynamic to string|null', [cite: 49]
+        'c' => 'DBDate', 'm' => 'getCustomFormatter', 'p' => 2, 't' => 'int', 'n' => 'Changed type of parameter $dateLength from dynamic to int', [cite: 31]
+        'c' => 'DBDate', 'm' => 'getCustomFormatter', 'p' => 3, 't' => 'int', 'n' => 'Changed type of parameter $timeLength from dynamic to int', [cite: 84]
+        'c' => 'DBDate', 'm' => 'getFormatter', 'p' => 0, 't' => 'int', 'n' => 'Changed type of parameter $dateLength from dynamic to int', [cite: 31]
+        'c' => 'DBDate', 'm' => 'getFormatter', 'p' => 1, 't' => 'int', 'n' => 'Changed type of parameter $timeLength from dynamic to int', [cite: 84]
+        'c' => 'DBDate', 'm' => 'parseDate', 'p' => 0, 't' => 'mixed', 'n' => 'Changed type of parameter $value from dynamic to mixed', [cite: 90]
+
+        // DBDatetime
+        'c' => 'DBDatetime', 'm' => 'set_mock_now', 'p' => 0, 't' => 'DBDatetime|string', 'n' => 'Changed type of parameter $datetime from dynamic to DBDatetime|string', [cite: 32]
+        'c' => 'DBDatetime', 'm' => 'withFixedNow', 'p' => 0, 't' => 'DBDatetime|string', 'n' => 'Changed type of parameter $time from dynamic to DBDatetime|string', [cite: 85]
+        'c' => 'DBDatetime', 'm' => 'withFixedNow', 'p' => 1, 't' => 'callable', 'n' => 'Changed type of parameter $callback from dynamic to callable', [cite: 26]
+
+        // DBEnum
+        'c' => 'DBEnum', 'm' => 'enumValues', 'p' => 0, 't' => 'bool', 'n' => 'Changed type of parameter $hasEmpty from dynamic to bool', [cite: 43]
+        // 'c' => 'DBEnum', 'm' => 'formField', 'p' => 0, 't' => 'string|null', 'n' => 'Changed type of parameter $title from dynamic to string|null', [cite: 86]
+        // 'c' => 'DBEnum', 'm' => 'formField', 'p' => 1, 't' => 'string|null', 'n' => 'Changed type of parameter $name from dynamic to string|null', [cite: 62]
+        // 'c' => 'DBEnum', 'm' => 'formField', 'p' => 2, 't' => 'string|null', 'n' => 'Changed type of parameter $value from dynamic to string|null', [cite: 90]
+        // 'c' => 'DBEnum', 'm' => 'formField', 'p' => 3, 't' => 'string|null', 'n' => 'Changed type of parameter $emptyString from dynamic to string|null', [cite: 35]
+        'c' => 'DBEnum', 'm' => 'formField', 'p' => 4, 't' => 'bool', 'n' => 'Changed type of parameter $hasEmpty from dynamic to bool', [cite: 43]
+        // 'c' => 'DBEnum', 'm' => 'setDefault', 'p' => 0, 't' => 'string|null', 'n' => 'Changed type of parameter $default from dynamic to string|null', [cite: 33]
+        'c' => 'DBEnum', 'm' => 'setEnum', 'p' => 0, 't' => 'string|array', 'n' => 'Changed type of parameter $enum from dynamic to string|array', [cite: 35]
+
+        // DBField
+        'c' => 'DBField', 'm' => 'addToQuery', 'p' => 0, 't' => 'SQLSelect', 'n' => 'Changed type of parameter $query from dynamic to SQLSelect', [cite: 68]
+        'c' => 'DBField', 'm' => 'create_field', 'p' => 0, 't' => 'string', 'n' => 'Changed type of parameter $spec from dynamic to string', [cite: 80]
+        'c' => 'DBField', 'm' => 'create_field', 'p' => 1, 't' => 'mixed', 'n' => 'Changed type of parameter $value from dynamic to mixed', [cite: 91]
+        // 'c' => 'DBField', 'm' => 'create_field', 'p' => 2, 't' => 'string|null', 'n' => 'Changed type of parameter $name from dynamic to string|null', [cite: 62]
+        'c' => 'DBField', 'm' => 'create_field', 'p' => 3, 't' => 'mixed', 'n' => 'Changed type of parameter $args from dynamic to mixed', [cite: 23]
+        // 'c' => 'DBField', 'm' => 'defaultSearchFilter', 'p' => 0, 't' => 'string|null', 'n' => 'Changed type of parameter $name from dynamic to string|null', [cite: 62]
+        'c' => 'DBField', 'm' => 'prepValueForDB', 'p' => 0, 't' => 'mixed', 'n' => 'Changed type of parameter $value from dynamic to mixed', [cite: 91]
+        // 'c' => 'DBField', 'm' => 'saveInto', 'p' => 0, 't' => 'ModelData', 'n' => 'Changed type of parameter $dataObject from dynamic to ModelData', [cite: 30]
+        // 'c' => 'DBField', 'm' => 'scaffoldFormField', 'p' => 0, 't' => 'string|null', 'n' => 'Changed type of parameter $title from dynamic to string|null', [cite: 86]
+        'c' => 'DBField', 'm' => 'scaffoldFormField', 'p' => 1, 't' => 'array', 'n' => 'Changed type of parameter $params from dynamic to array', [cite: 64]
+        // 'c' => 'DBField', 'm' => 'scaffoldSearchField', 'p' => 0, 't' => 'string|null', 'n' => 'Changed type of parameter $title from dynamic to string|null', [cite: 86]
+        'c' => 'DBField', 'm' => 'setDefaultValue', 'p' => 0, 't' => 'mixed', 'n' => 'Changed type of parameter $defaultValue from dynamic to mixed', [cite: 33]
+        'c' => 'DBField', 'm' => 'setName', 'p' => 0, 't' => 'string', 'n' => 'Changed type of parameter $name from dynamic to string', [cite: 62]
+        'c' => 'DBField', 'm' => 'setTable', 'p' => 0, 't' => 'string', 'n' => 'Changed type of parameter $tableName from dynamic to string', [cite: 83]
+        'c' => 'DBField', 'm' => 'setValue', 'p' => 0, 't' => 'mixed', 'n' => 'Changed type of parameter $value from dynamic to mixed', [cite: 91]
+        // 'c' => 'DBField', 'm' => 'setValue', 'p' => 1, 't' => 'null|array|ModelData', 'n' => 'Changed type of parameter $record from dynamic to null|array|ModelData', [cite: 68]
+        'c' => 'DBField', 'm' => 'setValue', 'p' => 2, 't' => 'bool', 'n' => 'Changed type of parameter $markChanged from dynamic to bool', [cite: 51]
+        'c' => 'DBField', 'm' => 'writeToManipulation', 'p' => 0, 't' => 'array', 'n' => 'Changed type of parameter $manipulation from dynamic to array', [cite: 50]
+
+        // DBFile
+        'c' => 'DBFile', 'm' => 'assertFilenameValid', 'p' => 0, 't' => 'string', 'n' => 'Changed type of parameter $filename from dynamic to string', [cite: 6]
+        'c' => 'DBFile', 'm' => 'getSourceURL', 'p' => 0, 't' => 'bool', 'n' => 'Changed type of parameter $grant from dynamic to bool', [cite: 7]
+        'c' => 'DBFile', 'm' => 'isValidFilename', 'p' => 0, 't' => 'string', 'n' => 'Changed type of parameter $filename from dynamic to string', [cite: 6]
+        'c' => 'DBFile', 'm' => 'setAllowedCategories', 'p' => 0, 't' => 'array|string', 'n' => 'Changed type of parameter $categories from dynamic to array|string', [cite: 5]
+        'c' => 'DBFile', 'm' => 'setOriginal', 'p' => 0, 't' => 'AssetContainer', 'n' => 'Changed type of parameter $original from dynamic to AssetContainer', [cite: 11]
+        // 'c' => 'DBFile', 'm' => 'validateFilename', 'p' => 0, 't' => 'string|null', 'n' => 'Changed type of parameter $filename from dynamic to string|null', [cite: 6]
+
+        // DBHTMLText
+        'c' => 'DBHTMLText', 'm' => 'setProcessShortcodes', 'p' => 0, 't' => 'bool', 'n' => 'Changed type of parameter $process from dynamic to bool', [cite: 67]
+        'c' => 'DBHTMLText', 'm' => 'setWhitelist', 'p' => 0, 't' => 'string|array', 'n' => 'Changed type of parameter $whitelist from dynamic to string|array', [cite: 93]
+        'c' => 'DBHTMLText', 'm' => 'whitelistContent', 'p' => 0, 't' => 'mixed', 'n' => 'Changed type of parameter $value from dynamic to mixed', [cite: 91]
+
+        // DBHTMLVarchar
+        'c' => 'DBHTMLVarchar', 'm' => 'setProcessShortcodes', 'p' => 0, 't' => 'bool', 'n' => 'Changed type of parameter $process from dynamic to bool', [cite: 67]
+
+        // DBLocale
+        'c' => 'DBLocale', 'm' => 'Nice', 'p' => 0, 't' => 'bool', 'n' => 'Changed type of parameter $showNative from dynamic to bool', [cite: 80]
+
+        // DBMoney
+        'c' => 'DBMoney', 'm' => 'setAmount', 'p' => 0, 't' => 'mixed', 'n' => 'Changed type of parameter $amount from dynamic to mixed', [cite: 22]
+        'c' => 'DBMoney', 'm' => 'setAmount', 'p' => 1, 't' => 'bool', 'n' => 'Changed type of parameter $markChanged from dynamic to bool', [cite: 51]
+        // 'c' => 'DBMoney', 'm' => 'setCurrency', 'p' => 0, 't' => 'string|null', 'n' => 'Changed type of parameter $currency from dynamic to string|null', [cite: 29]
+        'c' => 'DBMoney', 'm' => 'setCurrency', 'p' => 1, 't' => 'bool', 'n' => 'Changed type of parameter $markChanged from dynamic to bool', [cite: 51]
+        'c' => 'DBMoney', 'm' => 'setLocale', 'p' => 0, 't' => 'string', 'n' => 'Changed type of parameter $locale from dynamic to string', [cite: 50]
+
+        // DBPolymorphicForeignKey
+        'c' => 'DBPolymorphicForeignKey', 'm' => 'setClassValue', 'p' => 0, 't' => 'string', 'n' => 'Changed type of parameter $value from dynamic to string', [cite: 92]
+        'c' => 'DBPolymorphicForeignKey', 'm' => 'setClassValue', 'p' => 1, 't' => 'bool', 'n' => 'Changed type of parameter $markChanged from dynamic to bool', [cite: 51]
+        'c' => 'DBPolymorphicForeignKey', 'm' => 'setIDValue', 'p' => 0, 't' => 'int', 'n' => 'Changed type of parameter $value from dynamic to int', [cite: 92]
+        'c' => 'DBPolymorphicForeignKey', 'm' => 'setIDValue', 'p' => 1, 't' => 'bool', 'n' => 'Changed type of parameter $markChanged from dynamic to bool', [cite: 52]
+
+        // DBPrimaryKey
+        'c' => 'DBPrimaryKey', 'm' => 'setAutoIncrement', 'p' => 0, 't' => 'bool', 'n' => 'Changed type of parameter $autoIncrement from dynamic to bool', [cite: 23]
+
+        // DBString
+        'c' => 'DBString', 'm' => 'LimitCharacters', 'p' => 0, 't' => 'int', 'n' => 'Changed type of parameter $limit from dynamic to int', [cite: 49]
+        // 'c' => 'DBString', 'm' => 'LimitCharacters', 'p' => 1, 't' => 'string|false', 'n' => 'Changed type of parameter $add from dynamic to string|false', [cite: 21]
+        'c' => 'DBString', 'm' => 'LimitCharactersToClosestWord', 'p' => 0, 't' => 'int', 'n' => 'Changed type of parameter $limit from dynamic to int', [cite: 49]
+        // 'c' => 'DBString', 'm' => 'LimitCharactersToClosestWord', 'p' => 1, 't' => 'string|false', 'n' => 'Changed type of parameter $add from dynamic to string|false', [cite: 21]
+        'c' => 'DBString', 'm' => 'LimitWordCount', 'p' => 0, 't' => 'int', 'n' => 'Changed type of parameter $numWords from dynamic to int', [cite: 64]
+        // 'c' => 'DBString', 'm' => 'LimitWordCount', 'p' => 1, 't' => 'string|false', 'n' => 'Changed type of parameter $add from dynamic to string|false', [cite: 22]
+        'c' => 'DBString', 'm' => 'setNullifyEmpty', 'p' => 0, 't' => 'bool', 'n' => 'Changed type of parameter $value from dynamic to bool', [cite: 92]
+
+        // DBText
+        'c' => 'DBText', 'm' => 'ContextSummary', 'p' => 0, 't' => 'int', 'n' => 'Changed type of parameter $characters from dynamic to int', [cite: 27]
+        // 'c' => 'DBText', 'm' => 'ContextSummary', 'p' => 1, 't' => 'string|null', 'n' => 'Changed type of parameter $keywords from dynamic to string|null', [cite: 48]
+        'c' => 'DBText', 'm' => 'ContextSummary', 'p' => 2, 't' => 'bool', 'n' => 'Changed type of parameter $highlight from dynamic to bool', [cite: 43]
+        // 'c' => 'DBText', 'm' => 'ContextSummary', 'p' => 3, 't' => 'string|false', 'n' => 'Changed type of parameter $prefix from dynamic to string|false', [cite: 67]
+        // 'c' => 'DBText', 'm' => 'ContextSummary', 'p' => 4, 't' => 'string|false', 'n' => 'Changed type of parameter $suffix from dynamic to string|false', [cite: 81]
+        'c' => 'DBText', 'm' => 'LimitSentences', 'p' => 0, 't' => 'int', 'n' => 'Changed type of parameter $maxSentences from dynamic to int', [cite: 52]
+        'c' => 'DBText', 'm' => 'Summary', 'p' => 0, 't' => 'int', 'n' => 'Changed type of parameter $maxWords from dynamic to int', [cite: 52]
+        // 'c' => 'DBText', 'm' => 'Summary', 'p' => 1, 't' => 'string|false', 'n' => 'Changed type of parameter $add from dynamic to string|false', [cite: 22]
+
+        // DBTime
+        'c' => 'DBTime', 'm' => 'Format', 'p' => 0, 't' => 'string', 'n' => 'Changed type of parameter $format from dynamic to string', [cite: 42]
+        // 'c' => 'DBTime', 'm' => 'FormatFromSettings', 'p' => 0, 't' => 'Member|null', 'n' => 'Changed type of parameter $member from dynamic to Member|null', [cite: 53]
+        'c' => 'DBTime', 'm' => 'getFormatter', 'p' => 0, 't' => 'int', 'n' => 'Changed type of parameter $timeLength from dynamic to int', [cite: 85]
+        'c' => 'DBTime', 'm' => 'parseTime', 'p' => 0, 't' => 'mixed', 'n' => 'Changed type of parameter $value from dynamic to mixed', [cite: 92]
+
+        // DataList
+        'c' => 'DataList', 'm' => 'columnUnique', 'p' => 0, 't' => 'string', 'n' => 'Changed type of parameter $colName from dynamic to string', [cite: 27]
+        'c' => 'DataList', 'm' => 'dbObject', 'p' => 0, 't' => 'string', 'n' => 'Changed type of parameter $fieldName from dynamic to string', [cite: 37]
+
+        // DataObject
+        'c' => 'DataObject', 'm' => 'dbObject', 'p' => 0, 't' => 'string', 'n' => 'Changed type of parameter $fieldName from dynamic to string', [cite: 37]
+        'c' => 'DataObject', 'm' => 'flushCache', 'p' => 0, 't' => 'bool', 'n' => 'Changed type of parameter $persistent from dynamic to bool', [cite: 66]
+
+        // DataObjectInterface
+        'c' => 'DataObjectInterface', 'm' => '__get', 'p' => 0, 't' => 'string', 'n' => 'Changed type of parameter $fieldName from dynamic to string', [cite: 37]
+
+        // DataObjectVersionFormFactory
+        // 'c' => 'DataObjectVersionFormFactory', 'm' => 'getFormActions', 'p' => 0, 't' => 'RequestHandler|null', 'n' => 'Changed type of parameter $controller from RequestHandler to RequestHandler|null', [cite: 98]
+        // 'c' => 'DataObjectVersionFormFactory', 'm' => 'getFormFields', 'p' => 0, 't' => 'RequestHandler|null', 'n' => 'Changed type of parameter $controller from RequestHandler to RequestHandler|null', [cite: 98]
+
+        // DateField
+        'c' => 'DateField', 'm' => 'internalToFrontend', 'p' => 0, 't' => 'mixed', 'n' => 'Changed type of parameter $date from dynamic to mixed', [cite: 32]
+        'c' => 'DateField', 'm' => 'tidyInternal', 'p' => 0, 't' => 'mixed', 'n' => 'Changed type of parameter $date from dynamic to mixed', [cite: 32]
+
+        // DatetimeField
+        'c' => 'DatetimeField', 'm' => 'internalToFrontend', 'p' => 0, 't' => 'mixed', 'n' => 'Changed type of parameter $datetime from dynamic to mixed', [cite: 32]
+        'c' => 'DatetimeField', 'm' => 'tidyInternal', 'p' => 0, 't' => 'mixed', 'n' => 'Changed type of parameter $datetime from dynamic to mixed', [cite: 33]
+
+        // Debug
+        // 'c' => 'Debug', 'm' => 'create_debug_view', 'p' => 0, 't' => 'HTTPRequest|null', 'n' => 'Changed type of parameter $request from HTTPRequest to HTTPRequest|null', [cite: 69]
+        // 'c' => 'Debug', 'm' => 'dump', 'p' => 0, 't' => 'HTTPRequest|null', 'n' => 'Changed type of parameter $request from HTTPRequest to HTTPRequest|null', [cite: 70]
+        // 'c' => 'Debug', 'm' => 'endshow', 'p' => 0, 't' => 'HTTPRequest|null', 'n' => 'Changed type of parameter $request from HTTPRequest to HTTPRequest|null', [cite: 70]
+        // 'c' => 'Debug', 'm' => 'message', 'p' => 0, 't' => 'HTTPRequest|null', 'n' => 'Changed type of parameter $request from HTTPRequest to HTTPRequest|null', [cite: 70]
+        // 'c' => 'Debug', 'm' => 'show', 'p' => 0, 't' => 'HTTPRequest|null', 'n' => 'Changed type of parameter $request from HTTPRequest to HTTPRequest|null', [cite: 70]
+        // 'c' => 'Debug', 'm' => 'supportsHTML', 'p' => 0, 't' => 'HTTPRequest|null', 'n' => 'Changed type of parameter $request from HTTPRequest to HTTPRequest|null', [cite: 71]
+        // 'c' => 'Debug', 'm' => 'text', 'p' => 0, 't' => 'HTTPRequest|null', 'n' => 'Changed type of parameter $request from HTTPRequest to HTTPRequest|null', [cite: 71]
+
+        // DefaultCacheFactory
+        // 'c' => 'DefaultCacheFactory', 'm' => '__construct', 'p' => 0, 't' => 'Psr\\Log\\LoggerInterface|null', 'n' => 'Changed type of parameter $logger from Psr\\Log\\LoggerInterface to Psr\\Log\\LoggerInterface|null', [cite: 50]
+
+        // DefaultPermissionChecker
+        // 'c' => 'DefaultPermissionChecker', 'm' => 'canCreate', 'p' => 0, 't' => 'Member|null', 'n' => 'Changed type of parameter $member from Member to Member|null', [cite: 54]
+        // 'c' => 'DefaultPermissionChecker', 'm' => 'canDelete', 'p' => 0, 't' => 'Member|null', 'n' => 'Changed type of parameter $member from Member to Member|null', [cite: 54]
+        // 'c' => 'DefaultPermissionChecker', 'm' => 'canEdit', 'p' => 0, 't' => 'Member|null', 'n' => 'Changed type of parameter $member from Member to Member|null', [cite: 54]
+        // 'c' => 'DefaultPermissionChecker', 'm' => 'canView', 'p' => 0, 't' => 'Member|null', 'n' => 'Changed type of parameter $member from Member to Member|null', [cite: 54]
+
+        // Director
+        // 'c' => 'Director', 'm' => 'absoluteBaseURLWithAuth', 'p' => 0, 't' => 'HTTPRequest|null', 'n' => 'Changed type of parameter $request from HTTPRequest to HTTPRequest|null', [cite: 71]
+        // 'c' => 'Director', 'm' => 'currentRequest', 'p' => 0, 't' => 'HTTPRequest|null', 'n' => 'Changed type of parameter $request from HTTPRequest to HTTPRequest|null', [cite: 71]
+        // 'c' => 'Director', 'm' => 'forceSSL', 'p' => 0, 't' => 'HTTPRequest|null', 'n' => 'Changed type of parameter $request from HTTPRequest to HTTPRequest|null', [cite: 72]
+        // 'c' => 'Director', 'm' => 'forceWWW', 'p' => 0, 't' => 'HTTPRequest|null', 'n' => 'Changed type of parameter $request from HTTPRequest to HTTPRequest|null', [cite: 72]
+        // 'c' => 'Director', 'm' => 'host', 'p' => 0, 't' => 'HTTPRequest|null', 'n' => 'Changed type of parameter $request from HTTPRequest to HTTPRequest|null', [cite: 72]
+        // 'c' => 'Director', 'm' => 'hostName', 'p' => 0, 't' => 'HTTPRequest|null', 'n' => 'Changed type of parameter $request from HTTPRequest to HTTPRequest|null', [cite: 72]
+        // 'c' => 'Director', 'm' => 'is_ajax', 'p' => 0, 't' => 'HTTPRequest|null', 'n' => 'Changed type of parameter $request from HTTPRequest to HTTPRequest|null', [cite: 73]
+        // 'c' => 'Director', 'm' => 'is_https', 'p' => 0, 't' => 'HTTPRequest|null', 'n' => 'Changed type of parameter $request from HTTPRequest to HTTPRequest|null', [cite: 73]
+        // 'c' => 'Director', 'm' => 'port', 'p' => 0, 't' => 'HTTPRequest|null', 'n' => 'Changed type of parameter $request from HTTPRequest to HTTPRequest|null', [cite: 73]
+        // 'c' => 'Director', 'm' => 'protocol', 'p' => 0, 't' => 'HTTPRequest|null', 'n' => 'Changed type of parameter $request from HTTPRequest to HTTPRequest|null', [cite: 73]
+        // 'c' => 'Director', 'm' => 'protocolAndHost', 'p' => 0, 't' => 'HTTPRequest|null', 'n' => 'Changed type of parameter $request from HTTPRequest to HTTPRequest|null', [cite: 74]
+
+        // EagerLoadedList
+        'c' => 'EagerLoadedList', 'm' => 'columnUnique', 'p' => 0, 't' => 'string', 'n' => 'Changed type of parameter $colName from dynamic to string', [cite: 28]
+
+        // EditableFileField
+        // 'c' => 'EditableFileField', 'm' => 'getFolderPermissionString', 'p' => 0, 't' => 'Folder|null', 'n' => 'Changed type of parameter $folder from Folder to Folder|null', [cite: 95]
+
+        // Email
+        // 'c' => 'Email', 'm' => 'setBody', 'p' => 0, 't' => 'Symfony\\Component\\Mime\\Part\\AbstractPart|string|null', 'n' => 'Changed type of parameter $body from Symfony\\Component\\Mime\\Part\\AbstractPart|string to Symfony\\Component\\Mime\\Part\\AbstractPart|string|null', [cite: 24]
+        // 'c' => 'Email', 'm' => 'setData', 'p' => 0, 't' => 'array|ModelData', 'n' => 'Changed type of parameter $data from array|SilverStripe\\View\\ViewableData to array|ModelData', [cite: 30]
+
+        // Factory
+        'c' => 'Factory', 'm' => 'create', 'p' => 0, 't' => 'string', 'n' => 'Changed type of parameter $service from dynamic to string', [cite: 79]
+
+        // FieldFilterInterface
+        // 'c' => 'FieldFilterInterface', 'm' => 'apply', 'p' => 0, 't' => 'SS_List', 'n' => 'Changed type of parameter $list from SilverStripe\\ORM\\Filterable to SS_List', [cite: 93]
+
+        // FieldList
+        'c' => 'FieldList', 'm' => 'addFieldToTab', 'p' => 0, 't' => 'string', 'n' => 'Changed type of parameter $tabName from dynamic to string', [cite: 81]
+        'c' => 'FieldList', 'm' => 'addFieldToTab', 'p' => 1, 't' => 'FormField', 'n' => 'Changed type of parameter $field from dynamic to FormField', [cite: 40]
+        // 'c' => 'FieldList', 'm' => 'addFieldToTab', 'p' => 2, 't' => 'string|null', 'n' => 'Changed type of parameter $insertBefore from dynamic to string|null', [cite: 47]
+        'c' => 'FieldList', 'm' => 'addFieldsToTab', 'p' => 0, 't' => 'string', 'n' => 'Changed type of parameter $tabName from dynamic to string', [cite: 82]
+        'c' => 'FieldList', 'm' => 'addFieldsToTab', 'p' => 1, 't' => 'array', 'n' => 'Changed type of parameter $fields from dynamic to array', [cite: 41]
+        // 'c' => 'FieldList', 'm' => 'addFieldsToTab', 'p' => 2, 't' => 'string|null', 'n' => 'Changed type of parameter $insertBefore from dynamic to string|null', [cite: 47]
+        'c' => 'FieldList', 'm' => 'changeFieldOrder', 'p' => 0, 't' => 'array|string', 'n' => 'Changed type of parameter $fieldNames from dynamic to array|string', [cite: 39]
+        'c' => 'FieldList', 'm' => 'dataFieldByName', 'p' => 0, 't' => 'string', 'n' => 'Changed type of parameter $name from dynamic to string', [cite: 63]
+        'c' => 'FieldList', 'm' => 'fieldByName', 'p' => 0, 't' => 'string', 'n' => 'Changed type of parameter $name from dynamic to string', [cite: 63]
+        'c' => 'FieldList', 'm' => 'fieldNameError', 'p' => 0, 't' => 'string', 'n' => 'Changed type of parameter $functionName from dynamic to string', [cite: 42]
+        'c' => 'FieldList', 'm' => 'fieldPosition', 'p' => 0, 't' => 'string|FormField', 'n' => 'Changed type of parameter $field from dynamic to string|FormField', [cite: 40]
+        'c' => 'FieldList', 'm' => 'findOrMakeTab', 'p' => 0, 't' => 'string', 'n' => 'Changed type of parameter $tabName from dynamic to string', [cite: 82]
+        // 'c' => 'FieldList', 'm' => 'findOrMakeTab', 'p' => 1, 't' => 'string|null', 'n' => 'Changed type of parameter $title from dynamic to string|null', [cite: 86]
+        'c' => 'FieldList', 'm' => 'findTab', 'p' => 0, 't' => 'string', 'n' => 'Changed type of parameter $tabName from dynamic to string', [cite: 82]
+        'c' => 'FieldList', 'm' => 'makeFieldReadonly', 'p' => 0, 't' => 'string|array|FormField', 'n' => 'Changed type of parameter $field from dynamic to string|array|FormField', [cite: 40]
+        'c' => 'FieldList', 'm' => 'removeByName', 'p' => 0, 't' => 'string|array', 'n' => 'Changed type of parameter $fieldName from dynamic to string|array', [cite: 38]
+        'c' => 'FieldList', 'm' => 'removeByName', 'p' => 1, 't' => 'bool', 'n' => 'Changed type of parameter $dataFieldOnly from dynamic to bool', [cite: 29]
+        'c' => 'FieldList', 'm' => 'removeFieldFromTab', 'p' => 0, 't' => 'string', 'n' => 'Changed type of parameter $tabName from dynamic to string', [cite: 82]
+        'c' => 'FieldList', 'm' => 'removeFieldFromTab', 'p' => 1, 't' => 'string', 'n' => 'Changed type of parameter $fieldName from dynamic to string', [cite: 38]
+        'c' => 'FieldList', 'm' => 'removeFieldsFromTab', 'p' => 0, 't' => 'string', 'n' => 'Changed type of parameter $tabName from dynamic to string', [cite: 83]
+        'c' => 'FieldList', 'm' => 'removeFieldsFromTab', 'p' => 1, 't' => 'array', 'n' => 'Changed type of parameter $fields from dynamic to array', [cite: 41]
+        'c' => 'FieldList', 'm' => 'renameField', 'p' => 0, 't' => 'string', 'n' => 'Changed type of parameter $fieldName from dynamic to string', [cite: 38]
+        'c' => 'FieldList', 'm' => 'renameField', 'p' => 1, 't' => 'string', 'n' => 'Changed type of parameter $newFieldTitle from dynamic to string', [cite: 63]
+        'c' => 'FieldList', 'm' => 'replaceField', 'p' => 0, 't' => 'string', 'n' => 'Changed type of parameter $fieldName from dynamic to string', [cite: 38]
+        'c' => 'FieldList', 'm' => 'replaceField', 'p' => 1, 't' => 'FormField', 'n' => 'Changed type of parameter $newField from dynamic to FormField', [cite: 63]
+        'c' => 'FieldList', 'm' => 'replaceField', 'p' => 2, 't' => 'bool', 'n' => 'Changed type of parameter $dataFieldOnly from dynamic to bool', [cite: 30]
+        // 'c' => 'FieldList', 'm' => 'setContainerField', 'p' => 0, 't' => 'CompositeField|null', 'n' => 'Changed type of parameter $field from dynamic to CompositeField|null', [cite: 40]
+        'c' => 'FieldList', 'm' => 'setForm', 'p' => 0, 't' => 'Form', 'n' => 'Changed type of parameter $form from dynamic to Form', [cite: 41]
+        'c' => 'FieldList', 'm' => 'setValues', 'p' => 0, 't' => 'array', 'n' => 'Changed type of parameter $data from dynamic to array', [cite: 31]
+        'c' => 'FieldList', 'm' => 'transform', 'p' => 0, 't' => 'FormTransformation', 'n' => 'Changed type of parameter $trans from dynamic to FormTransformation', [cite: 87]
+
+        // FileLinkTracking
+        // 'c' => 'FileLinkTracking', 'm' => 'setFileParser', 'p' => 0, 't' => 'FileLinkTrackingParser|null', 'n' => 'Changed type of parameter $parser from FileLinkTrackingParser to FileLinkTrackingParser|null', [cite: 11]
+
+        // FileSearchFormFactory
+        // 'c' => 'FileSearchFormFactory', 'm' => 'getFormFields', 'p' => 0, 't' => 'RequestHandler|null', 'n' => 'Changed type of parameter $controller from RequestHandler to RequestHandler|null', [cite: 4]
+
+        // Filesystem
+        // 'c' => 'Filesystem', 'm' => '__construct', 'p' => 0, 't' => 'League\\Flysystem\\PathNormalizer|null', 'n' => 'Changed type of parameter $pathNormalizer from League\\Flysystem\\PathNormalizer to League\\Flysystem\\PathNormalizer|null', [cite: 12]
+
+        // FluentExtension
+        // 'c' => 'FluentExtension', 'm' => 'getDataQueryLocale', 'p' => 0, 't' => 'DataQuery|null', 'n' => 'Changed type of parameter $dataQuery from DataQuery to DataQuery|null', [cite: 102]
+
+        // FluentFilteredExtension
+        // 'c' => 'FluentFilteredExtension', 'm' => 'getDataQueryLocale', 'p' => 0, 't' => 'DataQuery|null', 'n' => 'Changed type of parameter $dataQuery from DataQuery to DataQuery|null', [cite: 102]
+
+        // FluentIsolatedExtension
+        // 'c' => 'FluentIsolatedExtension', 'm' => 'getDataQueryLocale', 'p' => 0, 't' => 'DataQuery|null', 'n' => 'Changed type of parameter $dataQuery from DataQuery to DataQuery|null', [cite: 102]
+
+        // FluentSiteTreeExtension
+        'c' => 'FluentSiteTreeExtension', 'm' => 'updateStatusFlags', 'p' => 0, 't' => 'array', 'n' => 'Changed type of parameter $flags from dynamic to array', [cite: 103]
+
+        // Form
+        'c' => 'Form', 'm' => 'loadDataFrom', 'p' => 0, 't' => 'object|array', 'n' => 'Changed type of parameter $data from dynamic to object|array', [cite: 31]
+        'c' => 'Form', 'm' => 'loadDataFrom', 'p' => 1, 't' => 'int', 'n' => 'Changed type of parameter $mergeStrategy from dynamic to int', [cite: 58]
+        'c' => 'Form', 'm' => 'loadDataFrom', 'p' => 2, 't' => 'array', 'n' => 'Changed type of parameter $fieldList from dynamic to array', [cite: 37]
+        'c' => 'Form', 'm' => 'sessionError', 'p' => 0, 't' => 'string', 'n' => 'Changed type of parameter $message from dynamic to string', [cite: 58]
+        'c' => 'Form', 'm' => 'sessionError', 'p' => 1, 't' => 'string', 'n' => 'Changed type of parameter $type from dynamic to string', [cite: 88]
+        'c' => 'Form', 'm' => 'sessionError', 'p' => 2, 't' => 'string', 'n' => 'Changed type of parameter $cast from dynamic to string', [cite: 26]
+        'c' => 'Form', 'm' => 'sessionFieldError', 'p' => 0, 't' => 'string', 'n' => 'Changed type of parameter $message from dynamic to string', [cite: 58]
+        'c' => 'Form', 'm' => 'sessionFieldError', 'p' => 1, 't' => 'string', 'n' => 'Changed type of parameter $fieldName from dynamic to string', [cite: 39]
+        'c' => 'Form', 'm' => 'sessionFieldError', 'p' => 2, 't' => 'string', 'n' => 'Changed type of parameter $type from dynamic to string', [cite: 88]
+        'c' => 'Form', 'm' => 'sessionFieldError', 'p' => 3, 't' => 'string', 'n' => 'Changed type of parameter $cast from dynamic to string', [cite: 26]
+        'c' => 'Form', 'm' => 'sessionMessage', 'p' => 0, 't' => 'string', 'n' => 'Changed type of parameter $message from dynamic to string', [cite: 58]
+        'c' => 'Form', 'm' => 'sessionMessage', 'p' => 1, 't' => 'string', 'n' => 'Changed type of parameter $type from dynamic to string', [cite: 88]
+        'c' => 'Form', 'm' => 'sessionMessage', 'p' => 2, 't' => 'string', 'n' => 'Changed type of parameter $cast from dynamic to string', [cite: 26]
+        // 'c' => 'Form', 'm' => 'setController', 'p' => 0, 't' => 'RequestHandler|null', 'n' => 'Changed type of parameter $controller from RequestHandler to RequestHandler|null', [cite: 28]
+        // 'c' => 'Form', 'm' => 'setValidator', 'p' => 0, 't' => 'Validator|null', 'n' => 'Changed type of parameter $validator from SilverStripe\\Forms\\Validator to Validator|null', [cite: 89]
+
+        // FormFactory
+        // 'c' => 'FormFactory', 'm' => 'getForm', 'p' => 0, 't' => 'RequestHandler|null', 'n' => 'Changed type of parameter $controller from RequestHandler to RequestHandler|null', [cite: 28]
+
+        // FormSchema
+        // 'c' => 'FormSchema', 'm' => 'getMultipartSchema', 'p' => 0, 't' => 'ValidationResult|null', 'n' => 'Changed type of parameter $result from SilverStripe\\ORM\\ValidationResult to ValidationResult|null', [cite: 77]
+        // 'c' => 'FormSchema', 'm' => 'getMultipartSchema', 'p' => 1, 't' => 'Form|null', 'n' => 'Changed type of parameter $form from Form to Form|null', [cite: 42]
+
+        // GridFieldNestedForm
+        // 'c' => 'GridFieldNestedForm', 'm' => 'handleNestedItem', 'p' => 0, 't' => 'ModelData|null', 'n' => 'Changed type of parameter $record from SilverStripe\\View\\ViewableData|null to ModelData|null', [cite: 101]
+        // 'c' => 'GridFieldNestedForm', 'm' => 'toggleNestedItem', 'p' => 0, 't' => 'ModelData|null', 'n' => 'Changed type of parameter $record from SilverStripe\\View\\ViewableData|null to ModelData|null', [cite: 101]
+
+        // GridFieldSiteTreeAddNewButton
+        // 'c' => 'GridFieldSiteTreeAddNewButton', 'm' => 'getAllowedChildren', 'p' => 0, 't' => 'SiteTree|null', 'n' => 'Changed type of parameter $parent from SiteTree to SiteTree|null', [cite: 94]
+
+        // HTMLEditorConfig
+        'c' => 'HTMLEditorConfig', 'm' => 'getOption', 'p' => 0, 't' => 'string', 'n' => 'Changed type of parameter $key from dynamic to string', [cite: 48]
+        'c' => 'HTMLEditorConfig', 'm' => 'setOption', 'p' => 0, 't' => 'string', 'n' => 'Changed type of parameter $key from dynamic to string', [cite: 48]
+        'c' => 'HTMLEditorConfig', 'm' => 'setOption', 'p' => 1, 't' => 'mixed', 'n' => 'Changed type of parameter $value from dynamic to mixed', [cite: 93]
+        'c' => 'HTMLEditorConfig', 'm' => 'setOptions', 'p' => 0, 't' => 'array', 'n' => 'Changed type of parameter $options from dynamic to array', [cite: 64]
+        'c' => 'HTMLEditorConfig', 'm' => 'setThemes', 'p' => 0, 't' => 'array', 'n' => 'Changed type of parameter $themes from dynamic to array', [cite: 83]
+        'c' => 'HTMLEditorConfig', 'm' => 'set_active_identifier', 'p' => 0, 't' => 'string', 'n' => 'Changed type of parameter $identifier from dynamic to string', [cite: 44]
+        'c' => 'HTMLEditorConfig', 'm' => 'set_config', 'p' => 0, 't' => 'string', 'n' => 'Changed type of parameter $identifier from dynamic to string', [cite: 45]
+        // 'c' => 'HTMLEditorConfig', 'm' => 'set_config', 'p' => 1, 't' => 'HTMLEditorConfig|null', 'n' => 'Changed type of parameter $config from HTMLEditorConfig to HTMLEditorConfig|null', [cite: 28]
+
+        // HTTP
+        'c' => 'HTTP', 'm' => 'urlRewriter', 'p' => 0, 't' => 'callable', 'n' => 'Changed type of parameter $code from dynamic to callable', [cite: 27]
+
+        // HistoryViewerController
+        // 'c' => 'HistoryViewerController', 'm' => 'compareForm', 'p' => 0, 't' => 'HTTPRequest|null', 'n' => 'Changed type of parameter $request from HTTPRequest to HTTPRequest|null', [cite: 99]
+        // 'c' => 'HistoryViewerController', 'm' => 'versionForm', 'p' => 0, 't' => 'HTTPRequest|null', 'n' => 'Changed type of parameter $request from HTTPRequest to HTTPRequest|null', [cite: 99]
+
+        // IdentityStore
+        // 'c' => 'IdentityStore', 'm' => 'logIn', 'p' => 0, 't' => 'HTTPRequest|null', 'n' => 'Changed type of parameter $request from HTTPRequest to HTTPRequest|null', [cite: 74]
+        // 'c' => 'IdentityStore', 'm' => 'logOut', 'p' => 0, 't' => 'HTTPRequest|null', 'n' => 'Changed type of parameter $request from HTTPRequest to HTTPRequest|null', [cite: 74]
+
+        // Image_Backend
+        // 'c' => 'Image_Backend', 'm' => '__construct', 'p' => 0, 't' => 'AssetContainer|null', 'n' => 'Changed type of parameter $assetContainer from AssetContainer to AssetContainer|null', [cite: 4]
+        'c' => 'Image_Backend', 'm' => 'crop', 'p' => 0, 't' => 'int', 'n' => 'Changed type of parameter $top from dynamic to int', [cite: 14]
+        'c' => 'Image_Backend', 'm' => 'crop', 'p' => 1, 't' => 'int', 'n' => 'Changed type of parameter $left from dynamic to int', [cite: 10]
+        'c' => 'Image_Backend', 'm' => 'crop', 'p' => 2, 't' => 'int', 'n' => 'Changed type of parameter $width from dynamic to int', [cite: 17]
+        'c' => 'Image_Backend', 'm' => 'crop', 'p' => 3, 't' => 'int', 'n' => 'Changed type of parameter $height from dynamic to int', [cite: 9]
+        'c' => 'Image_Backend', 'm' => 'croppedResize', 'p' => 0, 't' => 'int', 'n' => 'Changed type of parameter $width from dynamic to int', [cite: 17]
+        'c' => 'Image_Backend', 'm' => 'croppedResize', 'p' => 1, 't' => 'int', 'n' => 'Changed type of parameter $height from dynamic to int', [cite: 9]
+        'c' => 'Image_Backend', 'm' => 'loadFrom', 'p' => 0, 't' => 'string', 'n' => 'Changed type of parameter $path from dynamic to string', [cite: 12]
+        'c' => 'Image_Backend', 'm' => 'paddedResize', 'p' => 0, 't' => 'int', 'n' => 'Changed type of parameter $width from dynamic to int', [cite: 17]
+        'c' => 'Image_Backend', 'm' => 'paddedResize', 'p' => 1, 't' => 'int', 'n' => 'Changed type of parameter $height from dynamic to int', [cite: 9]
+        'c' => 'Image_Backend', 'm' => 'paddedResize', 'p' => 2, 't' => 'string', 'n' => 'Changed type of parameter $backgroundColor from dynamic to string', [cite: 5]
+        'c' => 'Image_Backend', 'm' => 'paddedResize', 'p' => 3, 't' => 'int', 'n' => 'Changed type of parameter $transparencyPercent from dynamic to int', [cite: 14]
+        'c' => 'Image_Backend', 'm' => 'resize', 'p' => 0, 't' => 'int', 'n' => 'Changed type of parameter $width from dynamic to int', [cite: 17]
+        'c' => 'Image_Backend', 'm' => 'resize', 'p' => 1, 't' => 'int', 'n' => 'Changed type of parameter $height from dynamic to int', [cite: 10]
+        'c' => 'Image_Backend', 'm' => 'resizeByHeight', 'p' => 0, 't' => 'int', 'n' => 'Changed type of parameter $height from dynamic to int', [cite: 10]
+        'c' => 'Image_Backend', 'm' => 'resizeByWidth', 'p' => 0, 't' => 'int', 'n' => 'Changed type of parameter $width from dynamic to int', [cite: 18]
+        'c' => 'Image_Backend', 'm' => 'resizeRatio', 'p' => 0, 't' => 'int', 'n' => 'Changed type of parameter $width from dynamic to int', [cite: 18]
+        'c' => 'Image_Backend', 'm' => 'resizeRatio', 'p' => 1, 't' => 'int', 'n' => 'Changed type of parameter $height from dynamic to int', [cite: 10]
+        'c' => 'Image_Backend', 'm' => 'resizeRatio', 'p' => 2, 't' => 'bool', 'n' => 'Changed type of parameter $useAsMinimum from dynamic to bool', [cite: 14]
+        'c' => 'Image_Backend', 'm' => 'setQuality', 'p' => 0, 't' => 'int', 'n' => 'Changed type of parameter $quality from dynamic to int', [cite: 13]
+        'c' => 'Image_Backend', 'm' => 'writeTo', 'p' => 0, 't' => 'string', 'n' => 'Changed type of parameter $path from dynamic to string', [cite: 12]
+        'c' => 'Image_Backend', 'm' => 'writeToStore', 'p' => 0, 't' => 'string', 'n' => 'Changed type of parameter $filename from dynamic to string', [cite: 6]
+        // 'c' => 'Image_Backend', 'm' => 'writeToStore', 'p' => 1, 't' => 'string|null', 'n' => 'Changed type of parameter $hash from dynamic to string|null', [cite: 7]
+        // 'c' => 'Image_Backend', 'm' => 'writeToStore', 'p' => 2, 't' => 'string|null', 'n' => 'Changed type of parameter $variant from dynamic to string|null', [cite: 14]
+        'c' => 'Image_Backend', 'm' => 'writeToStore', 'p' => 3, 't' => 'array', 'n' => 'Changed type of parameter $config from dynamic to array', [cite: 5]
+
+        // InheritedPermissions
+        // 'c' => 'InheritedPermissions', 'm' => '__construct', 'p' => 0, 't' => 'Psr\\SimpleCache\\CacheInterface|null', 'n' => 'Changed type of parameter $cache from Psr\\SimpleCache\\CacheInterface to Psr\\SimpleCache\\CacheInterface|null', [cite: 25]
+        // 'c' => 'InheritedPermissions', 'm' => 'batchPermissionCheck', 'p' => 0, 't' => 'Member|null', 'n' => 'Changed type of parameter $member from Member to Member|null', [cite: 55]
+        // 'c' => 'InheritedPermissions', 'm' => 'batchPermissionCheckForStage', 'p' => 0, 't' => 'Member|null', 'n' => 'Changed type of parameter $member from Member to Member|null', [cite: 55]
+        // 'c' => 'InheritedPermissions', 'm' => 'checkDefaultPermissions', 'p' => 0, 't' => 'Member|null', 'n' => 'Changed type of parameter $member from Member to Member|null', [cite: 55]
+
+        // InterventionBackend
+        'c' => 'InterventionBackend', 'm' => 'getDimensionCacheKey', 'p' => 0, 't' => 'string', 'n' => 'Changed type of parameter $hash from dynamic to string', [cite: 7]
+        // 'c' => 'InterventionBackend', 'm' => 'getDimensionCacheKey', 'p' => 1, 't' => 'string|null', 'n' => 'Changed type of parameter $variant from dynamic to string|null', [cite: 15]
+        'c' => 'InterventionBackend', 'm' => 'getErrorCacheKey', 'p' => 0, 't' => 'string', 'n' => 'Changed type of parameter $hash from dynamic to string', [cite: 7]
+        // 'c' => 'InterventionBackend', 'm' => 'getErrorCacheKey', 'p' => 1, 't' => 'string|null', 'n' => 'Changed type of parameter $variant from dynamic to string|null', [cite: 15]
+        'c' => 'InterventionBackend', 'm' => 'getResourceDimensions', 'p' => 0, 't' => 'Intervention\\Image\\Interfaces\\ImageInterface', 'n' => 'Changed type of parameter $resource from Intervention\\Image\\Image to Intervention\\Image\\Interfaces\\ImageInterface', [cite: 13]
+        'c' => 'InterventionBackend', 'm' => 'hasFailed', 'p' => 0, 't' => 'string', 'n' => 'Changed type of parameter $hash from dynamic to string', [cite: 8]
+        // 'c' => 'InterventionBackend', 'm' => 'hasFailed', 'p' => 1, 't' => 'string|null', 'n' => 'Changed type of parameter $variant from dynamic to string|null', [cite: 15]
+        'c' => 'InterventionBackend', 'm' => 'isStreamReadable', 'p' => 0, 't' => 'mixed', 'n' => 'Changed type of parameter $stream from dynamic to mixed', [cite: 13]
+        'c' => 'InterventionBackend', 'm' => 'markFailed', 'p' => 0, 't' => 'string', 'n' => 'Changed type of parameter $hash from dynamic to string', [cite: 8]
+        // 'c' => 'InterventionBackend', 'm' => 'markFailed', 'p' => 1, 't' => 'string|null', 'n' => 'Changed type of parameter $variant from dynamic to string|null', [cite: 15]
+        'c' => 'InterventionBackend', 'm' => 'markFailed', 'p' => 2, 't' => 'string', 'n' => 'Changed type of parameter $reason from dynamic to string', [cite: 13]
+        'c' => 'InterventionBackend', 'm' => 'markSuccess', 'p' => 0, 't' => 'string', 'n' => 'Changed type of parameter $hash from dynamic to string', [cite: 8]
+        // 'c' => 'InterventionBackend', 'm' => 'markSuccess', 'p' => 1, 't' => 'string|null', 'n' => 'Changed type of parameter $variant from dynamic to string|null', [cite: 16]
+        // 'c' => 'InterventionBackend', 'm' => 'setAssetContainer', 'p' => 0, 't' => 'AssetContainer|null', 'n' => 'Changed type of parameter $assetContainer from dynamic to AssetContainer|null', [cite: 14]
+        'c' => 'InterventionBackend', 'm' => 'setCache', 'p' => 0, 't' => 'Psr\\SimpleCache\\CacheInterface', 'n' => 'Changed type of parameter $cache from dynamic to Psr\\SimpleCache\\CacheInterface', [cite: 5]
+        'c' => 'InterventionBackend', 'm' => 'setImageManager', 'p' => 0, 't' => 'Intervention\\Image\\ImageManager', 'n' => 'Changed type of parameter $manager from dynamic to Intervention\\Image\\ImageManager', [cite: 11]
+        'c' => 'InterventionBackend', 'm' => 'setTempPath', 'p' => 0, 't' => 'string', 'n' => 'Changed type of parameter $path from dynamic to string', [cite: 12]
+        'c' => 'InterventionBackend', 'm' => 'warmCache', 'p' => 0, 't' => 'string', 'n' => 'Changed type of parameter $hash from dynamic to string', [cite: 8]
+        // 'c' => 'InterventionBackend', 'm' => 'warmCache', 'p' => 1, 't' => 'string|null', 'n' => 'Changed type of parameter $variant from dynamic to string|null', [cite: 16]
+
+        // LeftAndMain
+        'c' => 'LeftAndMain', 'm' => 'jsonError', 'p' => 0, 't' => 'string', 'n' => 'Changed type of parameter $errorMessage from dynamic to string', [cite: 1]
+        'c' => 'LeftAndMain', 'm' => 'jsonError', 'p' => 1, 't' => 'int', 'n' => 'Changed type of parameter $errorCode from dynamic to int', [cite: 1]
+        'c' => 'LeftAndMain', 'm' => 'getSchemaResponse', 'p' => 0, 't' => 'string', 'n' => 'Changed type of parameter $schemaID from dynamic to string', [cite: 2]
+        // 'c' => 'LeftAndMain', 'm' => 'getSchemaResponse', 'p' => 1, 't' => 'ValidationResult|null', 'n' => 'Changed type of parameter $errors from SilverStripe\\ORM\\ValidationResult to ValidationResult|null', [cite: 1]
+        // 'c' => 'LeftAndMain', 'm' => 'getSchemaResponse', 'p' => 2, 't' => 'Form|null', 'n' => 'Changed type of parameter $form from dynamic to Form|null', [cite: 2]
+        'c' => 'LeftAndMain', 'm' => 'getSchemaResponse', 'p' => 3, 't' => 'array', 'n' => 'Changed type of parameter $extraData from dynamic to array', [cite: 2]
+        'c' => 'LeftAndMain', 'm' => 'getTemplatesWithSuffix', 'p' => 0, 't' => 'string', 'n' => 'Changed type of parameter $suffix from dynamic to string', [cite: 2]
+
+        // LeftAndMainSubsites
+        // 'c' => 'LeftAndMainSubsites', 'm' => 'alternateAccessCheck', 'p' => 0, 't' => 'Member|null', 'n' => 'Changed type of parameter $member from Member to Member|null', [cite: 94]
+        // 'c' => 'LeftAndMainSubsites', 'm' => 'canAccess', 'p' => 0, 't' => 'Member|null', 'n' => 'Changed type of parameter $member from Member to Member|null', [cite: 95]
+
+        // LocalDateTime
+        'c' => 'LocalDateTime', 'm' => 'setLocalValue', 'p' => 0, 't' => 'string', 'n' => 'Changed type of parameter $value from dynamic to string', [cite: 103]
+        // 'c' => 'LocalDateTime', 'm' => 'setLocalValue', 'p' => 1, 't' => 'string|null', 'n' => 'Changed type of parameter $timezone from dynamic to string|null', [cite: 103]
+
+        // LocalFilesystemAdapter
+        // 'c' => 'LocalFilesystemAdapter', 'm' => '__construct', 'p' => 0, 't' => 'League\\MimeTypeDetection\\MimeTypeDetector|null', 'n' => 'Changed type of parameter $mimeTypeDetector from League\\MimeTypeDetection\\MimeTypeDetector to League\\MimeTypeDetection\\MimeTypeDetector|null', [cite: 11]
+        // 'c' => 'LocalFilesystemAdapter', 'm' => '__construct', 'p' => 1, 't' => 'League\\Flysystem\\UnixVisibility\\VisibilityConverter|null', 'n' => 'Changed type of parameter $visibility from League\\Flysystem\\UnixVisibility\\VisibilityConverter to League\\Flysystem\\UnixVisibility\\VisibilityConverter|null', [cite: 16]
+
+        // LoginHandler
+        // 'c' => 'LoginHandler', 'm' => 'checkLogin', 'p' => 0, 't' => 'ValidationResult|null', 'n' => 'Changed type of parameter $result from SilverStripe\\ORM\\ValidationResult to ValidationResult|null', [cite: 77]
+
+        // Member
+        // 'c' => 'Member', 'm' => 'afterMemberLoggedOut', 'p' => 0, 't' => 'HTTPRequest|null', 'n' => 'Changed type of parameter $request from HTTPRequest to HTTPRequest|null', [cite: 74]
+        // 'c' => 'Member', 'm' => 'beforeMemberLoggedOut', 'p' => 0, 't' => 'HTTPRequest|null', 'n' => 'Changed type of parameter $request from HTTPRequest to HTTPRequest|null', [cite: 75]
+        // 'c' => 'Member', 'm' => 'set_password_validator', 'p' => 0, 't' => 'PasswordValidator|null', 'n' => 'Changed type of parameter $validator from SilverStripe\\Security\\PasswordValidator to PasswordValidator|null', [cite: 89]
+        // 'c' => 'Member', 'm' => 'validateCanLogin', 'p' => 0, 't' => 'ValidationResult|null', 'n' => 'Changed type of parameter $result from SilverStripe\\ORM\\ValidationResult to ValidationResult|null', [cite: 77]
+
+        // MemberAuthenticator
+        // 'c' => 'MemberAuthenticator', 'm' => 'authenticateMember', 'p' => 0, 't' => 'Member|null', 'n' => 'Changed type of parameter $member from Member to Member|null', [cite: 55]
+        // 'c' => 'MemberAuthenticator', 'm' => 'authenticateMember', 'p' => 1, 't' => 'ValidationResult|null', 'n' => 'Changed type of parameter $result from SilverStripe\\ORM\\ValidationResult to ValidationResult|null', [cite: 77]
+
+        // MemcachedCacheFactory
+        // 'c' => 'MemcachedCacheFactory', 'm' => '__construct', 'p' => 0, 't' => 'Psr\\Log\\LoggerInterface|null', 'n' => 'Changed type of parameter $memcachedClient from Memcached to Psr\\Log\\LoggerInterface|null', [cite: 57]
+
+        // ModuleManifest
+        // 'c' => 'ModuleManifest', 'm' => '__construct', 'p' => 0, 't' => 'CacheFactory|null', 'n' => 'Changed type of parameter $cacheFactory from CacheFactory to CacheFactory|null', [cite: 25]
+
+        // NotifyUsersWorkflowAction
+        // 'c' => 'NotifyUsersWorkflowAction', 'm' => 'getMemberFields', 'p' => 0, 't' => 'Member|null', 'n' => 'Changed type of parameter $member from Member to Member|null', [cite: 100]
+
+        // NumericField
+        'c' => 'NumericField', 'm' => 'cast', 'p' => 0, 't' => 'mixed', 'n' => 'Changed type of parameter $value from dynamic to mixed', [cite: 93]
+
+        // PermissionChecker
+        // 'c' => 'PermissionChecker', 'm' => 'canDelete', 'p' => 0, 't' => 'Member|null', 'n' => 'Changed type of parameter $member from Member to Member|null', [cite: 56]
+        // 'c' => 'PermissionChecker', 'm' => 'canDeleteMultiple', 'p' => 0, 't' => 'Member|null', 'n' => 'Changed type of parameter $member from Member to Member|null', [cite: 56]
+        // 'c' => 'PermissionChecker', 'm' => 'canEdit', 'p' => 0, 't' => 'Member|null', 'n' => 'Changed type of parameter $member from Member to Member|null', [cite: 56]
+        // 'c' => 'PermissionChecker', 'm' => 'canEditMultiple', 'p' => 0, 't' => 'Member|null', 'n' => 'Changed type of parameter $member from Member to Member|null', [cite: 56]
+        // 'c' => 'PermissionChecker', 'm' => 'canView', 'p' => 0, 't' => 'Member|null', 'n' => 'Changed type of parameter $member from Member to Member|null', [cite: 57]
+        // 'c' => 'PermissionChecker', 'm' => 'canViewMultiple', 'p' => 0, 't' => 'Member|null', 'n' => 'Changed type of parameter $member from Member to Member|null', [cite: 57]
+
+        // PjaxResponseNegotiator
+        // 'c' => 'PjaxResponseNegotiator', 'm' => '__construct', 'p' => 0, 't' => 'HTTPResponse|null', 'n' => 'Changed type of parameter $response from HTTPResponse to HTTPResponse|null', [cite: 76]
+
+        // QueuedJobService
+        // 'c' => 'QueuedJobService', 'm' => 'setRunAsUser', 'p' => 0, 't' => 'Member|null', 'n' => 'Changed type of parameter $originalUser from Member to Member|null', [cite: 101]
+        // 'c' => 'QueuedJobService', 'm' => 'unsetRunAsUser', 'p' => 0, 't' => 'Member|null', 'n' => 'Changed type of parameter $runAsUser from Member to Member|null', [cite: 102]
+        // 'c' => 'QueuedJobService', 'm' => 'unsetRunAsUser', 'p' => 1, 't' => 'Member|null', 'n' => 'Changed type of parameter $originalUser from Member to Member|null', [cite: 101]
+
+        // RealMeService
+        // 'c' => 'RealMeService', 'm' => 'getAuth', 'p' => 0, 't' => 'HTTPRequest|null', 'n' => 'Changed type of parameter $request from HTTPRequest to HTTPRequest|null', [cite: 94]
+
+        // Relation
+        'c' => 'Relation', 'm' => 'dbObject', 'p' => 0, 't' => 'string', 'n' => 'Changed type of parameter $fieldName from dynamic to string', [cite: 39]
+
+        // SSListContains
+        'c' => 'SSListContains', 'm' => 'checkIfItemEvaluatesRemainingMatches', 'p' => 0, 't' => 'ModelData', 'n' => 'Changed type of parameter $item from SilverStripe\\View\\ViewableData to ModelData', [cite: 47]
+
+        // SSViewer
+        'c' => 'SSViewer', 'm' => '__construct', 'p' => 0, 't' => 'string|array', 'n' => 'Changed type of parameter $templates from dynamic to string|array', [cite: 83]
+        // 'c' => 'SSViewer', 'm' => '__construct', 'p' => 1, 't' => 'TemplateEngine|null', 'n' => 'Changed type of parameter $parser from SilverStripe\\View\\TemplateParser to TemplateEngine|null', [cite: 65]
+        'c' => 'SSViewer', 'm' => 'add_themes', 'p' => 0, 't' => 'array', 'n' => 'Changed type of parameter $themes from dynamic to array', [cite: 84]
+        // 'c' => 'SSViewer', 'm' => 'get_templates_by_class', 'p' => 0, 't' => 'string|null', 'n' => 'Changed type of parameter $baseClass from dynamic to string|null', [cite: 24]
+        'c' => 'SSViewer', 'm' => 'get_templates_by_class', 'p' => 1, 't' => 'string', 'n' => 'Changed type of parameter $suffix from dynamic to string', [cite: 81]
+        'c' => 'SSViewer', 'm' => 'get_templates_by_class', 'p' => 2, 't' => 'string|object', 'n' => 'Changed type of parameter $classOrObject from dynamic to string|object', [cite: 27]
+        'c' => 'SSViewer', 'm' => 'includeRequirements', 'p' => 0, 't' => 'bool', 'n' => 'Changed type of parameter $incl from dynamic to bool', [cite: 45]
+        'c' => 'SSViewer', 'm' => 'process', 'p' => 0, 't' => 'mixed', 'n' => 'Changed type of parameter $item from dynamic to mixed', [cite: 47]
+        'c' => 'SSViewer', 'm' => 'process', 'p' => 1, 't' => 'array', 'n' => 'Changed type of parameter $arguments from dynamic to array', [cite: 23]
+        // 'c' => 'SSViewer', 'm' => 'setRewriteHashLinks', 'p' => 0, 't' => 'null|bool|string', 'n' => 'Changed type of parameter $rewrite from dynamic to null|bool|string', [cite: 78]
+        // 'c' => 'SSViewer', 'm' => 'setRewriteHashLinksDefault', 'p' => 0, 't' => 'null|bool|string', 'n' => 'Changed type of parameter $rewrite from dynamic to null|bool|string', [cite: 78]
+        'c' => 'SSViewer', 'm' => 'set_themes', 'p' => 0, 't' => 'array', 'n' => 'Changed type of parameter $themes from dynamic to array', [cite: 84]
+
+        // SearchContext
+        // 'c' => 'SearchContext', 'm' => 'getQuery', 'p' => 0, 't' => 'int|array|null', 'n' => 'Changed type of parameter $limit from dynamic to int|array|null', [cite: 49]
+
+        // Session
+        // 'c' => 'Session', 'm' => 'destroy', 'p' => 0, 't' => 'HTTPRequest|null', 'n' => 'Changed type of parameter $request from HTTPRequest to HTTPRequest|null', [cite: 75]
+
+        // SiteTree
+        // 'c' => 'SiteTree', 'm' => 'canAddChildren', 'p' => 0, 't' => 'Member|null', 'n' => 'Changed type of parameter $member from dynamic to Member|null', [cite: 20]
+        'c' => 'SiteTree', 'm' => 'getStatusFlags', 'p' => 0, 't' => 'bool', 'n' => 'Changed type of parameter $cached from dynamic to bool', [cite: 18]
+
+        // SiteTreeLinkTracking
+        // 'c' => 'SiteTreeLinkTracking', 'm' => 'setParser', 'p' => 0, 't' => 'SiteTreeLinkTracking_Parser|null', 'n' => 'Changed type of parameter $parser from SiteTreeLinkTracking_Parser to SiteTreeLinkTracking_Parser|null', [cite: 20]
+
+        // TestMailer
+        // 'c' => 'TestMailer', 'm' => 'send', 'p' => 0, 't' => 'Symfony\\Component\\Mailer\\Envelope|null', 'n' => 'Changed type of parameter $envelope from Symfony\\Component\\Mailer\\Envelope to Symfony\\Component\\Mailer\\Envelope|null', [cite: 36]
+
+        // ThemeManifest
+        // 'c' => 'ThemeManifest', 'm' => '__construct', 'p' => 0, 't' => 'CacheFactory|null', 'n' => 'Changed type of parameter $cacheFactory from CacheFactory to CacheFactory|null', [cite: 25]
+
+        // ThumbnailGenerator
+        // 'c' => 'ThumbnailGenerator', 'm' => 'generateLink', 'p' => 0, 't' => 'AssetContainer|null', 'n' => 'Changed type of parameter $thumbnail from AssetContainer to AssetContainer|null', [cite: 4]
+
+        // TimeField
+        'c' => 'TimeField', 'm' => 'internalToFrontend', 'p' => 0, 't' => 'mixed', 'n' => 'Changed type of parameter $time from dynamic to mixed', [cite: 85]
+        'c' => 'TimeField', 'm' => 'tidyInternal', 'p' => 0, 't' => 'mixed', 'n' => 'Changed type of parameter $time from dynamic to mixed', [cite: 85]
+
+        // UserDefinedFormController
+        // 'c' => 'UserDefinedFormController', 'm' => 'index', 'p' => 0, 't' => 'HTTPRequest|null', 'n' => 'Changed type of parameter $request from HTTPRequest to HTTPRequest|null', [cite: 95]
+
+        // VerifyHandler
+        // 'c' => 'VerifyHandler', 'm' => 'getCredentialRequestOptions', 'p' => 0, 't' => 'RegisteredMethod|null', 'n' => 'Changed type of parameter $registeredMethod from RegisteredMethod to RegisteredMethod|null', [cite: 99]
+
+        // Versioned
+        'c' => 'Versioned', 'm' => 'augmentLoadLazyFields', 'p' => 0, 't' => 'DataQuery|null', 'n' => 'Changed type of parameter $dataQuery from DataQuery to DataQuery|null', [cite: 96]
+        'c' => 'Versioned', 'm' => 'get_by_stage', 'p' => 0, 't' => 'string', 'n' => 'Changed type of parameter $class from dynamic to string', [cite: 96]
+        'c' => 'Versioned', 'm' => 'get_by_stage', 'p' => 1, 't' => 'string', 'n' => 'Changed type of parameter $stage from dynamic to string', [cite: 98]
+        'c' => 'Versioned', 'm' => 'get_by_stage', 'p' => 2, 't' => 'string|array', 'n' => 'Changed type of parameter $filter from dynamic to string|array', [cite: 97]
+        // 'c' => 'Versioned', 'm' => 'get_by_stage', 'p' => 3, 't' => 'string|array|null', 'n' => 'Changed type of parameter $sort from dynamic to string|array|null', [cite: 97]
+        'c' => 'Versioned', 'm' => 'get_by_stage', 'p' => 4, 't' => 'string', 'n' => 'Changed type of parameter $containerClass from dynamic to string', [cite: 96]
+        // 'c' => 'Versioned', 'm' => 'get_by_stage', 'p' => 5, 't' => 'string|array|null', 'n' => 'Changed type of parameter $limit from dynamic to string|array|null', [cite: 97]
+        'c' => 'Versioned', 'm' => 'get_including_deleted', 'p' => 0, 't' => 'string', 'n' => 'Changed type of parameter $class from dynamic to string', [cite: 96]
+        'c' => 'Versioned', 'm' => 'get_including_deleted', 'p' => 1, 't' => 'string|array', 'n' => 'Changed type of parameter $filter from dynamic to string|array', [cite: 97]
+        'c' => 'Versioned', 'm' => 'get_including_deleted', 'p' => 2, 't' => 'string', 'n' => 'Changed type of parameter $sort from dynamic to string', [cite: 98]
+
+        // VirtualPage
+        'c' => 'VirtualPage', 'm' => '__get', 'p' => 0, 't' => 'string', 'n' => 'Changed type of parameter $field from dynamic to string', [cite: 19]
+        'c' => 'VirtualPage', 'm' => 'castingHelper', 'p' => 0, 't' => 'string', 'n' => 'Changed type of parameter $field from dynamic to string', [cite: 19]
+        'c' => 'VirtualPage', 'm' => 'getField', 'p' => 0, 't' => 'string', 'n' => 'Changed type of parameter $field from dynamic to string', [cite: 19]
+        'c' => 'VirtualPage', 'm' => 'getViewerTemplates', 'p' => 0, 't' => 'string', 'n' => 'Changed type of parameter $suffix from dynamic to string', [cite: 21]
+        'c' => 'VirtualPage', 'm' => 'hasField', 'p' => 0, 't' => 'string', 'n' => 'Changed type of parameter $field from dynamic to string', [cite: 19]
+
+        // WithinRangeFilter
+        'c' => 'WithinRangeFilter', 'm' => 'setMax', 'p' => 0, 't' => 'mixed', 'n' => 'Changed type of parameter $max from dynamic to mixed', [cite: 53]
+        'c' => 'WithinRangeFilter', 'm' => 'setMin', 'p' => 0, 't' => 'mixed', 'n' => 'Changed type of parameter $min from dynamic to mixed', [cite: 59]
+
+        // WorkflowInstance
+        // 'c' => 'WorkflowInstance', 'm' => 'beginWorkflow', 'p' => 0, 't' => 'DataObject|null', 'n' => 'Changed type of parameter $for from DataObject to DataObject|null', [cite: 100]
+
+        // WorkflowTemplate
+        // 'c' => 'WorkflowTemplate', 'm' => 'createAction', 'p' => 0, 't' => 'WorkflowDefinition|null', 'n' => 'Changed type of parameter $definition from WorkflowDefinition to WorkflowDefinition|null', [cite: 100]
+
+        // i18nTextCollector
+        // 'c' => 'i18nTextCollector', 'm' => 'collectFromEntityProviders', 'p' => 0, 't' => 'Module|null', 'n' => 'Changed type of parameter $module from Module to Module|null', [cite: 59]
+
+        // i18nTextCollectorTask
+        'c' => 'i18nTextCollectorTask', 'm' => 'getIsMerge', 'p' => 0, 't' => 'Symfony\\Component\\Console\\Input\\InputInterface', 'n' => 'Changed type of parameter $request from dynamic to Symfony\\Component\\Console\\Input\\InputInterface', [cite: 75]
     ];
 }

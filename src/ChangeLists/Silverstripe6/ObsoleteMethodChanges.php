@@ -13,7 +13,20 @@ class ObsoleteMethodChanges implements ChangeListInterface
     use MethodChangeHelper;
     private const LIST =
     [
+<?php
 
+declare(strict_types=1);
+
+namespace Netwerkstatt\SilverstripeRector\ChangeLists\Silverstripe6;
+
+use Netwerkstatt\SilverstripeRector\Interfaces\ChangeListInterface;
+use Netwerkstatt\SilverstripeRector\Traits\MethodChangeHelper;
+
+class ObsoleteMethodChanges implements ChangeListInterface
+{
+    use MethodChangeHelper;
+
+    private const LIST = [
         [
             'c' => 'DNADesign\\Elemental\\Controllers\\ElementalAreaController',
             'm' => 'formAction',
@@ -40,6 +53,7 @@ class ObsoleteMethodChanges implements ChangeListInterface
             'm' => 'getSearchFilter',
             'n' => 'removed without equivalent functionality to replace it',
         ],
+
         [
             'c' => 'SilverStripe\\Admin\\ModalController',
             'm' => 'getController',
@@ -78,6 +92,7 @@ class ObsoleteMethodChanges implements ChangeListInterface
             'm' => 'getQueryFilter',
             'n' => 'removed without equivalent functionality to replace it',
         ],
+
         [
             'c' => 'SilverStripe\\CMS\\Controllers\\CMSSiteTreeFilter',
             'm' => '__construct',
@@ -98,6 +113,7 @@ class ObsoleteMethodChanges implements ChangeListInterface
             'm' => 'populateIDs',
             'n' => 'removed without equivalent functionality to replace it',
         ],
+
         [
             'c' => 'SilverStripe\\CMS\\Controllers\\ContentController',
             'm' => 'deleteinstallfiles',
@@ -114,36 +130,43 @@ class ObsoleteMethodChanges implements ChangeListInterface
             'm' => 'has_curr',
             'n' => 'removed without equivalent functionality to replace it',
         ],
+
         [
             'c' => 'SilverStripe\\Core\\BaseKernel',
             'm' => 'redirectToInstaller',
             'n' => 'removed without equivalent functionality',
         ],
+
         [
             'c' => 'SilverStripe\\Core\\Cache\\DefaultCacheFactory',
             'm' => 'isAPCUSupported',
             'n' => 'removed without equivalent functionality to replace it',
         ],
+
         [
             'c' => 'SilverStripe\\Core\\Manifest\\VersionProvider',
             'm' => 'getComposerLockPath',
             'n' => 'removed without equivalent functionality to replace it',
         ],
+
         [
             'c' => 'SilverStripe\\Dev\\Debug',
             'm' => 'require_developer_login',
             'n' => 'removed without equivalent functionality',
         ],
+
         [
             'c' => 'SilverStripe\\Dev\\DevelopmentAdmin',
             'm' => 'getRegisteredController',
             'n' => 'removed without equivalent functionality to replace it',
         ],
+
         [
             'c' => 'SilverStripe\\Forms\\GridField\\GridFieldDataColumns',
             'm' => 'getValueFromRelation',
             'n' => 'removed without equivalent functionality to replace it',
         ],
+
         [
             'c' => 'SilverStripe\\Forms\\GridField\\GridFieldFilterHeader',
             'm' => 'getThrowExceptionOnBadDataType',
@@ -154,6 +177,7 @@ class ObsoleteMethodChanges implements ChangeListInterface
             'm' => 'setThrowExceptionOnBadDataType',
             'n' => 'removed without equivalent functionality',
         ],
+
         [
             'c' => 'SilverStripe\\Forms\\GridField\\GridFieldPaginator',
             'm' => 'getThrowExceptionOnBadDataType',
@@ -164,6 +188,7 @@ class ObsoleteMethodChanges implements ChangeListInterface
             'm' => 'setThrowExceptionOnBadDataType',
             'n' => 'removed without equivalent functionality',
         ],
+
         [
             'c' => 'SilverStripe\\Forms\\GridField\\GridFieldSortableHeader',
             'm' => 'getThrowExceptionOnBadDataType',
@@ -174,6 +199,7 @@ class ObsoleteMethodChanges implements ChangeListInterface
             'm' => 'setThrowExceptionOnBadDataType',
             'n' => 'removed without equivalent functionality',
         ],
+
         [
             'c' => 'SilverStripe\\ORM\\DataObject',
             'm' => 'disable_subclass_access',
@@ -184,16 +210,19 @@ class ObsoleteMethodChanges implements ChangeListInterface
             'm' => 'enable_subclass_access',
             'n' => 'removed without equivalent functionality',
         ],
+
         [
             'c' => 'SilverStripe\\ORM\\FieldType\\DBInt',
             'm' => 'Times',
             'n' => 'removed without equivalent functionality to replace it',
         ],
+
         [
             'c' => 'SilverStripe\\Security\\RememberLoginHash',
             'm' => 'renew',
             'n' => 'removed without equivalent functionality',
         ],
+
         [
             'c' => 'SilverStripe\\View\\SSViewer',
             'm' => 'chooseTemplate',
@@ -224,11 +253,13 @@ class ObsoleteMethodChanges implements ChangeListInterface
             'm' => 'topLevel',
             'n' => 'removed without equivalent functionality to replace it',
         ],
+
         [
             'c' => 'SilverStripe\\View\\ThemeResourceLoader',
             'm' => 'findTemplate',
             'n' => 'removed without equivalent functionality to replace it',
         ],
+
         [
             'c' => 'SilverStripe\\i18n\\Messages\\Symfony\\FlushInvalidatedResource',
             'm' => 'getResource',
@@ -240,11 +271,13 @@ class ObsoleteMethodChanges implements ChangeListInterface
             'm' => 'canAccess',
             'n' => 'removed without equivalent functionality to replace it',
         ],
+
         [
             'c' => 'SilverStripe\\Subsites\\Extensions\\LeftAndMainSubsites',
             'm' => 'ListSubsites',
             'n' => 'removed without equivalent functionality to replace it',
         ],
+
         [
             'c' => 'SilverStripe\\Subsites\\Model\\Subsite',
             'm' => 'getMembersByPermission',
@@ -257,4 +290,5 @@ class ObsoleteMethodChanges implements ChangeListInterface
             'n' => 'removed without equivalent functionality',
         ],
     ];
+}
 }

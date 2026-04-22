@@ -57,27 +57,4 @@ CODE_SAMPLE,
             ]
         );
     }
-
-    // public function configure(array $configuration): void - see Trait
-
-    // public function getNodeTypes(): array - see Trait
-
-    /**
-     * @param Expression|ClassMethod $node
-     */
-    // public function refactor(Node $node): ?Node - see Trait
-
-    // private function refactorExpression(Expression $expression): ?Node
-
-    // private function refactorClassMethod(ClassMethod $classMethod): ?Node - see Trait
-
-    // private function matchesCallTarget(MethodCall|NullsafeMethodCall|StaticCall $call, array $change): bool - see Trait
-
-    // private function resolveCalledMethodName(MethodCall|NullsafeMethodCall|StaticCall $call): ?string - see Trait
-
-    // private function appendTodoDocCommentSafely(Node $node, string $todoLine): bool - see Trait
-
-    // private function isUnknownType(Type $type): bool - see Trait
-
-    // private function matchesTypeAgainstConfiguredClass(Type $type, string $configuredClass): bool
 }
