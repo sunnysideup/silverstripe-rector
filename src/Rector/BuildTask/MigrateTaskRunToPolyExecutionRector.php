@@ -14,6 +14,10 @@ use PhpParser\Node\Expr\Array_;
 use PhpParser\Node\Expr\ArrayItem;
 use PhpParser\Node\Scalar\String_;
 use PhpParser\Node\Stmt\Expression;
+use PhpParser\Node\Stmt\ClassMethod;
+use PhpParser\Node\Stmt\Function_;
+use PhpParser\Node\Expr\Closure;
+use PhpParser\Node\Stmt\Namespace_;
 use PHPStan\Type\ObjectType;
 use Rector\Rector\AbstractRector;
 use Symplify\RuleDocGenerator\ValueObject\CodeSample\CodeSample;
@@ -44,47 +48,152 @@ CODE
 
     public function getNodeTypes(): array
     {
-        return [Expression::class];
+        return [
+            ClassMethod::class,
+            Function_::class,
+            Closure::class,
+            Namespace_::class,
+        ];
     }
 
     /**
-     * @param Expression $node
+     * @param ClassMethod|Function_|Closure|Namespace_ $node
      */
-    public function refactor(Node $node): ?array
+    public function refactor(Node $node): ?Node
     {
-        $methodCall = $node->expr;
-        if (!$methodCall instanceof MethodCall) {
+        if ($node->stmts === null) {
             return null;
         }
 
-        if (!$this->isName($methodCall->name, 'run')) {
-            return null;
+        $newStmts = [];
+        $hasChanged = false;
+        $taskVars = []; 
+
+        foreach ($node->stmts as $stmt) {
+            $handled = false;
+
+            if ($stmt instanceof Expression) {
+                $expr = $stmt->expr;
+
+                if ($expr instanceof Assign && $expr->var instanceof Variable) {
+                    $varName = $this->getName($expr->var);
+                    if ($varName) {
+                        $taskVars[$varName] = [
+                            'isTask' => $this->isTaskType($expr->expr),
+                            'setterIndices' => []
+                        ];
+                    }
+                }
+
+                if ($expr instanceof MethodCall && $expr->var instanceof Variable) {
+                    $varName = $this->getName($expr->var);
+                    $methodName = $this->getName($expr->name);
+
+                    if ($varName && $methodName) {
+                        if (!isset($taskVars[$varName])) {
+                            $taskVars[$varName] = [
+                                'isTask' => $this->isTaskType($expr->var),
+                                'setterIndices' => []
+                            ];
+                        }
+
+                        if ($taskVars[$varName]['isTask']) {
+                            if (str_starts_with($methodName, 'set')) {
+                                $key = substr($methodName, 3);
+                                $args = $expr->getArgs();
+                                if (isset($args[0])) {
+                                    $newStmts[] = $stmt;
+                                    $taskVars[$varName]['setterIndices'][array_key_last($newStmts)] = new ArrayItem($args[0]->value, new String_($key));
+                                    $handled = true;
+                                }
+                            } elseif ($methodName === 'run') {
+                                $params = array_values($taskVars[$varName]['setterIndices']);
+                                
+                                foreach (array_keys($taskVars[$varName]['setterIndices']) as $idx) {
+                                    unset($newStmts[$idx]);
+                                }
+
+                                $replacementNodes = $this->generatePolyExecutionNodes($expr->var, $params, clone $expr);
+                                foreach ($replacementNodes as $replNode) {
+                                    $newStmts[] = $replNode;
+                                }
+
+                                $taskVars[$varName]['setterIndices'] = [];
+                                $handled = true;
+                                $hasChanged = true;
+                            }
+                        }
+                    }
+                } 
+                elseif ($expr instanceof MethodCall && ($expr->var instanceof New_ || $expr->var instanceof StaticCall)) {
+                    $methodName = $this->getName($expr->name);
+                    if ($methodName === 'run' && $this->isTaskType($expr->var)) {
+                        $replacementNodes = $this->generatePolyExecutionNodes($expr->var, [], clone $expr);
+                        foreach ($replacementNodes as $replNode) {
+                            $newStmts[] = $replNode;
+                        }
+                        $handled = true;
+                        $hasChanged = true;
+                    }
+                }
+            }
+
+            if (!$handled) {
+                $newStmts[] = $stmt;
+            }
         }
 
-        if (!$this->isObjectType($methodCall->var, new ObjectType('SilverStripe\Dev\BuildTask')) &&
-            !$this->isObjectType($methodCall->var, new ObjectType('App\Tasks\MyTask'))) {
-            return null;
+        if ($hasChanged) {
+            $node->stmts = array_values($newStmts);
+            return $node;
         }
 
-        $varName = $this->getName($methodCall->var);
+        return null;
+    }
 
-        // If it's an inline instantiation like (new MyTask())->run(), we can't easily track setters,
-        // but we still need to migrate the run() signature.
-        $params = $varName !== null ? $this->collectAndRemoveSetters($node, $varName) : [];
+    private function isTaskType(Node $expr): bool
+    {
+        if ($this->isObjectType($expr, new ObjectType('SilverStripe\Dev\BuildTask')) ||
+            $this->isObjectType($expr, new ObjectType('App\Tasks\MyTask'))) {
+            return true;
+        }
 
+        if ($expr instanceof StaticCall && $this->isName($expr->name, 'create') && $expr->class instanceof Node\Name) {
+            $className = $this->getName($expr->class);
+            if ($className === 'MyTask' || str_ends_with($className, 'Task')) {
+                return true;
+            }
+        }
+
+        if ($expr instanceof New_ && $expr->class instanceof Node\Name) {
+            $className = $this->getName($expr->class);
+            if ($className === 'MyTask' || str_ends_with($className, 'Task')) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @param Node\Expr $taskExpr
+     * @param ArrayItem[] $params
+     * @param MethodCall $originalRunCall
+     * @return Node\Stmt[]
+     */
+    private function generatePolyExecutionNodes(Node\Expr $taskExpr, array $params, MethodCall $originalRunCall): array
+    {
         $definitionVar = new Variable('definition');
         $inputVar = new Variable('input');
         $outputVar = new Variable('output');
 
         $nodes = [];
 
-        // $definition = new InputDefinition($task->getOptions());
         $nodes[] = new Expression(new Assign($definitionVar, new New_(
             new Node\Name\FullyQualified('Symfony\Component\Console\Input\InputDefinition'),
-            [new Node\Arg(new MethodCall($methodCall->var, 'getOptions'))]
+            [new Node\Arg(new MethodCall($taskExpr, 'getOptions'))]
         )));
 
-        // $input = new ArrayInput([...], $definition);
         $nodes[] = new Expression(new Assign($inputVar, new New_(
             new Node\Name\FullyQualified('Symfony\Component\Console\Input\ArrayInput'),
             [
@@ -93,19 +202,17 @@ CODE
             ]
         )));
 
-        // $output = PolyOutput::create(PolyOutput::FORMAT_ANSI);
         $nodes[] = new Expression(new Assign($outputVar, new StaticCall(
             new Node\Name\FullyQualified('SilverStripe\PolyExecution\PolyOutput'),
             'create',
             [new Node\Arg(new Node\Expr\ClassConstFetch(new Node\Name\FullyQualified('SilverStripe\PolyExecution\PolyOutput'), 'FORMAT_ANSI'))]
         )));
 
-        // $task->run($input, $output);
-        $methodCall->args = [
+        $originalRunCall->args = [
             new Node\Arg($inputVar),
             new Node\Arg($outputVar)
         ];
-        $nodes[] = $node;
+        $nodes[] = new Expression($originalRunCall);
 
         return $nodes;
     }
