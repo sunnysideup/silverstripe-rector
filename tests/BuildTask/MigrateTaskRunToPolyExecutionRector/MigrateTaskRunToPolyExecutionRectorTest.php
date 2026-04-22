@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Netwerkstatt\SilverstripeRector\Tests\v5\MigrateTaskRunToPolyExecutionRector;
+namespace Netwerkstatt\SilverstripeRector\Tests\BuildTask\MigrateTaskRunToPolyExecutionRector;
 
 use Rector\Testing\PHPUnit\AbstractRectorTestCase;
 use PHPUnit\Framework\Attributes\DataProvider;

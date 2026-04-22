@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Netwerkstatt\SilverstripeRector\Rector\v5\MigrateTaskRunToPolyExecutionRector;
+use Netwerkstatt\SilverstripeRector\Rector\BuildTask\MigrateTaskRunToPolyExecutionRector;
 use Rector\Config\RectorConfig;
 
 return RectorConfig::configure()

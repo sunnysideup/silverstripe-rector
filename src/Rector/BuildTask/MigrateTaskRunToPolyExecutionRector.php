@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Netwerkstatt\SilverstripeRector\Rector\v5;
+namespace Netwerkstatt\SilverstripeRector\Rector\BuildTask;
 
 use PhpParser\Node;
 use PhpParser\Node\Expr\Assign;
@@ -61,13 +61,13 @@ CODE
             return null;
         }
 
-        if (!$this->isObjectType($methodCall->var, new ObjectType('SilverStripe\Dev\BuildTask')) && 
+        if (!$this->isObjectType($methodCall->var, new ObjectType('SilverStripe\Dev\BuildTask')) &&
             !$this->isObjectType($methodCall->var, new ObjectType('App\Tasks\MyTask'))) {
             return null;
         }
 
         $varName = $this->getName($methodCall->var);
-        
+
         // If it's an inline instantiation like (new MyTask())->run(), we can't easily track setters,
         // but we still need to migrate the run() signature.
         $params = $varName !== null ? $this->collectAndRemoveSetters($node, $varName) : [];
@@ -114,13 +114,15 @@ CODE
     {
         $params = [];
         $parent = $currentNode->getAttribute('parent');
-        
+
         if (!$parent instanceof Node\Stmt\ClassMethod && !$parent instanceof Node\Stmt\Function_ && !$parent instanceof Node\File) {
             return [];
         }
 
         $stmts = $parent instanceof Node\File ? $parent->stmts : $parent->stmts;
-        if ($stmts === null) return [];
+        if ($stmts === null) {
+            return [];
+        }
 
         foreach ($stmts as $stmt) {
             if ($stmt === $currentNode) {
