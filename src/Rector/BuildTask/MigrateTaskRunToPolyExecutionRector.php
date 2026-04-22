@@ -162,7 +162,16 @@ CODE
 
     private function isTaskType(Node $expr): bool
     {
-        return $this->isObjectType($expr, new ObjectType('SilverStripe\Dev\BuildTask'));
+        if ($this->isObjectType($expr, new ObjectType('SilverStripe\Dev\BuildTask'))) {
+            return true;
+        }
+
+        // Fallback: If it's a StaticCall to ::create(), check the class being called instead of the method's return type
+        if ($expr instanceof StaticCall && $this->isName($expr->name, 'create')) {
+            return $this->isObjectType($expr->class, new ObjectType('SilverStripe\Dev\BuildTask'));
+        }
+
+        return false;
     }
 
     /**
