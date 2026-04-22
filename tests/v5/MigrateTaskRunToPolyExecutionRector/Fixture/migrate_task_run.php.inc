@@ -3,7 +3,6 @@
 namespace App\Tasks {
     use SilverStripe\Dev\BuildTask;
     class MyTask extends BuildTask {
-        // Ensure create() exists so PHPStan can resolve MyTask::create() correctly in fixtures!
         public static function create(): static { return new static(); }
         public function run($request) {}
         public function setMyParam($val) {}
@@ -108,7 +107,8 @@ namespace {
     }
 
     // 13. Inline Instantiation (No variable tracking possible, but run should upgrade)
-    function testInlineInstantiation() {
+    function testInlineInstantiation()
+    {
         (new MyTask())->run(null);
     }
 }
@@ -118,7 +118,6 @@ namespace {
 namespace App\Tasks {
     use SilverStripe\Dev\BuildTask;
     class MyTask extends BuildTask {
-        // Ensure create() exists so PHPStan can resolve MyTask::create() correctly in fixtures!
         public static function create(): static { return new static(); }
         public function run($request) {}
         public function setMyParam($val) {}
@@ -250,7 +249,8 @@ namespace {
     }
 
     // 13. Inline Instantiation (No variable tracking possible, but run should upgrade)
-    function testInlineInstantiation() {
+    function testInlineInstantiation()
+    {
         $definition = new \Symfony\Component\Console\Input\InputDefinition((new MyTask())->getOptions());
         $input = new \Symfony\Component\Console\Input\ArrayInput([], $definition);
         $output = \SilverStripe\PolyExecution\PolyOutput::create(\SilverStripe\PolyExecution\PolyOutput::FORMAT_ANSI);

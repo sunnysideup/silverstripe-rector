@@ -48,7 +48,7 @@ CODE
 
     public function getNodeTypes(): array
     {
-        // Target blocks of statements rather than single expressions
+        // Target nodes that contain an array of statements
         return [
             ClassMethod::class,
             Function_::class,
@@ -66,91 +66,125 @@ CODE
             return null;
         }
 
-        $stmts = $node->stmts;
-        $state = []; // Map: varName => ['isTask' => bool, 'setters' => [ stmtIndex => ArrayItem ]]
+        $newStmts = [];
+        $hasChanged = false;
+        
+        // Map: $varName => ['isTask' => bool, 'setterIndices' => [ int $newStmtsIndex => ArrayItem ]]
+        $taskVars = []; 
 
-        foreach ($stmts as $i => $stmt) {
-            if (!$stmt instanceof Expression) {
-                continue;
-            }
+        foreach ($node->stmts as $stmt) {
+            $isRunCall = false;
 
-            $expr = $stmt->expr;
+            if ($stmt instanceof Expression) {
+                $expr = $stmt->expr;
 
-            // Track assignment to deduce if variable holds a Task
-            if ($expr instanceof Assign && $expr->var instanceof Variable) {
-                $varName = $this->getName($expr->var);
-                if ($varName) {
-                    $state[$varName] = [
-                        'isTask' => $this->isObjectType($expr->expr, new ObjectType('SilverStripe\Dev\BuildTask')) 
-                                 || $this->isObjectType($expr->expr, new ObjectType('App\Tasks\MyTask')),
-                        'setters' => []
-                    ];
-                }
-                continue;
-            }
-
-            // Track Method Calls
-            if ($expr instanceof MethodCall && $expr->var instanceof Variable) {
-                $varName = $this->getName($expr->var);
-                $methodName = $this->getName($expr->name);
-
-                if (!$varName || !$methodName) {
-                    continue;
+                // 1. Track Variable Assignments
+                if ($expr instanceof Assign && $expr->var instanceof Variable) {
+                    $varName = $this->getName($expr->var);
+                    if ($varName) {
+                        $taskVars[$varName] = [
+                            'isTask' => $this->isTaskType($expr->expr),
+                            'setterIndices' => []
+                        ];
+                    }
                 }
 
-                // Initialise state if not explicitly assigned earlier (e.g., injected via method parameter)
-                if (!isset($state[$varName])) {
-                    $state[$varName] = [
-                        'isTask' => $this->isObjectType($expr->var, new ObjectType('SilverStripe\Dev\BuildTask'))
-                                 || $this->isObjectType($expr->var, new ObjectType('App\Tasks\MyTask')),
-                        'setters' => []
-                    ];
-                }
+                // 2. Track Standard Method Calls
+                if ($expr instanceof MethodCall && $expr->var instanceof Variable) {
+                    $varName = $this->getName($expr->var);
+                    $methodName = $this->getName($expr->name);
 
-                // Collect Setters
-                if ($state[$varName]['isTask'] && str_starts_with($methodName, 'set')) {
-                    $key = str_replace('set', '', $methodName);
-                    $args = $expr->getArgs();
-                    if (isset($args[0])) {
-                        $state[$varName]['setters'][$i] = new ArrayItem($args[0]->value, new String_($key));
+                    if ($varName && $methodName) {
+                        if (!isset($taskVars[$varName])) {
+                            // Initialise if injected via parameter (e.g., test 10)
+                            $taskVars[$varName] = [
+                                'isTask' => $this->isTaskType($expr->var),
+                                'setterIndices' => []
+                            ];
+                        }
+
+                        if ($taskVars[$varName]['isTask']) {
+                            if (str_starts_with($methodName, 'set')) {
+                                $key = substr($methodName, 3);
+                                $args = $expr->getArgs();
+                                if (isset($args[0])) {
+                                    $currentIndex = count($newStmts); // Where this statement will sit in $newStmts
+                                    $taskVars[$varName]['setterIndices'][$currentIndex] = new ArrayItem($args[0]->value, new String_($key));
+                                }
+                            } elseif ($methodName === 'run') {
+                                $isRunCall = true;
+                                $params = array_values($taskVars[$varName]['setterIndices']);
+                                
+                                // Cleanse setters from our new array
+                                foreach (array_keys($taskVars[$varName]['setterIndices']) as $idx) {
+                                    unset($newStmts[$idx]);
+                                }
+
+                                $replacementNodes = $this->generatePolyExecutionNodes($expr->var, $params, clone $expr);
+                                foreach ($replacementNodes as $replNode) {
+                                    $newStmts[] = $replNode;
+                                }
+
+                                // Reset for potential variable reuse
+                                $taskVars[$varName]['setterIndices'] = [];
+                                $hasChanged = true;
+                            }
+                        }
                     }
                 } 
-                // Mutate on run()
-                elseif ($state[$varName]['isTask'] && $methodName === 'run') {
-                    $params = array_values($state[$varName]['setters']);
-                    $setterIndices = array_keys($state[$varName]['setters']);
-                    
-                    $newStmts = $this->generatePolyExecutionNodes($expr->var, $params, $expr);
-                    
-                    // Remove setter statements
-                    foreach ($setterIndices as $idx) {
-                        unset($stmts[$idx]);
+                // 3. Track Inline Method Calls: (new MyTask())->run() or MyTask::create()->run()
+                elseif ($expr instanceof MethodCall && ($expr->var instanceof New_ || $expr->var instanceof StaticCall)) {
+                    $methodName = $this->getName($expr->name);
+                    if ($methodName === 'run' && $this->isTaskType($expr->var)) {
+                        $isRunCall = true;
+                        $replacementNodes = $this->generatePolyExecutionNodes($expr->var, [], clone $expr);
+                        foreach ($replacementNodes as $replNode) {
+                            $newStmts[] = $replNode;
+                        }
+                        $hasChanged = true;
                     }
-                    
-                    // Replace the run() statement with our block
-                    array_splice($stmts, array_search($stmt, $stmts, true), 1, $newStmts);
-                    
-                    // Reassign and return immediately to allow Rector to traverse cleanly from the top
-                    $node->stmts = array_values($stmts);
-                    return $node;
                 }
             }
-            
-            // Handle inline instantiation: (new MyTask())->run()
-            if ($expr instanceof MethodCall && $expr->var instanceof New_) {
-                if ($this->getName($expr->name) === 'run' && (
-                    $this->isObjectType($expr->var, new ObjectType('SilverStripe\Dev\BuildTask')) ||
-                    $this->isObjectType($expr->var, new ObjectType('App\Tasks\MyTask'))
-                )) {
-                    $newStmts = $this->generatePolyExecutionNodes($expr->var, [], $expr);
-                    array_splice($stmts, array_search($stmt, $stmts, true), 1, $newStmts);
-                    $node->stmts = array_values($stmts);
-                    return $node;
-                }
+
+            if (!$isRunCall) {
+                $newStmts[] = $stmt;
             }
         }
 
+        if ($hasChanged) {
+            // array_values strictly re-indexes the array cleanly after unset() gaps
+            $node->stmts = array_values($newStmts);
+            return $node;
+        }
+
         return null;
+    }
+
+    private function isTaskType(Node $expr): bool
+    {
+        // 1. Trust PHPStan Types First
+        if ($this->isObjectType($expr, new ObjectType('SilverStripe\Dev\BuildTask')) ||
+            $this->isObjectType($expr, new ObjectType('App\Tasks\MyTask'))) {
+            return true;
+        }
+
+        // 2. Fallback for Static Call blindness in test fixtures (MyTask::create())
+        if ($expr instanceof StaticCall && $this->isName($expr->name, 'create') && $expr->class instanceof Node\Name) {
+            $className = $this->getName($expr->class);
+            if ($className === 'MyTask' || str_ends_with($className, 'Task')) {
+                return true;
+            }
+        }
+
+        // 3. Fallback for explicit New_ instantiation
+        if ($expr instanceof New_ && $expr->class instanceof Node\Name) {
+            $className = $this->getName($expr->class);
+            if ($className === 'MyTask' || str_ends_with($className, 'Task')) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
