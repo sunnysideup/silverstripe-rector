@@ -84,7 +84,8 @@ class ReturnVoidTask extends BuildTask {
 }
 
 class EmptyTask extends BuildTask {
-    protected function execute($input, $output): int {
+    protected function execute($input, $output): int 
+    {
         return \Symfony\Component\Console\Command\Command::SUCCESS;
     }
 }
