@@ -221,7 +221,7 @@ namespace {
     }
 
     // 10. Task passed as method argument
-    function testTaskAsArgument(MyTask $injectedTask) 
+    function testTaskAsArgument(MyTask $injectedTask)
     {
         $definition = new \Symfony\Component\Console\Input\InputDefinition($injectedTask->getOptions());
         $input = new \Symfony\Component\Console\Input\ArrayInput(['MyParam' => 'injected'], $definition);
@@ -249,7 +249,7 @@ namespace {
     }
 
     // 13. Inline Instantiation (No variable tracking possible, but run should upgrade)
-    function testInlineInstantiation() 
+    function testInlineInstantiation()
     {
         $definition = new \Symfony\Component\Console\Input\InputDefinition((new MyTask())->getOptions());
         $input = new \Symfony\Component\Console\Input\ArrayInput([], $definition);
