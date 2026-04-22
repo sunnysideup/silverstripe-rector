@@ -107,20 +107,23 @@ CODE
                                     $handled = true;
                                 }
                             } elseif ($methodName === 'run') {
-                                $params = array_values($taskVars[$varName]['setterIndices']);
-                                
-                                foreach (array_keys($taskVars[$varName]['setterIndices']) as $idx) {
-                                    unset($newStmts[$idx]);
-                                }
+                                // Idempotency check: Ignore if already migrated (has 2 or more args)
+                                if (count($expr->getArgs()) < 2) {
+                                    $params = array_values($taskVars[$varName]['setterIndices']);
+                                    
+                                    foreach (array_keys($taskVars[$varName]['setterIndices']) as $idx) {
+                                        unset($newStmts[$idx]);
+                                    }
 
-                                $replacementNodes = $this->generatePolyExecutionNodes($expr->var, $params, clone $expr);
-                                foreach ($replacementNodes as $replNode) {
-                                    $newStmts[] = $replNode;
-                                }
+                                    $replacementNodes = $this->generatePolyExecutionNodes($expr->var, $params, clone $expr);
+                                    foreach ($replacementNodes as $replNode) {
+                                        $newStmts[] = $replNode;
+                                    }
 
-                                $taskVars[$varName]['setterIndices'] = [];
-                                $handled = true;
-                                $hasChanged = true;
+                                    $taskVars[$varName]['setterIndices'] = [];
+                                    $handled = true;
+                                    $hasChanged = true;
+                                }
                             }
                         }
                     }
@@ -128,12 +131,15 @@ CODE
                 elseif ($expr instanceof MethodCall && ($expr->var instanceof New_ || $expr->var instanceof StaticCall)) {
                     $methodName = $this->getName($expr->name);
                     if ($methodName === 'run' && $this->isTaskType($expr->var)) {
-                        $replacementNodes = $this->generatePolyExecutionNodes($expr->var, [], clone $expr);
-                        foreach ($replacementNodes as $replNode) {
-                            $newStmts[] = $replNode;
+                        // Idempotency check for inline instantiation
+                        if (count($expr->getArgs()) < 2) {
+                            $replacementNodes = $this->generatePolyExecutionNodes($expr->var, [], clone $expr);
+                            foreach ($replacementNodes as $replNode) {
+                                $newStmts[] = $replNode;
+                            }
+                            $handled = true;
+                            $hasChanged = true;
                         }
-                        $handled = true;
-                        $hasChanged = true;
                     }
                 }
             }

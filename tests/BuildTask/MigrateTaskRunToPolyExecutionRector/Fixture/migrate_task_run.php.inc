@@ -110,6 +110,23 @@ namespace {
     function testInlineInstantiation() {
         (new MyTask())->run(null);
     }
+
+    // 14. Idempotency check - Should not run twice
+    function testAlreadyMigrated() {
+        $task = new MyTask();
+        $definition = new \Symfony\Component\Console\Input\InputDefinition($task->getOptions());
+        $input = new \Symfony\Component\Console\Input\ArrayInput(['MyParam' => true], $definition);
+        $output = \SilverStripe\PolyExecution\PolyOutput::create(\SilverStripe\PolyExecution\PolyOutput::FORMAT_ANSI);
+        $task->run($input, $output);
+    }
+
+    // 15. Inline Idempotency check
+    function testInlineAlreadyMigrated() {
+        $definition = new \Symfony\Component\Console\Input\InputDefinition((new MyTask())->getOptions());
+        $input = new \Symfony\Component\Console\Input\ArrayInput([], $definition);
+        $output = \SilverStripe\PolyExecution\PolyOutput::create(\SilverStripe\PolyExecution\PolyOutput::FORMAT_ANSI);
+        (new MyTask())->run($input, $output);
+    }
 }
 -----
 <?php
@@ -221,8 +238,7 @@ namespace {
     }
 
     // 10. Task passed as method argument
-    function testTaskAsArgument(MyTask $injectedTask)
-    {
+    function testTaskAsArgument(MyTask $injectedTask) {
         $definition = new \Symfony\Component\Console\Input\InputDefinition($injectedTask->getOptions());
         $input = new \Symfony\Component\Console\Input\ArrayInput(['MyParam' => 'injected'], $definition);
         $output = \SilverStripe\PolyExecution\PolyOutput::create(\SilverStripe\PolyExecution\PolyOutput::FORMAT_ANSI);
@@ -249,8 +265,24 @@ namespace {
     }
 
     // 13. Inline Instantiation (No variable tracking possible, but run should upgrade)
-    function testInlineInstantiation()
-    {
+    function testInlineInstantiation() {
+        $definition = new \Symfony\Component\Console\Input\InputDefinition((new MyTask())->getOptions());
+        $input = new \Symfony\Component\Console\Input\ArrayInput([], $definition);
+        $output = \SilverStripe\PolyExecution\PolyOutput::create(\SilverStripe\PolyExecution\PolyOutput::FORMAT_ANSI);
+        (new MyTask())->run($input, $output);
+    }
+
+    // 14. Idempotency check - Should not run twice
+    function testAlreadyMigrated() {
+        $task = new MyTask();
+        $definition = new \Symfony\Component\Console\Input\InputDefinition($task->getOptions());
+        $input = new \Symfony\Component\Console\Input\ArrayInput(['MyParam' => true], $definition);
+        $output = \SilverStripe\PolyExecution\PolyOutput::create(\SilverStripe\PolyExecution\PolyOutput::FORMAT_ANSI);
+        $task->run($input, $output);
+    }
+
+    // 15. Inline Idempotency check
+    function testInlineAlreadyMigrated() {
         $definition = new \Symfony\Component\Console\Input\InputDefinition((new MyTask())->getOptions());
         $input = new \Symfony\Component\Console\Input\ArrayInput([], $definition);
         $output = \SilverStripe\PolyExecution\PolyOutput::create(\SilverStripe\PolyExecution\PolyOutput::FORMAT_ANSI);
