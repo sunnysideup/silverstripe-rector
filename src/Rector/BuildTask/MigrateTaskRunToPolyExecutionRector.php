@@ -16,7 +16,7 @@ use PhpParser\Node\Scalar\String_;
 use PhpParser\Node\Stmt\Expression;
 use PHPStan\Type\ObjectType;
 use Rector\Rector\AbstractRector;
-use Rector\Contract\PhpParser\Node\StmtsAwareInterface;
+use Rector\PhpParser\Enum\NodeGroup;
 use Symplify\RuleDocGenerator\ValueObject\CodeSample\CodeSample;
 use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 
@@ -48,9 +48,7 @@ CODE
 
     public function getNodeTypes(): array
     {
-        return [
-            StmtsAwareInterface::class,
-        ];
+        return NodeGroup::STMTS_AWARE;
     }
 
     /**
@@ -64,7 +62,7 @@ CODE
 
         $newStmts = [];
         $hasChanged = false;
-        $taskVars = []; 
+        $taskVars = [];
 
         foreach ($node->stmts as $stmt) {
             $handled = false;
@@ -106,7 +104,7 @@ CODE
                             } elseif ($methodName === 'run') {
                                 if (count($expr->getArgs()) < 2) {
                                     $params = array_values($taskVars[$varName]['setterIndices']);
-                                    
+
                                     foreach (array_keys($taskVars[$varName]['setterIndices']) as $idx) {
                                         unset($newStmts[$idx]);
                                     }
@@ -121,7 +119,7 @@ CODE
                                         new Node\Arg(new Variable('input')),
                                         new Node\Arg(new Variable('output'))
                                     ];
-                                    
+
                                     $taskVars[$varName]['setterIndices'] = [];
                                     $handled = true;
                                     $hasChanged = true;
@@ -130,8 +128,7 @@ CODE
                             }
                         }
                     }
-                } 
-                elseif ($expr instanceof MethodCall && ($expr->var instanceof New_ || $expr->var instanceof StaticCall)) {
+                } elseif ($expr instanceof MethodCall && ($expr->var instanceof New_ || $expr->var instanceof StaticCall)) {
                     $methodName = $this->getName($expr->name);
                     if ($methodName === 'run' && $this->isTaskType($expr->var)) {
                         if (count($expr->getArgs()) < 2) {
@@ -192,8 +189,8 @@ CODE
         $outputVar = new Variable('output');
 
         // IMPORTANT: Avoid sharing the same AST node instance to prevent infinite loops in printer
-        $taskExprForOptions = $taskExpr instanceof Variable 
-            ? new Variable($taskExpr->name) 
+        $taskExprForOptions = $taskExpr instanceof Variable
+            ? new Variable($taskExpr->name)
             : clone $taskExpr;
 
         $nodes = [];
