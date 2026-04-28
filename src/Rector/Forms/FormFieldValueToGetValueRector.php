@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace Netwerkstatt\SilverstripeRector\Rector\Forms;
 
+use PhpParser\Modifiers;
 use PhpParser\Node;
 use PhpParser\Node\Expr\MethodCall;
+use PhpParser\Node\Expr\NullsafeMethodCall;
 use PhpParser\Node\Identifier;
 use PhpParser\Node\Stmt\Class_;
 use PHPStan\Type\ObjectType;
@@ -18,14 +20,14 @@ final class FormFieldValueToGetValueRector extends AbstractRector
     public function getDefinition(): RuleDefinition
     {
         return new RuleDefinition(
-            'Renames Value() and value() methods to getValue() for classes extending FormField. 
+            'Renames Value() and value() methods to getValue(): mixed for classes extending FormField. 
             See https://docs.silverstripe.org/en/6/changelogs/6.0.0/#formfield-value',
             [
                 new CodeSample(
                     <<<'CODE_SAMPLE'
 class MyField extends \SilverStripe\Forms\FormField
 {
-    public function Value()
+    protected function Value()
     {
         return 'test';
     }
@@ -38,7 +40,7 @@ CODE_SAMPLE
                     <<<'CODE_SAMPLE'
 class MyField extends \SilverStripe\Forms\FormField
 {
-    public function getValue()
+    public function getValue(): mixed
     {
         return 'test';
     }
@@ -54,16 +56,14 @@ CODE_SAMPLE
 
     public function getNodeTypes(): array
     {
-        // Target both the class declaration and method calls
-        return [Class_::class, MethodCall::class];
+        return [Class_::class, MethodCall::class, NullsafeMethodCall::class];
     }
 
     /**
-     * @param Class_|MethodCall $node
+     * @param Class_|MethodCall|NullsafeMethodCall $node
      */
     public function refactor(Node $node): ?Node
     {
-        // 1. Handle Class Declarations (Renaming the method definition)
         if ($node instanceof Class_) {
             if (! $this->isObjectType($node, new ObjectType('SilverStripe\Forms\FormField'))) {
                 return null;
@@ -71,22 +71,39 @@ CODE_SAMPLE
 
             $hasChanged = false;
             foreach ($node->getMethods() as $classMethod) {
-                if ($this->isName($classMethod->name, 'Value') || $this->isName($classMethod->name, 'value')) {
-                    $classMethod->name = new Identifier('getValue');
-                    $hasChanged = true;
+                // Target Value, value, and getValue (to fix incomplete manual upgrades)
+                if ($this->isNames($classMethod->name, ['Value', 'value', 'getValue'])) {
+                    
+                    // 1. Rename method
+                    if (! $this->isName($classMethod->name, 'getValue')) {
+                        $classMethod->name = new Identifier('getValue');
+                        $hasChanged = true;
+                    }
+
+                    // 2. Enforce 'mixed' return type
+                    if ($classMethod->returnType === null || ! $this->isName($classMethod->returnType, 'mixed')) {
+                        $classMethod->returnType = new Identifier('mixed');
+                        $hasChanged = true;
+                    }
+
+                    // 3. Enforce 'public' visibility
+                    if (($classMethod->flags & Modifiers::PUBLIC) !== Modifiers::PUBLIC) {
+                        $classMethod->flags = ($classMethod->flags & ~Modifiers::PROTECTED & ~Modifiers::PRIVATE) | Modifiers::PUBLIC;
+                        $hasChanged = true;
+                    }
                 }
             }
 
             return $hasChanged ? $node : null;
         }
 
-        // 2. Handle Method Calls (Renaming $field->Value() to $field->getValue())
-        if ($node instanceof MethodCall) {
+        if ($node instanceof MethodCall || $node instanceof NullsafeMethodCall) {
             if (! $this->isObjectType($node->var, new ObjectType('SilverStripe\Forms\FormField'))) {
                 return null;
             }
 
-            if ($this->isName($node->name, 'Value') || $this->isName($node->name, 'value')) {
+            // Only rename the calls
+            if ($this->isNames($node->name, ['Value', 'value'])) {
                 $node->name = new Identifier('getValue');
                 return $node;
             }
