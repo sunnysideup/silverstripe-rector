@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use Netwerkstatt\SilverstripeRector\Rector\BuildTask\BuildTaskDescriptionPropertyRector;
+use Netwerkstatt\SilverstripeRector\Rector\BuildTask\BuildTaskIsEnabledPropertyRector;
 use Netwerkstatt\SilverstripeRector\Rector\BuildTask\BuildTaskSegmentToCommandNameRector;
 use Netwerkstatt\SilverstripeRector\Rector\BuildTask\BuildTaskTitlePropertyRector;
 use Netwerkstatt\SilverstripeRector\Rector\BuildTask\EnsureExecuteReturnsCommandSuccessRector;
@@ -235,4 +237,6 @@ return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->rule(AddUnionReturnTypeToPrepValueForDBRector::class);
     $rectorConfig->rule(AddVoidReturnTypeToSaveIntoRector::class);
     $rectorConfig->rule(UpdateControllerRenderSignatureRector::class);
+    $rectorConfig->rule(BuildTaskDescriptionPropertyRector::class);
+    $rectorConfig->rule(BuildTaskIsEnabledPropertyRector::class);
 };
