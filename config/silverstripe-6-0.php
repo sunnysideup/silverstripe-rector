@@ -18,6 +18,9 @@ use Netwerkstatt\SilverstripeRector\Rector\Control\ReplaceHasCurrWithCurrRector;
 use Netwerkstatt\SilverstripeRector\Rector\Control\UpdateControllerRenderSignatureRector;
 use Netwerkstatt\SilverstripeRector\Rector\DataObject\DataObjectDebugReturnTypeRector;
 use Netwerkstatt\SilverstripeRector\Rector\DataObject\DataObjectGetByIdToByIDRector;
+
+use Netwerkstatt\SilverstripeRector\Rector\Misc\BuildTaskUpdateRector;
+use Netwerkstatt\SilverstripeRector\Rector\Misc\RemoveSilverstripeDeprecationCommentRector;
 use Netwerkstatt\SilverstripeRector\Rector\Forms\FormFieldValidateSignatureRector;
 use Netwerkstatt\SilverstripeRector\Rector\Forms\FormFieldValueToGetValueRector;
 use Netwerkstatt\SilverstripeRector\Rector\Forms\FormFieldCompositeDatabaseFieldsReturnTypeRector;
@@ -44,6 +47,7 @@ use Rector\Renaming\ValueObject\RenameProperty;
 use Rector\Renaming\ValueObject\RenameStaticMethod;
 
 return static function (RectorConfig $rectorConfig): void {
+    $rectorConfig->rule(BuildTaskUpdateRector::class);
     $rectorConfig->ruleWithConfiguration(RenameClassRector::class, [
         'SilverStripe\ORM\ArrayLib' => 'SilverStripe\Core\ArrayLib',
         'SilverStripe\ORM\ArrayList' => 'SilverStripe\Model\List\ArrayList',
@@ -116,18 +120,10 @@ return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->importNames();
     $rectorConfig->removeUnusedImports();
     $rectorConfig->ruleWithConfiguration(RenameStaticMethodRector::class, [
-        new RenameStaticMethod(
-            'SilverStripe\View\SSViewer',
-            'flush',
-            'SilverStripe\TemplateEngine\SSTemplateEngine',
-            'flush'
-        ),
-        new RenameStaticMethod(
-            'SilverStripe\ORM\FieldType\DBEnum',
-            'flushCache',
-            'SilverStripe\ORM\FieldType\DBEnum',
-            'reset'
-        ),
+        new RenameStaticMethod('SilverStripe\View\SSViewer', 'flush', 'SilverStripe\TemplateEngine\SSTemplateEngine',
+            'flush'),
+        new RenameStaticMethod('SilverStripe\ORM\FieldType\DBEnum', 'flushCache', 'SilverStripe\ORM\FieldType\DBEnum',
+            'reset'),
     ]);
     $rectorConfig->ruleWithConfiguration(RenamePropertyRector::class, [
         new RenameProperty('SilverStripe\Admin\LeftAndMain', 'tree_class', 'model_class'),
@@ -162,25 +158,21 @@ return static function (RectorConfig $rectorConfig): void {
         new MethodCallRename('SilverStripe\CMS\Controllers\CMSMain', 'getPageTypes', 'getRecordTypes'),
         new MethodCallRename('SilverStripe\CMS\Controllers\CMSMain', 'PageTypes', 'RecordTypes'),
         new MethodCallRename('SilverStripe\CMS\Controllers\CMSMain', 'SiteTreeHints', 'TreeHints'),
-        new MethodCallRename(
-            'SilverStripe\CMS\Controllers\LeftAndMainRecordIconsExtension',
-            'generatePageIconsCss',
-            'generateRecordIconsCss'
-        ),
+        new MethodCallRename('SilverStripe\CMS\Controllers\LeftAndMainRecordIconsExtension', 'generatePageIconsCss',
+            'generateRecordIconsCss'),
         new MethodCallRename('SilverStripe\Forms\Form', 'validationResult', 'validate'),
+        new MethodCallRename('SilverStripe\Forms\FormField', 'Value', 'getFormattedValue'),
         new MethodCallRename('SilverStripe\Forms\TextareaField', 'ValueEntities', 'getFormattedValueEntities'),
         new MethodCallRename('SilverStripe\Model\List\ListDecorator', 'TotalItems', 'getTotalItems'),
         new MethodCallRename('SilverStripe\Model\List\PaginatedList', 'TotalItems', 'getTotalItems'),
+        new MethodCallRename('SilverStripe\Control\Director', 'get_session_environment_type', 'get_environment_type'),
 
         // Member hooks
         new MethodCallRename('SilverStripe\Core\Extension', 'afterMemberLoggedIn', 'onAfterMemberLoggedIn'),
         new MethodCallRename('SilverStripe\Core\Extension', 'afterMemberLoggedOut', 'onAfterMemberLoggedOut'),
         new MethodCallRename('SilverStripe\Core\Extension', 'authenticationFailed', 'onAuthenticationFailed'),
-        new MethodCallRename(
-            'SilverStripe\Core\Extension',
-            'authenticationFailedUnknownUser',
-            'onAuthenticationFailedUnknownUser'
-        ),
+        new MethodCallRename('SilverStripe\Core\Extension', 'authenticationFailedUnknownUser',
+            'onAuthenticationFailedUnknownUser'),
         new MethodCallRename('SilverStripe\Core\Extension', 'authenticationSucceeded', 'onAuthenticationSucceeded'),
         new MethodCallRename('SilverStripe\Core\Extension', 'beforeMemberLoggedIn', 'onBeforeMemberLoggedIn'),
         new MethodCallRename('SilverStripe\Core\Extension', 'beforeMemberLoggedOut', 'onBeforeMemberLoggedOut'),
@@ -203,20 +195,31 @@ return static function (RectorConfig $rectorConfig): void {
     ]);
     $rectorConfig->rule(ReplaceHasCurrWithCurrRector::class);
     $rectorConfig->rule(DataObjectGetByIdToByIDRector::class);
-    $rectorConfig->rule(ModelDataExistsReturnTypeRector::class);
-    $rectorConfig->rule(DBVarcharURLReturnTypeRector::class);
-    $rectorConfig->rule(DBCompositeWriteToManipulationSignatureRector::class);
-    $rectorConfig->rule(FactoryCreateMethodSignatureRector::class);
-    $rectorConfig->rule(DBFieldAddToQuerySignatureRector::class);
-    $rectorConfig->rule(DBFieldSetValueSignatureRector::class);
-    $rectorConfig->rule(DBFieldScaffoldFormFieldSignatureRector::class);
+    $rectorConfig->ruleWithConfiguration(RemoveSilverstripeDeprecationCommentRector::class, [
+        'SilverStripe\Model\List\ListDecorator::getTotalItems' => [
+            'message' => 'ListDecorator::TotalItems() has been deprecated. Use getTotalItems() instead.',
+            'link' => 'https://docs.silverstripe.org/en/5/changelogs/5.4.0/#deprecated-api',
+        ],
+        'SilverStripe\Model\List\PaginatedList::getTotalItems' => [
+            'message' => 'PaginatedList::TotalItems() has been deprecated. Use getTotalItems() instead.',
+            'link' => 'https://docs.silverstripe.org/en/5/changelogs/5.4.0/#deprecated-api',
+        ],
+        'SilverStripe\Forms\TextareaField::getFormattedValueEntities' => [
+            'message' => 'TextareaField::ValueEntities() has been deprecated. Use getFormattedValueEntities() instead.',
+            'link' => 'https://docs.silverstripe.org/en/5/changelogs/5.4.0/#deprecated-api',
+        ],
+        'SilverStripe\Forms\FormField::getFormattedValue' => [
+            'message' => 'FormField::Value() has been deprecated. It will be replaced by getFormattedValue() and getValue().',
+            'link' => 'https://docs.silverstripe.org/en/5/changelogs/5.4.0/#deprecated-api',
+        ],
+        'SilverStripe\Control\Director::get_environment_type' => [
+            'message' => 'Director::get_session_environment_type() has been deprecated. Use Director::get_environment_type() instead.',
+            'link' => 'https://docs.silverstripe.org/en/5/changelogs/5.4.0/#deprecated-api',
+        ],
+    ]);
     $rectorConfig->ruleWithConfiguration(RenameClassConstFetchRector::class, [
-        new RenameClassAndConstFetch(
-            'SilverStripe\Admin\LeftAndMain',
-            'SCHEMA_HEADER',
-            'SilverStripe\Forms\Schema\FormSchema',
-            'SCHEMA_HEADER'
-        ),
+        new RenameClassAndConstFetch('SilverStripe\Admin\LeftAndMain', 'SCHEMA_HEADER',
+            'SilverStripe\Forms\Schema\FormSchema', 'SCHEMA_HEADER'),
     ]);
     $rectorConfig->rule(BuildTaskSegmentToCommandNameRector::class);
     $rectorConfig->rule(BuildTaskTitlePropertyRector::class);

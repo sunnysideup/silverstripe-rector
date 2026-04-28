@@ -8,6 +8,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Added `RenameFieldListMethodsWithoutArrayParamRector` to handle both `addFieldsToTab()` and `removeFieldsFromTab()` 
+  when a non-array argument is passed.
+- Added generic `PropertyToConfigRector` to convert class properties to static config variables (e.g. `BuildTask::$enabled` to `private static $is_enabled`).
+- Added generic `StaticCallToConfigRector` to convert static method calls to class config variables (e.g. `DataObject::disable_subclass_access()` to `private static $subclass_access = false`).
+- Integrated new generic rules into Silverstripe 5.1 and 5.2 setlists.
+
+## [1.3] - 2026-04-28
+
+### Deprecated
+- Deprecated `RenameAddFieldsToTabWithoutArrayParamRector` in favor of `RenameFieldListMethodsWithoutArrayParamRector`.
+
+### Added
+- Improved `BuildTaskUpdateRector` to handle comprehensive Silverstripe 6 BuildTask migration:
+    - Properties `$segment`, `$title`, `$description` are updated with correct visibility, static status and `string` types.
+    - `run()` is converted to `protected execute()` with `PolyOutput` and `int` return type.
+    - `echo` statements are converted to `$output->writeln()`.
+    - `$request->getVar()` is converted to `$input->getOption()`.
+    - `getOptions()` method is automatically generated when options are detected.
+    - Handles `run()` without parameters and avoids conflicts if `execute()` already exists.
+    - Thanks to [@BettinaMaria98](https://github.com/BettinaMaria98) for the idea.
 - Added rules for Silverstripe 6.1 deprecations:
     - Added `DataObjectStaticMethodsToFluentRector` to replace `DataObject::get_by_id()`, `get_one()`, and `delete_by_id()` with fluent equivalents (e.g. `DataObject::get($className)->setUseCache(true)->byID($id)`).
 - Added rules for Silverstripe 6.2 deprecations:
@@ -25,7 +45,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Added tests and comprehensive documentation.
   - Improved class and method detection using PHPStan Scope.
   - Ensured PHP 7.4 compatibility.
+- Added `RemoveSilverstripeDeprecationCommentRector` to clean up deprecation comments during upgrades from Silverstripe 5.4 to 6.0.
 - Added new Silverstripe 5.4 set with deprecations without substitute using `SilverstripeDeprecationCommentRector`.
+- Updated Silverstripe 6.0 setlist with missing renames from 5.4 deprecations (e.g. `FormField::Value()` and `Director::get_session_environment_type()`).
+- Added tests for Silverstripe 5.4 to 6.0 upgrade path.
 - Add jack for testing outdated packages in CI
 - Improved CI script
 

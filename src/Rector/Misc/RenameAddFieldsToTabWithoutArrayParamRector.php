@@ -14,12 +14,17 @@ use Symplify\RuleDocGenerator\Contract\DocumentedRuleInterface;
 use Symplify\RuleDocGenerator\ValueObject\CodeSample\CodeSample;
 use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 
+/**
+ * @deprecated Use RenameFieldListMethodsWithoutArrayParamRector instead. Will be removed in 2.0.0
+ */
 final class RenameAddFieldsToTabWithoutArrayParamRector extends AbstractRector implements DocumentedRuleInterface
 {
     public function getRuleDefinition(): RuleDefinition
     {
         return new RuleDefinition(
-            'Silverstripe 5.3: Renames ->addFieldsToTab($name, $singleField) to ->addFieldToTab($name, $singleField)',
+            'Silverstripe 5.3: DEPRECATED: Use RenameFieldListMethodsWithoutArrayParamRector instead. ' .
+            'Will be removed in 2.0.0. Renames ->addFieldsToTab($name, $singleField) ' .
+            'to ->addFieldToTab($name, $singleField)',
             [
                 new CodeSample(
                     <<<'CODE_SAMPLE'
@@ -69,7 +74,6 @@ CODE_SAMPLE
         }
 
         // If the second argument is an array, keep as addFieldsToTab
-        // (this rector is only for the *non-array* second arg case)
         $secondArgValue = $node->args[1]->value;
         if ($secondArgValue instanceof Array_) {
             return null;

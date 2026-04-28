@@ -1,10 +1,10 @@
-# 14 Rules Overview
+# 18 Rules Overview
 
 <br>
 
 ## Categories
 
-- [Rector](#rector) (14)
+- [Rector](#rector) (18)
 
 <br>
 
@@ -25,6 +25,34 @@ Code Style: Adds `@config` property to predefined private statics, e.g. `$db` or
 +    * @config
 +    */
      private static $db = [];
+ }
+```
+
+<br>
+
+### BuildTaskUpdateRector
+
+Silverstripe 6.0: Updates Silverstripe BuildTask from v5 to v6
+
+- class: [`Netwerkstatt\SilverstripeRector\Rector\Misc\BuildTaskUpdateRector`](../src/Rector/Misc/BuildTaskUpdateRector.php)
+
+```diff
+ use SilverStripe\Dev\BuildTask;
++use Symfony\Component\Console\Input\InputInterface;
++use SilverStripe\PolyExecution\PolyOutput;
+
+ class MyTask extends BuildTask
+ {
+-    protected $title = 'My Task';
++    protected string $title = 'My Task';
+
+-    public function run($request)
++    protected function execute(InputInterface $input, PolyOutput $output): int
+     {
+-        echo "Running task";
++        $output->writeln('Running task');
++        return \Symfony\Component\Console\Command\Command::SUCCESS;
+     }
  }
 ```
 
@@ -181,21 +209,61 @@ Code Style: Replace specific property fetches with method calls
 
 <br>
 
-### RenameAddFieldsToTabWithoutArrayParamRector
+### PropertyToConfigRector
 
-Silverstripe 5.3: Renames ->addFieldsToTab($name, `$singleField)` to ->addFieldToTab($name, `$singleField)`
+Convert protected properties to private static config properties
 
-- class: [`Netwerkstatt\SilverstripeRector\Rector\Misc\RenameAddFieldsToTabWithoutArrayParamRector`](../src/Rector/Misc/RenameAddFieldsToTabWithoutArrayParamRector.php)
+:wrench: **configure it!**
+
+- class: [`Netwerkstatt\SilverstripeRector\Rector\Misc\PropertyToConfigRector`](../src/Rector/Misc/PropertyToConfigRector.php)
 
 ```diff
- class SomeClass extends \SilverStripe\ORM\DataObject
+ class MyTask extends BuildTask
  {
-     public function getCMSFields() {
-         $myfield = FormField::create();
--        $fields->addFieldsToTab('Root.Main', $myfield);
-+        $fields->addFieldToTab('Root.Main', $myfield);
+-    protected $enabled = true;
++    /**
++     * @config
++     */
++    private static $is_enabled = true;
+ }
+```
+
+<br>
+
+### RemoveSilverstripeDeprecationCommentRector
+
+Silverstripe: Remove deprecation comments that are no longer applicable after upgrade.
+
+:wrench: **configure it!**
+
+- class: [`Netwerkstatt\SilverstripeRector\Rector\Misc\RemoveSilverstripeDeprecationCommentRector`](../src/Rector/Misc/RemoveSilverstripeDeprecationCommentRector.php)
+
+```diff
+ class SomeClass
+ {
+-    /**
+-     * @deprecated This method is deprecated. Use newMethod() instead.
+-     * See: https://docs.silverstripe.org/...
+-     */
+     public function newMethod()
+     {
      }
  }
+```
+
+<br>
+
+### RenameFieldListMethodsWithoutArrayParamRector
+
+Silverstripe 5.3: Renames FieldList plural methods to singular if second argument is not an array
+
+- class: [`Netwerkstatt\SilverstripeRector\Rector\Misc\RenameFieldListMethodsWithoutArrayParamRector`](../src/Rector/Misc/RenameFieldListMethodsWithoutArrayParamRector.php)
+
+```diff
+-$fields->addFieldsToTab('Root.Main', $myfield);
+-$fields->removeFieldsFromTab('Root.Main', $myfield);
++$fields->addFieldToTab('Root.Main', $myfield);
++$fields->removeFieldFromTab('Root.Main', $myfield);
 ```
 
 <br>
@@ -251,6 +319,31 @@ Silverstripe 4.0: Replace `$this->stat('foo')` with `static::config()->get('foo'
      public function myMethod() {
 -        $this->stat('foo');
 +        static::config()->get('foo');
+     }
+ }
+```
+
+<br>
+
+### StaticCallToConfigRector
+
+Convert static method calls to config properties
+
+:wrench: **configure it!**
+
+- class: [`Netwerkstatt\SilverstripeRector\Rector\Misc\StaticCallToConfigRector`](../src/Rector/Misc/StaticCallToConfigRector.php)
+
+```diff
+ class MyObject extends DataObject
+ {
++    /**
++     * @config
++     */
++    private static $subclass_access = false;
+     public function onBeforeWrite()
+     {
+         parent::onBeforeWrite();
+-        self::disable_subclass_access();
      }
  }
 ```
