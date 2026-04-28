@@ -191,8 +191,7 @@ CODE
         $inputVar = new Variable('input');
         $outputVar = new Variable('output');
 
-        // IMPORTANT: We must avoid sharing the same AST node instance between getOptions() and run(), 
-        // otherwise PHP-Parser creates an infinite printing loop.
+        // IMPORTANT: Avoid sharing the same AST node instance to prevent infinite loops in printer
         $taskExprForOptions = $taskExpr instanceof Variable 
             ? new Variable($taskExpr->name) 
             : clone $taskExpr;
