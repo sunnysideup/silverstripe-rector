@@ -9,15 +9,21 @@ namespace SilverStripe\Model {
 }
 
 namespace SilverStripe\ORM\FieldType {
-    class DBField extends \SilverStripe\Model\ModelData {}
+    if (!class_exists(DBField::class)) {
+        class DBField extends \SilverStripe\Model\ModelData {}
+    }
 }
 
 namespace SilverStripe\ORM {
-    class DataObject extends \SilverStripe\Model\ModelData {}
+    if (!class_exists(DataObject::class)) {
+        class DataObject extends \SilverStripe\Model\ModelData {}
+    }
 }
 
 namespace SilverStripe\CMS\Model {
-    class SiteTree extends \SilverStripe\ORM\DataObject {}
+    if (!class_exists(SiteTree::class)) {
+        class SiteTree extends \SilverStripe\ORM\DataObject {}
+    }
 }
 
 namespace App\Models {
@@ -137,15 +143,21 @@ namespace SilverStripe\Model {
 }
 
 namespace SilverStripe\ORM\FieldType {
-    class DBField extends \SilverStripe\Model\ModelData {}
+    if (!class_exists(DBField::class)) {
+        class DBField extends \SilverStripe\Model\ModelData {}
+    }
 }
 
 namespace SilverStripe\ORM {
-    class DataObject extends \SilverStripe\Model\ModelData {}
+    if (!class_exists(DataObject::class)) {
+        class DataObject extends \SilverStripe\Model\ModelData {}
+    }
 }
 
 namespace SilverStripe\CMS\Model {
-    class SiteTree extends \SilverStripe\ORM\DataObject {}
+    if (!class_exists(SiteTree::class)) {
+        class SiteTree extends \SilverStripe\ORM\DataObject {}
+    }
 }
 
 namespace App\Models {

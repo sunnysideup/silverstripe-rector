@@ -18,7 +18,7 @@ final class ModelDataForTemplateReturnTypeRector extends AbstractRector
     public function getDefinition(): RuleDefinition
     {
         return new RuleDefinition(
-            'Adds strict string return type to forTemplate() on all ModelData subclasses (including DBField, DataObject, etc.)',
+            'Adds strict string return type to forTemplate() on all ModelData/ViewableData subclasses (including DBField, DataObject, etc.)',
             [
                 new CodeSample(
                     <<<'CODE_SAMPLE'
@@ -59,8 +59,12 @@ CODE_SAMPLE
      */
     public function refactor(Node $node): ?Node
     {
-        // Target the root class that defines forTemplate() in Silverstripe 6
-        if (! $this->isObjectType($node, new ObjectType('SilverStripe\Model\ModelData'))) {
+        // Check both SS6 (ModelData) and SS4/5 (ViewableData) to ensure compatibility 
+        // with the test runner's vendor directory and real-world upgrade paths.
+        $isModelData = $this->isObjectType($node, new ObjectType('SilverStripe\Model\ModelData'));
+        $isViewableData = $this->isObjectType($node, new ObjectType('SilverStripe\View\ViewableData'));
+
+        if (! $isModelData && ! $isViewableData) {
             return null;
         }
 
