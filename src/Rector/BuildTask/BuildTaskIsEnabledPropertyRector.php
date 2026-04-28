@@ -7,6 +7,7 @@ namespace Netwerkstatt\SilverstripeRector\Rector\BuildTask;
 use PhpParser\Modifiers;
 use PhpParser\Node;
 use PhpParser\Node\Identifier;
+use PhpParser\Node\VarLikeIdentifier;
 use PhpParser\Node\Stmt\Class_;
 use PHPStan\Type\ObjectType;
 use Rector\Rector\AbstractRector;
@@ -61,13 +62,13 @@ CODE_SAMPLE
             return null;
         }
 
-        // Rename the property variable
-        $property->props[0]->name = new Identifier('is_enabled');
+        // In PHP-Parser 5 / Rector 2, property names must be VarLikeIdentifier
+        $property->props[0]->name = new VarLikeIdentifier('is_enabled');
 
         // Set type to bool
         $property->type = new Identifier('bool');
 
-        // Force private static
+        // Force private static visibility
         $property->flags = Modifiers::PRIVATE | Modifiers::STATIC;
 
         return $node;
