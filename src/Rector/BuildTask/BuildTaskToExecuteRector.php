@@ -33,7 +33,7 @@ CODE_SAMPLE
                 ,
                 <<<'CODE_SAMPLE'
 class MyTask extends \SilverStripe\Dev\BuildTask {
-    protected function execute(\Symfony\Component\Console\Input\InputInterface $input, \SilverStripe\Console\PolyOutput $output): int
+    protected function execute(\Symfony\Component\Console\Input\InputInterface $input, \SilverStripe\PolyExecution\PolyOutput $output): int
     {
         echo "done";
         return 0;
@@ -76,7 +76,7 @@ CODE_SAMPLE
             // 2. Set Parameters
             $method->params = [
                 new Node\Param(new Node\Expr\Variable('input'), null, new Node\Name\FullyQualified('Symfony\Component\Console\Input\InputInterface')),
-                new Node\Param(new Node\Expr\Variable('output'), null, new Node\Name\FullyQualified('SilverStripe\Console\PolyOutput')),
+                new Node\Param(new Node\Expr\Variable('output'), null, new Node\Name\FullyQualified('SilverStripe\PolyExecution\PolyOutput')),
             ];
 
             // 3. Set Return Type
