@@ -1,36 +1,9 @@
 <?php
 
-namespace SilverStripe\Model {
-    if (!class_exists(ModelData::class)) {
-        class ModelData {
-            public function forTemplate(): string { return ''; }
-        }
-    }
-}
-
-namespace SilverStripe\ORM\FieldType {
-    if (!class_exists(DBField::class)) {
-        class DBField extends \SilverStripe\Model\ModelData {}
-    }
-}
-
-namespace SilverStripe\ORM {
-    if (!class_exists(DataObject::class)) {
-        class DataObject extends \SilverStripe\Model\ModelData {}
-    }
-}
-
-namespace SilverStripe\CMS\Model {
-    if (!class_exists(SiteTree::class)) {
-        class SiteTree extends \SilverStripe\ORM\DataObject {}
-    }
-}
-
 namespace App\Models {
     use SilverStripe\ORM\FieldType\DBField;
     use SilverStripe\ORM\DataObject;
-    use SilverStripe\Model\ModelData;
-    use SilverStripe\CMS\Model\SiteTree;
+    use SilverStripe\View\ViewableData;
 
     // Case 1: DBField missing return type
     class CustomField extends DBField {
@@ -46,8 +19,8 @@ namespace App\Models {
         }
     }
 
-    // Case 3: Direct ModelData subclass missing return type
-    class CustomModel extends ModelData {
+    // Case 3: Direct ViewableData subclass missing return type
+    class CustomModel extends ViewableData {
         public function forTemplate() {
             return 'Model';
         }
@@ -84,15 +57,15 @@ namespace App\Models {
         }
     }
 
-    // Case 8: Deep inheritance (SiteTree)
-    class MyPage extends SiteTree {
+    // Case 8: Deep inheritance
+    class DeepField extends CustomField {
         public function forTemplate() {
-            return 'Page Content';
+            return 'Deep Content';
         }
     }
 
     // Case 9: Abstract class definition
-    abstract class AbstractModel extends ModelData {
+    abstract class AbstractModel extends ViewableData {
         abstract public function forTemplate();
     }
 
@@ -118,14 +91,14 @@ namespace App\Models {
     }
 
     // Case 13: Protected visibility
-    class ProtectedModel extends ModelData {
+    class ProtectedModel extends ViewableData {
         protected function forTemplate() {
             return 'protected';
         }
     }
 
     // Case 14: Private visibility
-    class PrivateModel extends ModelData {
+    class PrivateModel extends ViewableData {
         private function forTemplate() {
             return 'private';
         }
@@ -134,37 +107,10 @@ namespace App\Models {
 -----
 <?php
 
-namespace SilverStripe\Model {
-    if (!class_exists(ModelData::class)) {
-        class ModelData {
-            public function forTemplate(): string { return ''; }
-        }
-    }
-}
-
-namespace SilverStripe\ORM\FieldType {
-    if (!class_exists(DBField::class)) {
-        class DBField extends \SilverStripe\Model\ModelData {}
-    }
-}
-
-namespace SilverStripe\ORM {
-    if (!class_exists(DataObject::class)) {
-        class DataObject extends \SilverStripe\Model\ModelData {}
-    }
-}
-
-namespace SilverStripe\CMS\Model {
-    if (!class_exists(SiteTree::class)) {
-        class SiteTree extends \SilverStripe\ORM\DataObject {}
-    }
-}
-
 namespace App\Models {
     use SilverStripe\ORM\FieldType\DBField;
     use SilverStripe\ORM\DataObject;
-    use SilverStripe\Model\ModelData;
-    use SilverStripe\CMS\Model\SiteTree;
+    use SilverStripe\View\ViewableData;
 
     // Case 1: DBField missing return type
     class CustomField extends DBField {
@@ -180,8 +126,8 @@ namespace App\Models {
         }
     }
 
-    // Case 3: Direct ModelData subclass missing return type
-    class CustomModel extends ModelData {
+    // Case 3: Direct ViewableData subclass missing return type
+    class CustomModel extends ViewableData {
         public function forTemplate(): string {
             return 'Model';
         }
@@ -218,15 +164,15 @@ namespace App\Models {
         }
     }
 
-    // Case 8: Deep inheritance (SiteTree)
-    class MyPage extends SiteTree {
+    // Case 8: Deep inheritance
+    class DeepField extends CustomField {
         public function forTemplate(): string {
-            return 'Page Content';
+            return 'Deep Content';
         }
     }
 
     // Case 9: Abstract class definition
-    abstract class AbstractModel extends ModelData {
+    abstract class AbstractModel extends ViewableData {
         abstract public function forTemplate(): string;
     }
 
@@ -252,14 +198,14 @@ namespace App\Models {
     }
 
     // Case 13: Protected visibility
-    class ProtectedModel extends ModelData {
+    class ProtectedModel extends ViewableData {
         protected function forTemplate(): string {
             return 'protected';
         }
     }
 
     // Case 14: Private visibility
-    class PrivateModel extends ModelData {
+    class PrivateModel extends ViewableData {
         private function forTemplate(): string {
             return 'private';
         }
