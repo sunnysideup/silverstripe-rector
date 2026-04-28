@@ -60,7 +60,6 @@ CODE_SAMPLE
     public function refactor(Node $node): ?Node
     {
         // Check both SS6 (ModelData) and SS4/5 (ViewableData) to ensure compatibility 
-        // with the test runner's vendor directory and real-world upgrade paths.
         $isModelData = $this->isObjectType($node, new ObjectType('SilverStripe\Model\ModelData'));
         $isViewableData = $this->isObjectType($node, new ObjectType('SilverStripe\View\ViewableData'));
 
@@ -79,7 +78,7 @@ CODE_SAMPLE
             return null;
         }
 
-        // Force the strict "string" return type declaration (overriding ?string, union types, or missing types)
+        // Force the strict "string" return type declaration
         $method->returnType = new Identifier('string');
 
         return $node;

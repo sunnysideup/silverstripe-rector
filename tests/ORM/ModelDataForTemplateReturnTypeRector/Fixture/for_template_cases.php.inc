@@ -1,9 +1,20 @@
 <?php
 
+// ---------------------------------------------------------
+// STUBS: We explicitly define the inheritance tree here so 
+// PHPStan can reflect it properly without relying on autoloading.
+// ---------------------------------------------------------
+namespace SilverStripe\View { class ViewableData {} }
+namespace SilverStripe\Model { class ModelData extends \SilverStripe\View\ViewableData {} }
+namespace SilverStripe\ORM\FieldType { class DBField extends \SilverStripe\Model\ModelData {} }
+namespace SilverStripe\ORM { class DataObject extends \SilverStripe\Model\ModelData {} }
+namespace SilverStripe\CMS\Model { class SiteTree extends \SilverStripe\ORM\DataObject {} }
+
 namespace App\Models {
     use SilverStripe\ORM\FieldType\DBField;
     use SilverStripe\ORM\DataObject;
     use SilverStripe\View\ViewableData;
+    use SilverStripe\Model\ModelData;
 
     // Case 1: DBField missing return type
     class CustomField extends DBField {
@@ -103,14 +114,50 @@ namespace App\Models {
             return 'private';
         }
     }
+
+    // Case 15: Final class modification
+    final class FinalField extends DBField {
+        public function forTemplate() {
+            return 'final';
+        }
+    }
+
+    // Case 16: Anonymous class testing
+    class AnonymousFactory {
+        public function getField() {
+            return new class extends DBField {
+                public function forTemplate() {
+                    return 'anonymous';
+                }
+            };
+        }
+    }
+
+    // Case 17: Overriding a mixed return type
+    class MixedField extends DBField {
+        public function forTemplate(): mixed {
+            return 'mixed';
+        }
+    }
 }
 -----
 <?php
+
+// ---------------------------------------------------------
+// STUBS: We explicitly define the inheritance tree here so 
+// PHPStan can reflect it properly without relying on autoloading.
+// ---------------------------------------------------------
+namespace SilverStripe\View { class ViewableData {} }
+namespace SilverStripe\Model { class ModelData extends \SilverStripe\View\ViewableData {} }
+namespace SilverStripe\ORM\FieldType { class DBField extends \SilverStripe\Model\ModelData {} }
+namespace SilverStripe\ORM { class DataObject extends \SilverStripe\Model\ModelData {} }
+namespace SilverStripe\CMS\Model { class SiteTree extends \SilverStripe\ORM\DataObject {} }
 
 namespace App\Models {
     use SilverStripe\ORM\FieldType\DBField;
     use SilverStripe\ORM\DataObject;
     use SilverStripe\View\ViewableData;
+    use SilverStripe\Model\ModelData;
 
     // Case 1: DBField missing return type
     class CustomField extends DBField {
@@ -208,6 +255,31 @@ namespace App\Models {
     class PrivateModel extends ViewableData {
         private function forTemplate(): string {
             return 'private';
+        }
+    }
+
+    // Case 15: Final class modification
+    final class FinalField extends DBField {
+        public function forTemplate(): string {
+            return 'final';
+        }
+    }
+
+    // Case 16: Anonymous class testing
+    class AnonymousFactory {
+        public function getField() {
+            return new class extends DBField {
+                public function forTemplate(): string {
+                    return 'anonymous';
+                }
+            };
+        }
+    }
+
+    // Case 17: Overriding a mixed return type
+    class MixedField extends DBField {
+        public function forTemplate(): string {
+            return 'mixed';
         }
     }
 }
