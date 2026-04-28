@@ -22,15 +22,19 @@ final class BuildTaskDescriptionPropertyRector extends AbstractRector
             [
                 new CodeSample(
                     <<<'CODE_SAMPLE'
-class MyTask extends \SilverStripe\Dev\BuildTask
+use SilverStripe\Dev\BuildTask;
+
+class MyTask extends BuildTask
 {
-    private $description = 'My Task';
+    private $description = 'My description';
 }
 CODE_SAMPLE,
                     <<<'CODE_SAMPLE'
-class MyTask extends \SilverStripe\Dev\BuildTask
+use SilverStripe\Dev\BuildTask;
+
+class MyTask extends BuildTask
 {
-    protected static string $description = 'My Task';
+    protected static string $description = 'My description';
 }
 CODE_SAMPLE
                 )
@@ -66,7 +70,7 @@ CODE_SAMPLE
         }
 
         // 2. Force Flags: protected static
-        // We reset flags to specifically PROTECTED | STATIC to clear private/public/readonly/etc.
+        // This handles converting non-static to static and fixing visibility simultaneously
         $expectedFlags = Modifiers::PROTECTED | Modifiers::STATIC;
         if ($property->flags !== $expectedFlags) {
             $property->flags = $expectedFlags;
