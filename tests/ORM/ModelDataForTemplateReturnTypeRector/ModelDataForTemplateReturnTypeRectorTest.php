@@ -2,13 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Netwerkstatt\SilverstripeRector\Tests\ORM\AddStringReturnTypeToForTemplateRector;
+namespace Netwerkstatt\SilverstripeRector\Tests\ORM\ModelDataForTemplateReturnTypeRector;
 
-use Iterator;
-use PHPUnit\Framework\Attributes\DataProvider;
 use Rector\Testing\PHPUnit\AbstractRectorTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
-final class AddStringReturnTypeToForTemplateRectorTest extends AbstractRectorTestCase
+final class ModelDataForTemplateReturnTypeRectorTest extends AbstractRectorTestCase
 {
     #[DataProvider('provideData')]
     public function test(string $filePath): void
@@ -16,7 +15,7 @@ final class AddStringReturnTypeToForTemplateRectorTest extends AbstractRectorTes
         $this->doTestFile($filePath);
     }
 
-    public static function provideData(): Iterator
+    public static function provideData(): \Iterator
     {
         return self::yieldFilesFromDirectory(__DIR__ . '/Fixture');
     }

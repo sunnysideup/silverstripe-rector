@@ -32,7 +32,7 @@ use Netwerkstatt\SilverstripeRector\Rector\DataObject\DataObjectGetByIdToByIDRec
 use Netwerkstatt\SilverstripeRector\Rector\Forms\FormFieldValueToGetValueRector;
 use Netwerkstatt\SilverstripeRector\Rector\Injector\FactoryCreateMethodSignatureRector;
 use Netwerkstatt\SilverstripeRector\Rector\Misc\ModelDataExistsReturnTypeRector;
-use Netwerkstatt\SilverstripeRector\Rector\ORM\AddStringReturnTypeToForTemplateRector;
+use Netwerkstatt\SilverstripeRector\Rector\ORM\ModelDataForTemplateReturnTypeRector;
 use Netwerkstatt\SilverstripeRector\Rector\ORM\AddUnionReturnTypeToPrepValueForDBRector;
 use Netwerkstatt\SilverstripeRector\Rector\ORM\AddVoidReturnTypeToSaveIntoRector;
 use Netwerkstatt\SilverstripeRector\Rector\DataObject\DataObjectDebugReturnTypeRector;
@@ -304,7 +304,7 @@ return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->rule(ReplacePageTypeClassesRector::class);
     $rectorConfig->rule(ConvertArrayToInputOptionRector::class);
     $rectorConfig->rule(AddParentConstructToControllerRector::class);
-    $rectorConfig->rule(AddStringReturnTypeToForTemplateRector::class);
+    $rectorConfig->rule(ModelDataForTemplateReturnTypeRector::class);
     $rectorConfig->rule(AddUnionReturnTypeToPrepValueForDBRector::class);
     $rectorConfig->rule(AddVoidReturnTypeToSaveIntoRector::class);
     $rectorConfig->rule(ModelDataExistsReturnTypeRector::class);

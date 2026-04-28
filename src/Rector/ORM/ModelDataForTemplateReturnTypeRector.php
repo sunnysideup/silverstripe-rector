@@ -13,15 +13,17 @@ use Rector\Rector\AbstractRector;
 use Symplify\RuleDocGenerator\ValueObject\CodeSample\CodeSample;
 use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 
-final class AddStringReturnTypeToForTemplateRector extends AbstractRector
+final class ModelDataForTemplateReturnTypeRector extends AbstractRector
 {
-    public function getRuleDefinition(): RuleDefinition
+    public function getDefinition(): RuleDefinition
     {
         return new RuleDefinition(
-            'Adds string return type to forTemplate() on DBField subclasses',
+            'Adds strict string return type to forTemplate() on all ModelData subclasses (including DBField, DataObject, etc.)',
             [
                 new CodeSample(
                     <<<'CODE_SAMPLE'
+use SilverStripe\ORM\FieldType\DBField;
+
 class MyField extends DBField
 {
     public function forTemplate()
@@ -32,6 +34,8 @@ class MyField extends DBField
 CODE_SAMPLE
                     ,
                     <<<'CODE_SAMPLE'
+use SilverStripe\ORM\FieldType\DBField;
+
 class MyField extends DBField
 {
     public function forTemplate(): string
@@ -47,7 +51,6 @@ CODE_SAMPLE
 
     public function getNodeTypes(): array
     {
-        // Target the Class_ node to easily check inheritance context
         return [Class_::class];
     }
 
@@ -56,8 +59,8 @@ CODE_SAMPLE
      */
     public function refactor(Node $node): ?Node
     {
-        // Check if the class is or extends SilverStripe\ORM\FieldType\DBField
-        if (! $this->isObjectType($node, new ObjectType('SilverStripe\ORM\FieldType\DBField'))) {
+        // Target the root class that defines forTemplate() in Silverstripe 6
+        if (! $this->isObjectType($node, new ObjectType('SilverStripe\Model\ModelData'))) {
             return null;
         }
 
@@ -67,12 +70,12 @@ CODE_SAMPLE
             return null;
         }
 
-        // If it already has a return type, skip it to prevent infinite loops
-        if ($method->returnType !== null) {
+        // If it already has exactly a 'string' return type, skip to prevent infinite loops
+        if ($method->returnType !== null && $this->isName($method->returnType, 'string')) {
             return null;
         }
 
-        // Add the strict "string" return type declaration
+        // Force the strict "string" return type declaration (overriding ?string, union types, or missing types)
         $method->returnType = new Identifier('string');
 
         return $node;
