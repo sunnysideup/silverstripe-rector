@@ -1,109 +1,145 @@
 <?php
 
+namespace SilverStripe\Dev {
+    if (!class_exists(BuildTask::class)) {
+        class BuildTask {}
+    }
+}
+
 namespace App\Tasks {
-    // Case 1: Simple private untyped
-    class Task1 extends \SilverStripe\Dev\BuildTask {
-        private $description = 'Task 1';
+    use SilverStripe\Dev\BuildTask;
+
+    // 1. Private non-static
+    class Task1 extends BuildTask {
+        private $description = 'Desc 1';
     }
 
-    // Case 2: Public untyped
-    class Task2 extends \SilverStripe\Dev\BuildTask {
-        public $description = 'Task 2';
+    // 2. Public non-static
+    class Task2 extends BuildTask {
+        public $description = 'Desc 2';
     }
 
-    // Case 3: Protected untyped but not static
-    class Task3 extends \SilverStripe\Dev\BuildTask {
-        protected $description = 'Task 3';
+    // 3. Protected non-static
+    class Task3 extends BuildTask {
+        protected $description = 'Desc 3';
     }
 
-    // Case 4: Static but private and no type
-    class Task4 extends \SilverStripe\Dev\BuildTask {
-        private static $description = 'Task 4';
+    // 4. Private static untyped
+    class Task4 extends BuildTask {
+        private static $description = 'Desc 4';
     }
 
-    // Case 5: Static and public with wrong type
-    class Task5 extends \SilverStripe\Dev\BuildTask {
-        public static int $description = 123;
+    // 5. Public static with wrong type
+    class Task5 extends BuildTask {
+        public static int $description = 101;
     }
 
-    // Case 6: Already correct (should remain unchanged)
-    class Task6 extends \SilverStripe\Dev\BuildTask {
-        protected static string $description = 'Task 6';
+    // 6. Correct usage (idempotency)
+    class Task6 extends BuildTask {
+        protected static string $description = 'Correct';
     }
 
-    // Case 7: Inherited class check
+    // 7. Recursive inheritance
     class SubTask extends Task1 {
-        private $description = 'SubTask';
+        private $description = 'Sub';
     }
 
-    // Case 8: Property with DocBlock preservation
-    class Task8 extends \SilverStripe\Dev\BuildTask {
+    // 8. Docblock preservation
+    class Task8 extends BuildTask {
         /** @var string */
-        private $description = 'Task 8';
+        private $description = 'With Doc';
     }
 
-    // Case 9: Readonly property (should be converted to static/protected/string)
-    class Task9 extends \SilverStripe\Dev\BuildTask {
+    // 9. Readonly (should be stripped)
+    class Task9 extends BuildTask {
         private readonly string $description;
     }
 
-    // Case 10: Unrelated class (should not be touched)
-    class NotATask {
-        private $description = 'I stay private';
+    // 10. Typed but non-static
+    class Task10 extends BuildTask {
+        protected string $description = 'Typed non-static';
+    }
+
+    // 11. Multi-flag static public
+    class Task11 extends BuildTask {
+        static public $description = 'Reverse order flags';
+    }
+
+    // 12. Unrelated class
+    class Ignored {
+        private $description = 'Ignore';
     }
 }
 -----
 <?php
 
+namespace SilverStripe\Dev {
+    if (!class_exists(BuildTask::class)) {
+        class BuildTask {}
+    }
+}
+
 namespace App\Tasks {
-    // Case 1: Simple private untyped
-    class Task1 extends \SilverStripe\Dev\BuildTask {
-        protected static string $description = 'Task 1';
+    use SilverStripe\Dev\BuildTask;
+
+    // 1. Private non-static
+    class Task1 extends BuildTask {
+        protected static string $description = 'Desc 1';
     }
 
-    // Case 2: Public untyped
-    class Task2 extends \SilverStripe\Dev\BuildTask {
-        protected static string $description = 'Task 2';
+    // 2. Public non-static
+    class Task2 extends BuildTask {
+        protected static string $description = 'Desc 2';
     }
 
-    // Case 3: Protected untyped but not static
-    class Task3 extends \SilverStripe\Dev\BuildTask {
-        protected static string $description = 'Task 3';
+    // 3. Protected non-static
+    class Task3 extends BuildTask {
+        protected static string $description = 'Desc 3';
     }
 
-    // Case 4: Static but private and no type
-    class Task4 extends \SilverStripe\Dev\BuildTask {
-        protected static string $description = 'Task 4';
+    // 4. Private static untyped
+    class Task4 extends BuildTask {
+        protected static string $description = 'Desc 4';
     }
 
-    // Case 5: Static and public with wrong type
-    class Task5 extends \SilverStripe\Dev\BuildTask {
-        protected static string $description = 123;
+    // 5. Public static with wrong type
+    class Task5 extends BuildTask {
+        protected static string $description = 101;
     }
 
-    // Case 6: Already correct (should remain unchanged)
-    class Task6 extends \SilverStripe\Dev\BuildTask {
-        protected static string $description = 'Task 6';
+    // 6. Correct usage (idempotency)
+    class Task6 extends BuildTask {
+        protected static string $description = 'Correct';
     }
 
-    // Case 7: Inherited class check
+    // 7. Recursive inheritance
     class SubTask extends Task1 {
-        protected static string $description = 'SubTask';
+        protected static string $description = 'Sub';
     }
 
-    // Case 8: Property with DocBlock preservation
-    class Task8 extends \SilverStripe\Dev\BuildTask {
+    // 8. Docblock preservation
+    class Task8 extends BuildTask {
         /** @var string */
-        protected static string $description = 'Task 8';
+        protected static string $description = 'With Doc';
     }
 
-    // Case 9: Readonly property (should be converted to static/protected/string)
-    class Task9 extends \SilverStripe\Dev\BuildTask {
+    // 9. Readonly (should be stripped)
+    class Task9 extends BuildTask {
         protected static string $description;
     }
 
-    // Case 10: Unrelated class (should not be touched)
-    class NotATask {
-        private $description = 'I stay private';
+    // 10. Typed but non-static
+    class Task10 extends BuildTask {
+        protected static string $description = 'Typed non-static';
+    }
+
+    // 11. Multi-flag static public
+    class Task11 extends BuildTask {
+        protected static string $description = 'Reverse order flags';
+    }
+
+    // 12. Unrelated class
+    class Ignored {
+        private $description = 'Ignore';
     }
 }
