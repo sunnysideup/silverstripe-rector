@@ -78,7 +78,7 @@ namespace App\Other {
 
 namespace SilverStripe\Control {
     class Controller {
-        public function render($params = null) { return null; }
+        public function render($params = null): \SilverStripe\ORM\FieldType\DBHTMLText { return null; }
     }
 }
 
@@ -102,7 +102,10 @@ namespace App\Controllers {
 
     // 4. Too many parameters
     class C4 extends Controller {
-        public function render($params = null): \SilverStripe\ORM\FieldType\DBHTMLText { return null; }
+        public function render($params = null): \SilverStripe\ORM\FieldType\DBHTMLText
+        {
+            return null;
+        }
     }
 
     // 5. Existing return type is incorrect

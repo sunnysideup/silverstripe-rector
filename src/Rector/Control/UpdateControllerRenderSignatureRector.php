@@ -75,9 +75,9 @@ CODE
             $firstParam = $params[0];
             if ($firstParam->default instanceof \PhpParser\Node\Expr\ConstFetch) {
                 $defaultName = $this->getName($firstParam->default->name);
+                // Strict check: we only consider it idempotent if it is exactly lowercase 'null'
                 if (
-                    $defaultName !== null && 
-                    strtolower($defaultName) === 'null' &&
+                    $defaultName === 'null' && 
                     $this->isName($firstParam->var, 'params') &&
                     $firstParam->type === null
                 ) {
