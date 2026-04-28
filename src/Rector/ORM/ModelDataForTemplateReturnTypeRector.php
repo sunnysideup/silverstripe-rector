@@ -18,7 +18,7 @@ final class ModelDataForTemplateReturnTypeRector extends AbstractRector
     public function getDefinition(): RuleDefinition
     {
         return new RuleDefinition(
-            'Adds strict string return type to forTemplate() on all ModelData/ViewableData subclasses (including DBField, DataObject, etc.)',
+            'Adds strict string return type to forTemplate() on all ModelData subclasses (including DBField, DataObject, etc.)',
             [
                 new CodeSample(
                     <<<'CODE_SAMPLE'
@@ -59,11 +59,25 @@ CODE_SAMPLE
      */
     public function refactor(Node $node): ?Node
     {
-        // Check both SS6 (ModelData) and SS4/5 (ViewableData) to ensure compatibility 
-        $isModelData = $this->isObjectType($node, new ObjectType('SilverStripe\Model\ModelData'));
-        $isViewableData = $this->isObjectType($node, new ObjectType('SilverStripe\View\ViewableData'));
+        // Explicitly check for common primary subclasses in addition to the root classes.
+        // This makes the rule highly resilient to autoloader failures and isolated test environments.
+        $targetClasses = [
+            'SilverStripe\Model\ModelData',
+            'SilverStripe\View\ViewableData',
+            'SilverStripe\ORM\FieldType\DBField',
+            'SilverStripe\ORM\DataObject',
+            'SilverStripe\CMS\Model\SiteTree'
+        ];
 
-        if (! $isModelData && ! $isViewableData) {
+        $isMatch = false;
+        foreach ($targetClasses as $targetClass) {
+            if ($this->isObjectType($node, new ObjectType($targetClass))) {
+                $isMatch = true;
+                break;
+            }
+        }
+
+        if (! $isMatch) {
             return null;
         }
 
