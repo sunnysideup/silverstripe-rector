@@ -311,7 +311,6 @@ return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->rule(DBFieldAddToQuerySignatureRector::class);
     $rectorConfig->rule(DBFieldSetValueSignatureRector::class);
     $rectorConfig->rule(DBFieldScaffoldFormFieldSignatureRector::class);
-    $rectorConfig->rule(BuildTaskToExecuteRector::class);
     $rectorConfig->rule(DataObjectDebugReturnTypeRector::class);  
     $rectorConfig->rule(DBFieldAddToQuerySignatureRector::class);
     $rectorConfig->rule(DBFieldSetValueSignatureRector::class);
@@ -325,7 +324,6 @@ return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->rule(FormFieldCompositeDatabaseFieldsReturnTypeRector::class);
     $rectorConfig->rule(FormFieldValueToGetValueRector::class);
 
-     $rectorConfig->rule(BuildTaskToExecuteRector::class);
      $rectorConfig->rule(DBFieldAddToQuerySignatureRector::class);
     $rectorConfig->rule(DBFieldSetValueSignatureRector::class);
     $rectorConfig->rule(DBFieldScaffoldFormFieldSignatureRector::class);
@@ -335,18 +333,14 @@ return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->rule(FormFieldValueToGetValueRector::class);
     $rectorConfig->rule(FormFieldCompositeDatabaseFieldsReturnTypeRector::class);
     $rectorConfig->rule(MigrateTaskRunToPolyExecutionRector::class);
-    $rectorConfig->rule(BuildTaskToExecuteRector::class);
     $rectorConfig->rule(PolyCommandGetOptionsPublicRector::class);
-    $rectorConfig->rule(BuildTaskSegmentToCommandNameRector::class);
       $rectorConfig->rule(ModelDataExistsReturnTypeRector::class);
     $rectorConfig->rule(DBFieldAddToQuerySignatureRector::class);
     $rectorConfig->rule(DBFieldSetValueSignatureRector::class);
     $rectorConfig->rule(DBFieldScaffoldFormFieldSignatureRector::class);
     $rectorConfig->rule(BuildTaskSegmentToCommandNameRector::class);
     $rectorConfig->rule(EnsureExecuteReturnsCommandSuccessRector::class);
-    $rectorConfig->rule(MigrateTaskRunToPolyExecutionRector::class);
     $rectorConfig->rule(BuildTaskToExecuteRector::class);
-    $rectorConfig->rule(PolyCommandGetOptionsPublicRector::class);
     $rectorConfig->rule(DataObjectDebugReturnTypeRector::class);
     $rectorConfig->rule(FormFieldValidateSignatureRector::class);
     $rectorConfig->rule(FormFieldValueToGetValueRector::class);
