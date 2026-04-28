@@ -14,12 +14,9 @@ use PhpParser\Node\Expr\Array_;
 use PhpParser\Node\Expr\ArrayItem;
 use PhpParser\Node\Scalar\String_;
 use PhpParser\Node\Stmt\Expression;
-use PhpParser\Node\Stmt\ClassMethod;
-use PhpParser\Node\Stmt\Function_;
-use PhpParser\Node\Expr\Closure;
-use PhpParser\Node\Stmt\Namespace_;
 use PHPStan\Type\ObjectType;
 use Rector\Rector\AbstractRector;
+use Rector\Contract\PhpParser\Node\StmtsAwareInterface;
 use Symplify\RuleDocGenerator\ValueObject\CodeSample\CodeSample;
 use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 
@@ -39,7 +36,7 @@ $task->run(null);
 CODE
                 ,
                 <<<'CODE'
-$task = MyTask::create();
+$task = new MyTask();
 $definition = new \Symfony\Component\Console\Input\InputDefinition($task->getOptions());
 $input = new \Symfony\Component\Console\Input\ArrayInput(['MyParam' => true], $definition);
 $output = \SilverStripe\PolyExecution\PolyOutput::create(\SilverStripe\PolyExecution\PolyOutput::FORMAT_ANSI);
@@ -52,15 +49,12 @@ CODE
     public function getNodeTypes(): array
     {
         return [
-            ClassMethod::class,
-            Function_::class,
-            Closure::class,
-            Namespace_::class,
+            StmtsAwareInterface::class,
         ];
     }
 
     /**
-     * @param ClassMethod|Function_|Closure|Namespace_ $node
+     * @param StmtsAwareInterface $node
      */
     public function refactor(Node $node): ?Node
     {
@@ -80,7 +74,7 @@ CODE
 
                 if ($expr instanceof Assign && $expr->var instanceof Variable) {
                     $varName = $this->getName($expr->var);
-                    if ($varName) {
+                    if ($varName !== null) {
                         $taskVars[$varName] = [
                             'isTask' => $this->isTaskType($expr->expr),
                             'setterIndices' => []
@@ -92,7 +86,7 @@ CODE
                     $varName = $this->getName($expr->var);
                     $methodName = $this->getName($expr->name);
 
-                    if ($varName && $methodName) {
+                    if ($varName !== null && $methodName !== null) {
                         if (!isset($taskVars[$varName])) {
                             $taskVars[$varName] = [
                                 'isTask' => $this->isTaskType($expr->var),
@@ -110,7 +104,6 @@ CODE
                                     $handled = true;
                                 }
                             } elseif ($methodName === 'run') {
-                                // Idempotency check: Ignore if already migrated (has 2 or more args)
                                 if (count($expr->getArgs()) < 2) {
                                     $params = array_values($taskVars[$varName]['setterIndices']);
                                     
@@ -118,14 +111,21 @@ CODE
                                         unset($newStmts[$idx]);
                                     }
 
-                                    $replacementNodes = $this->generatePolyExecutionNodes($expr->var, $params, clone $expr);
+                                    $replacementNodes = $this->generatePolyExecutionNodes($expr->var, $params);
                                     foreach ($replacementNodes as $replNode) {
                                         $newStmts[] = $replNode;
                                     }
 
+                                    // Mutate existing statement args
+                                    $expr->args = [
+                                        new Node\Arg(new Variable('input')),
+                                        new Node\Arg(new Variable('output'))
+                                    ];
+                                    
                                     $taskVars[$varName]['setterIndices'] = [];
                                     $handled = true;
                                     $hasChanged = true;
+                                    $newStmts[] = $stmt; // Re-add the mutated statement
                                 }
                             }
                         }
@@ -134,14 +134,21 @@ CODE
                 elseif ($expr instanceof MethodCall && ($expr->var instanceof New_ || $expr->var instanceof StaticCall)) {
                     $methodName = $this->getName($expr->name);
                     if ($methodName === 'run' && $this->isTaskType($expr->var)) {
-                        // Idempotency check for inline instantiation
                         if (count($expr->getArgs()) < 2) {
-                            $replacementNodes = $this->generatePolyExecutionNodes($expr->var, [], clone $expr);
+                            $replacementNodes = $this->generatePolyExecutionNodes($expr->var, []);
                             foreach ($replacementNodes as $replNode) {
                                 $newStmts[] = $replNode;
                             }
+
+                            // Mutate existing statement args
+                            $expr->args = [
+                                new Node\Arg(new Variable('input')),
+                                new Node\Arg(new Variable('output'))
+                            ];
+
                             $handled = true;
                             $hasChanged = true;
+                            $newStmts[] = $stmt; // Re-add the mutated statement
                         }
                     }
                 }
@@ -166,7 +173,6 @@ CODE
             return true;
         }
 
-        // Fallback: If it's a StaticCall to ::create(), check the class being called instead of the method's return type
         if ($expr instanceof StaticCall && $this->isName($expr->name, 'create')) {
             return $this->isObjectType($expr->class, new ObjectType('SilverStripe\Dev\BuildTask'));
         }
@@ -177,20 +183,25 @@ CODE
     /**
      * @param Node\Expr $taskExpr
      * @param ArrayItem[] $params
-     * @param MethodCall $originalRunCall
      * @return Node\Stmt[]
      */
-    private function generatePolyExecutionNodes(Node\Expr $taskExpr, array $params, MethodCall $originalRunCall): array
+    private function generatePolyExecutionNodes(Node\Expr $taskExpr, array $params): array
     {
         $definitionVar = new Variable('definition');
         $inputVar = new Variable('input');
         $outputVar = new Variable('output');
 
+        // IMPORTANT: We must avoid sharing the same AST node instance between getOptions() and run(), 
+        // otherwise PHP-Parser creates an infinite printing loop.
+        $taskExprForOptions = $taskExpr instanceof Variable 
+            ? new Variable($taskExpr->name) 
+            : clone $taskExpr;
+
         $nodes = [];
 
         $nodes[] = new Expression(new Assign($definitionVar, new New_(
             new Node\Name\FullyQualified('Symfony\Component\Console\Input\InputDefinition'),
-            [new Node\Arg(new MethodCall($taskExpr, 'getOptions'))]
+            [new Node\Arg(new MethodCall($taskExprForOptions, 'getOptions'))]
         )));
 
         $nodes[] = new Expression(new Assign($inputVar, new New_(
@@ -206,12 +217,6 @@ CODE
             'create',
             [new Node\Arg(new Node\Expr\ClassConstFetch(new Node\Name\FullyQualified('SilverStripe\PolyExecution\PolyOutput'), 'FORMAT_ANSI'))]
         )));
-
-        $originalRunCall->args = [
-            new Node\Arg($inputVar),
-            new Node\Arg($outputVar)
-        ];
-        $nodes[] = new Expression($originalRunCall);
 
         return $nodes;
     }
