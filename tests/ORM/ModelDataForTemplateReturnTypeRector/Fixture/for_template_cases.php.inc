@@ -1,9 +1,5 @@
 <?php
 
-// ---------------------------------------------------------
-// STUBS: We explicitly define the inheritance tree here so 
-// PHPStan can reflect it properly without relying on autoloading.
-// ---------------------------------------------------------
 namespace SilverStripe\View { class ViewableData {} }
 namespace SilverStripe\Model { class ModelData extends \SilverStripe\View\ViewableData {} }
 namespace SilverStripe\ORM\FieldType { class DBField extends \SilverStripe\Model\ModelData {} }
@@ -143,10 +139,6 @@ namespace App\Models {
 -----
 <?php
 
-// ---------------------------------------------------------
-// STUBS: We explicitly define the inheritance tree here so 
-// PHPStan can reflect it properly without relying on autoloading.
-// ---------------------------------------------------------
 namespace SilverStripe\View { class ViewableData {} }
 namespace SilverStripe\Model { class ModelData extends \SilverStripe\View\ViewableData {} }
 namespace SilverStripe\ORM\FieldType { class DBField extends \SilverStripe\Model\ModelData {} }
