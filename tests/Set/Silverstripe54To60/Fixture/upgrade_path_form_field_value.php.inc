@@ -21,7 +21,7 @@ use SilverStripe\Forms\FormField;
 
 class MyField extends FormField
 {
-    public function getValue()
+    public function getValue(): mixed
     {
         return $this->getFormattedValue();
     }
