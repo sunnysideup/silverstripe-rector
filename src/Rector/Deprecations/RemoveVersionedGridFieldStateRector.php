@@ -15,6 +15,7 @@ use PhpParser\Node\Identifier;
 use PhpParser\Node\Name;
 use PhpParser\Node\Stmt;
 use PhpParser\NodeTraverser;
+use PhpParser\NodeVisitor;
 use PhpParser\NodeVisitorAbstract;
 use Rector\Rector\AbstractRector;
 use Symplify\RuleDocGenerator\ValueObject\CodeSample\CodeSample;
@@ -57,11 +58,23 @@ CODE_SAMPLE
 
         $traverser = new NodeTraverser();
         
-        $visitor = new class() extends NodeVisitorAbstract {
+        $visitor = new class($node) extends NodeVisitorAbstract {
             public bool $hasChanged = false;
+            private Stmt $rootNode;
 
-            public function enterNode(Node $n): ?Node
+            public function __construct(Stmt $rootNode)
             {
+                $this->rootNode = $rootNode;
+            }
+
+            public function enterNode(Node $n): ?int
+            {
+                // Prevent traversing into nested statements. This inherently forces 
+                // the comment to be placed on the most specific, nearest statement!
+                if ($n instanceof Stmt && $n !== $this->rootNode) {
+                    return NodeVisitor::DONT_TRAVERSE_CHILDREN;
+                }
+
                 if (! $n instanceof MethodCall) {
                     return null;
                 }
@@ -109,7 +122,7 @@ CODE_SAMPLE
 
         $traverser->addVisitor($visitor);
         
-        // Traverse the original node directly to preserve file position attributes
+        // Traverse the original node directly to safely modify expressions in place
         $traverser->traverse([$node]);
 
         if (! $visitor->hasChanged) {
@@ -121,12 +134,14 @@ CODE_SAMPLE
                        "// Show the flags against a specific column (e.g. if you don't have a Title column)\n" .
                        "// \$dataColumns->setColumnsForStatusFlag(['Name']);";
         
-        // Check to prevent duplicating comments on multiple passes
+        // Check to prevent duplicating comments on multiple passes (e.g., chained calls)
         $hasComment = false;
-        foreach ($node->getComments() as $existingComment) {
-            if (str_contains($existingComment->getText(), 'VersionedGridFieldState is Deprecated')) {
-                $hasComment = true;
-                break;
+        if ($node->getComments() !== []) {
+            foreach ($node->getComments() as $existingComment) {
+                if (str_contains($existingComment->getText(), 'VersionedGridFieldState is Deprecated')) {
+                    $hasComment = true;
+                    break;
+                }
             }
         }
 
