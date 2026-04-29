@@ -10,14 +10,10 @@ use PhpParser\Node\Arg;
 use PhpParser\Node\Expr\ClassConstFetch;
 use PhpParser\Node\Expr\MethodCall;
 use PhpParser\Node\Expr\New_;
-use PhpParser\Node\Expr\PropertyFetch;
 use PhpParser\Node\Expr\StaticCall;
-use PhpParser\Node\Expr\Variable;
 use PhpParser\Node\Identifier;
 use PhpParser\Node\Name;
 use PhpParser\Node\Stmt;
-use PhpParser\Node\Stmt\Expression;
-use PhpParser\Node\Stmt\Nop;
 use PhpParser\NodeTraverser;
 use PhpParser\NodeVisitorAbstract;
 use Rector\Rector\AbstractRector;
@@ -70,7 +66,6 @@ CODE_SAMPLE
                     return null;
                 }
 
-                // Native PHP-Parser check instead of AbstractRector::isName()
                 if (! $n->name instanceof Identifier || $n->name->toString() !== 'addComponent') {
                     return null;
                 }
@@ -97,6 +92,7 @@ CODE_SAMPLE
 
                 if ($isTarget) {
                     $this->hasChanged = true;
+                    // Replace the method call directly with its caller variable
                     return clone $n->var;
                 }
 
@@ -104,7 +100,6 @@ CODE_SAMPLE
             }
 
             private function isVersionedState(Node $classNode): bool {
-                // Native PHP-Parser check instead of AbstractRector::getName()
                 if ($classNode instanceof Name) {
                     return str_ends_with($classNode->toString(), 'VersionedGridFieldState');
                 }
@@ -113,12 +108,11 @@ CODE_SAMPLE
         };
 
         $traverser->addVisitor($visitor);
-        $clonedNode = clone $node;
         
-        $newStmts = $traverser->traverse([$clonedNode]);
-        $newNode = $newStmts[0] ?? null;
+        // Traverse the original node directly to preserve file position attributes
+        $traverser->traverse([$node]);
 
-        if (! $visitor->hasChanged || ! $newNode instanceof Stmt) {
+        if (! $visitor->hasChanged) {
             return null;
         }
 
@@ -127,19 +121,21 @@ CODE_SAMPLE
                        "// Show the flags against a specific column (e.g. if you don't have a Title column)\n" .
                        "// \$dataColumns->setColumnsForStatusFlag(['Name']);";
         
-        $comment = new Comment($commentText);
-        $existingComments = $node->getComments();
-
-        if ($newNode instanceof Expression) {
-            if ($newNode->expr instanceof Variable || $newNode->expr instanceof PropertyFetch) {
-                $nop = new Nop();
-                $nop->setAttribute('comments', array_merge($existingComments, [$comment]));
-                return $nop;
+        // Check to prevent duplicating comments on multiple passes
+        $hasComment = false;
+        foreach ($node->getComments() as $existingComment) {
+            if (str_contains($existingComment->getText(), 'VersionedGridFieldState is Deprecated')) {
+                $hasComment = true;
+                break;
             }
         }
 
-        $newNode->setAttribute('comments', array_merge($existingComments, [$comment]));
+        if (! $hasComment) {
+            $comments = $node->getComments();
+            $comments[] = new Comment($commentText);
+            $node->setAttribute('comments', $comments);
+        }
 
-        return $newNode;
+        return $node;
     }
 }

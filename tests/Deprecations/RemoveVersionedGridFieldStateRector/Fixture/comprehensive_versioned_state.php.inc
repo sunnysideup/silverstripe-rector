@@ -128,6 +128,7 @@ namespace Netwerkstatt\SilverstripeRector\Tests\Fixture {
             // $dataColumns = $config->getComponentByType(GridFieldDataColumns::class);
             // Show the flags against a specific column (e.g. if you don't have a Title column)
             // $dataColumns->setColumnsForStatusFlag(['Name']);
+            $this->config;
             return $this->config;
         }
 
@@ -147,6 +148,7 @@ namespace Netwerkstatt\SilverstripeRector\Tests\Fixture {
             // $dataColumns = $config->getComponentByType(GridFieldDataColumns::class);
             // Show the flags against a specific column (e.g. if you don't have a Title column)
             // $dataColumns->setColumnsForStatusFlag(['Name']);
+            $config;
         }
 
         public function stringFallback() {
@@ -163,6 +165,7 @@ namespace Netwerkstatt\SilverstripeRector\Tests\Fixture {
             // $dataColumns = $config->getComponentByType(GridFieldDataColumns::class);
             // Show the flags against a specific column (e.g. if you don't have a Title column)
             // $dataColumns->setColumnsForStatusFlag(['Name']);
+            $config;
         }
 
         public function insideCondition($config) {
@@ -242,6 +245,7 @@ namespace Netwerkstatt\SilverstripeRector\Tests\Fixture {
             // $dataColumns = $config->getComponentByType(GridFieldDataColumns::class);
             // Show the flags against a specific column (e.g. if you don't have a Title column)
             // $dataColumns->setColumnsForStatusFlag(['Name']);
+            $config;
         }
     }
 }
