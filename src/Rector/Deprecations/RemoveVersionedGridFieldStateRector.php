@@ -67,13 +67,18 @@ CODE_SAMPLE
                 $this->rootNode = $rootNode;
             }
 
-            // Fixed signature for PHP-Parser 5: int to control traversal, Node to replace, null to do nothing
+            // Top-down: Stop traversal from escaping into nested statements
             public function enterNode(Node $n): int|Node|null
             {
                 if ($n instanceof Stmt && $n !== $this->rootNode) {
                     return NodeVisitor::DONT_TRAVERSE_CHILDREN;
                 }
+                return null;
+            }
 
+            // Bottom-up: Safely collapse infinite chains from the inside-out
+            public function leaveNode(Node $n): int|Node|array|null
+            {
                 if (! $n instanceof MethodCall) {
                     return null;
                 }
@@ -104,7 +109,7 @@ CODE_SAMPLE
 
                 if ($isTarget) {
                     $this->hasChanged = true;
-                    // Replace the method call directly with its caller variable
+                    // Bypass the method call by returning its caller
                     return clone $n->var;
                 }
 
@@ -133,7 +138,6 @@ CODE_SAMPLE
                        "// Show the flags against a specific column (e.g. if you don't have a Title column)\n" .
                        "// \$dataColumns->setColumnsForStatusFlag(['Name']);";
         
-        // Check to prevent duplicating comments on multiple passes (e.g., chained calls)
         $hasComment = false;
         if ($node->getComments() !== []) {
             foreach ($node->getComments() as $existingComment) {
