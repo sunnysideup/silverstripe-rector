@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Rector\Deprecations;
+namespace Netwerkstatt\SilverstripeRector\Rector\Deprecations;
 
 use PhpParser\Comment;
 use PhpParser\Node;
