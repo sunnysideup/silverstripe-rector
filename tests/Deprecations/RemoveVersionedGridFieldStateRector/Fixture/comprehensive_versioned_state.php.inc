@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests {
+namespace Netwerkstatt\SilverstripeRector\Tests\Fixture {
     class ComplexAdmin {
         public function getGridFieldConfig() {
             // Case 1: Method call inside a return statement (using ::class)
@@ -99,7 +99,7 @@ namespace App\Tests {
 -----
 <?php
 
-namespace App\Tests {
+namespace Netwerkstatt\SilverstripeRector\Tests\Fixture {
     class ComplexAdmin {
         public function getGridFieldConfig() {
             // Case 1: Method call inside a return statement (using ::class)

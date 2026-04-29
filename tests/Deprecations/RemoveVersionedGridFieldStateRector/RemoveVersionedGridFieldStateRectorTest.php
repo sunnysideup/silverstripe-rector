@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Deprecations\RemoveVersionedGridFieldStateRector;
+namespace Netwerkstatt\SilverstripeRector\Tests\Deprecations\RemoveVersionedGridFieldStateRector;
 
 use Iterator;
 use PHPUnit\Framework\Attributes\DataProvider;
