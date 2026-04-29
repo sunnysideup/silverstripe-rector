@@ -13,6 +13,8 @@ use PhpParser\Node\Expr\New_;
 use PhpParser\Node\Expr\PropertyFetch;
 use PhpParser\Node\Expr\StaticCall;
 use PhpParser\Node\Expr\Variable;
+use PhpParser\Node\Identifier;
+use PhpParser\Node\Name;
 use PhpParser\Node\Stmt;
 use PhpParser\Node\Stmt\Expression;
 use PhpParser\Node\Stmt\Nop;
@@ -57,17 +59,10 @@ CODE_SAMPLE
             return null;
         }
 
-        $rector = $this;
         $traverser = new NodeTraverser();
         
-        $visitor = new class($rector) extends NodeVisitorAbstract {
+        $visitor = new class() extends NodeVisitorAbstract {
             public bool $hasChanged = false;
-            private AbstractRector $rector;
-
-            public function __construct(AbstractRector $rector)
-            {
-                $this->rector = $rector;
-            }
 
             public function enterNode(Node $n): ?Node
             {
@@ -75,7 +70,8 @@ CODE_SAMPLE
                     return null;
                 }
 
-                if (! $this->rector->isName($n->name, 'addComponent')) {
+                // Native PHP-Parser check instead of AbstractRector::isName()
+                if (! $n->name instanceof Identifier || $n->name->toString() !== 'addComponent') {
                     return null;
                 }
 
@@ -90,12 +86,12 @@ CODE_SAMPLE
                 if ($val instanceof New_) {
                     $isTarget = $this->isVersionedState($val->class);
                 } elseif ($val instanceof StaticCall) {
-                    if ($this->rector->isName($val->name, 'create') && $this->isVersionedState($val->class)) {
-                        $isTarget = true;
+                    if ($val->name instanceof Identifier && $val->name->toString() === 'create') {
+                        $isTarget = $this->isVersionedState($val->class);
                     }
                 } elseif ($val instanceof ClassConstFetch) {
-                    if ($this->rector->isName($val->name, 'class') && $this->isVersionedState($val->class)) {
-                        $isTarget = true;
+                    if ($val->name instanceof Identifier && $val->name->toString() === 'class') {
+                        $isTarget = $this->isVersionedState($val->class);
                     }
                 }
 
@@ -108,8 +104,11 @@ CODE_SAMPLE
             }
 
             private function isVersionedState(Node $classNode): bool {
-                $className = $this->rector->getName($classNode);
-                return $className !== null && str_ends_with($className, 'VersionedGridFieldState');
+                // Native PHP-Parser check instead of AbstractRector::getName()
+                if ($classNode instanceof Name) {
+                    return str_ends_with($classNode->toString(), 'VersionedGridFieldState');
+                }
+                return false;
             }
         };
 
