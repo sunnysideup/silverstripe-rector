@@ -67,10 +67,9 @@ CODE_SAMPLE
                 $this->rootNode = $rootNode;
             }
 
-            public function enterNode(Node $n): ?int
+            // Fixed signature for PHP-Parser 5: int to control traversal, Node to replace, null to do nothing
+            public function enterNode(Node $n): int|Node|null
             {
-                // Prevent traversing into nested statements. This inherently forces 
-                // the comment to be placed on the most specific, nearest statement!
                 if ($n instanceof Stmt && $n !== $this->rootNode) {
                     return NodeVisitor::DONT_TRAVERSE_CHILDREN;
                 }
