@@ -68,18 +68,27 @@ CODE_SAMPLE
             return null;
         }
 
-        // We need at least 2 args: ($tabName, $fieldOrFields)
-        if (count($node->args) < 2) {
+        $args = $node->getArgs();
+        if (count($args) < 2) {
             return null;
         }
 
-        // If the second argument is an array, keep as addFieldsToTab
-        $secondArgValue = $node->args[1]->value;
+        $secondArgValue = $args[1]->value;
+
+        // 1. Fast check for an explicit Array node
         if ($secondArgValue instanceof Array_) {
             return null;
         }
 
-        // Change method name to addFieldToTab
+        // 2. Deep type check via PHPStan for variables resolving to arrays
+        $type = $this->getType($secondArgValue);
+        
+        // If the variable type is unequivocally an array (e.g. built via $var = []), skip it
+        if ($type->isArray()->yes()) {
+            return null;
+        }
+
+        // Change method name to addFieldToTab for all single variables/objects
         $node->name = new Identifier('addFieldToTab');
         return $node;
     }
