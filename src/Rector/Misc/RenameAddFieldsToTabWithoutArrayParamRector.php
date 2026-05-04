@@ -8,6 +8,8 @@ use PhpParser\Node;
 use PhpParser\Node\Expr\Array_;
 use PhpParser\Node\Expr\MethodCall;
 use PhpParser\Node\Expr\NullsafeMethodCall;
+use PhpParser\Node\Expr\PropertyFetch;
+use PhpParser\Node\Expr\Variable;
 use PhpParser\Node\Identifier;
 use PHPStan\Type\ObjectType;
 use Rector\Rector\AbstractRector;
@@ -75,17 +77,17 @@ CODE_SAMPLE
 
         $secondArgValue = $args[1]->value;
 
-        // 1. Explicit array node
+        // 1. Explicit array node check
         if ($secondArgValue instanceof Array_) {
             return null;
         }
 
-        // 2. FieldList objects act as arrays of fields
+        // 2. Do not mutate FieldList objects (they act as arrays of fields)
         if ($this->isObjectType($secondArgValue, new ObjectType('SilverStripe\Forms\FieldList'))) {
             return null;
         }
 
-        // 3. Fast AST fallbacks for guaranteed single objects (solves inline MixedType issues)
+        // 3. Fast AST fallbacks for guaranteed single objects
         if ($secondArgValue instanceof \PhpParser\Node\Expr\New_) {
             $node->name = new Identifier('addFieldToTab');
             return $node;
@@ -96,22 +98,29 @@ CODE_SAMPLE
             return $node;
         }
 
-        // 4. Deep type check via PHPStan for variables
+        // 4. PHPStan Type Inference (catches most basic arrays)
         $type = $this->getType($secondArgValue);
-        
-        // If it is definitively an array or iterable, SKIP.
         if ($type->isArray()->yes() || $type->isIterable()->yes()) {
             return null;
         }
 
-        // If it is definitively NOT an array (e.g. an ObjectType), RENAME.
-        if ($type->isArray()->no()) {
-            $node->name = new Identifier('addFieldToTab');
-            return $node;
+        // 5. Naming Heuristic Fallback for MixedType degradation.
+        // If a variable/method is named 'Fields' (plural), skip it as an assumed array.
+        $nameToCheck = null;
+        if ($secondArgValue instanceof Variable && is_string($secondArgValue->name)) {
+            $nameToCheck = $secondArgValue->name;
+        } elseif ($secondArgValue instanceof MethodCall && $secondArgValue->name instanceof Identifier) {
+            $nameToCheck = $secondArgValue->name->toString();
+        } elseif ($secondArgValue instanceof PropertyFetch && $secondArgValue->name instanceof Identifier) {
+            $nameToCheck = $secondArgValue->name->toString();
         }
 
-        // 5. Fallback for MixedType/unknown variables:
-        // We skip to prevent false positives on complex conditional arrays like $heroTabFields.
-        return null;
+        if ($nameToCheck !== null && preg_match('/fields$/i', $nameToCheck)) {
+            return null; // Skip $heroTabFields, getExtraFields(), etc.
+        }
+
+        // 6. Safe to rename
+        $node->name = new Identifier('addFieldToTab');
+        return $node;
     }
 }
