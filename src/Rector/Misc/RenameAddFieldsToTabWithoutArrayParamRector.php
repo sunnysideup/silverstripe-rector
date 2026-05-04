@@ -64,7 +64,6 @@ CODE_SAMPLE
      */
     public function refactor(Node $node): ?Node
     {
-        // Only handle addFieldsToTab(...)
         if (! $this->isName($node->name, 'addFieldsToTab')) {
             return null;
         }
@@ -76,29 +75,43 @@ CODE_SAMPLE
 
         $secondArgValue = $args[1]->value;
 
-        // 1. Fast check for explicit Array node
+        // 1. Explicit array node
         if ($secondArgValue instanceof Array_) {
             return null;
         }
 
-        // 2. Do not mutate FieldList objects (they act as arrays of fields)
+        // 2. FieldList objects act as arrays of fields
         if ($this->isObjectType($secondArgValue, new ObjectType('SilverStripe\Forms\FieldList'))) {
             return null;
         }
 
-        // 3. Deep conservative type check via PHPStan
+        // 3. Fast AST fallbacks for guaranteed single objects (solves inline MixedType issues)
+        if ($secondArgValue instanceof \PhpParser\Node\Expr\New_) {
+            $node->name = new Identifier('addFieldToTab');
+            return $node;
+        }
+
+        if ($secondArgValue instanceof \PhpParser\Node\Expr\StaticCall && $this->isName($secondArgValue->name, 'create')) {
+            $node->name = new Identifier('addFieldToTab');
+            return $node;
+        }
+
+        // 4. Deep type check via PHPStan for variables
         $type = $this->getType($secondArgValue);
         
-        // isArray()->no() returns TRUE only if the type is definitively NOT an array.
-        // If it is an array, or if PHPStan evaluates it to MixedType because of complex conditional
-        // loops, it will evaluate to false. By returning null here, we skip unknown variables 
-        // entirely, preventing destructive false-positive refactors.
-        if (! $type->isArray()->no()) {
+        // If it is definitively an array or iterable, SKIP.
+        if ($type->isArray()->yes() || $type->isIterable()->yes()) {
             return null;
         }
 
-        // Safely change method name to addFieldToTab
-        $node->name = new Identifier('addFieldToTab');
-        return $node;
+        // If it is definitively NOT an array (e.g. an ObjectType), RENAME.
+        if ($type->isArray()->no()) {
+            $node->name = new Identifier('addFieldToTab');
+            return $node;
+        }
+
+        // 5. Fallback for MixedType/unknown variables:
+        // We skip to prevent false positives on complex conditional arrays like $heroTabFields.
+        return null;
     }
 }
