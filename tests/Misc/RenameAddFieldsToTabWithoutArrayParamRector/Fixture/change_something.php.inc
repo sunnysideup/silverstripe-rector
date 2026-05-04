@@ -1,34 +1,6 @@
 <?php
 
-namespace SilverStripe\Forms {
-    class FormField {
-        /** @return static */
-        public static function create(...$args) { return new static(); }
-        public function setTitle($title) { return $this; }
-        public function displayIf($field) { return $this; }
-        public function isEqualTo($val) { return $this; }
-        public function isNotEqualTo($val) { return $this; }
-        public function end() { return $this; }
-    }
-    class TextField extends FormField {}
-    class DropdownField extends FormField {}
-    class HeaderField extends FormField {}
-    class Wrapper extends FormField {}
-    class FieldList {
-        public function addFieldsToTab($tab, $fields) {}
-        public function addFieldToTab($tab, $field) {}
-        public function removeByName($name) {}
-        public function insertAfter($name, $field) {}
-    }
-}
-
 namespace App\Test {
-
-    use SilverStripe\Forms\FieldList;
-    use SilverStripe\Forms\TextField;
-    use SilverStripe\Forms\Wrapper;
-    use SilverStripe\Forms\DropdownField;
-    use SilverStripe\Forms\HeaderField;
 
     class SomeClass
     {
@@ -39,7 +11,7 @@ namespace App\Test {
             // Test Case 1: Direct Object should be renamed
             $fields->addFieldsToTab('Root.Main', TextField::create('Name'));
 
-            // Test Case 2: Object in Variable should be renamed
+            // Test Case 2: Object in Variable should be renamed (matches heuristic because singular 'Field')
             $singleField = TextField::create('Title');
             $fields->addFieldsToTab('Root.Main', $singleField);
 
@@ -59,10 +31,10 @@ namespace App\Test {
             // Test Case 5: Nullsafe Object Method Call should be renamed
             $fields?->addFieldsToTab('Root.Nullsafe', TextField::create('Nullsafe'));
 
-            // Test Case 6: Method call returning array should NOT be renamed
+            // Test Case 6: Method call returning array should NOT be renamed (matches heuristic plural 'Fields')
             $fields->addFieldsToTab('Root.MethodReturn', $this->getExtraFields());
 
-            // Test Case 7: Method call returning single object should be renamed
+            // Test Case 7: Method call returning single object should be renamed (matches heuristic singular)
             $fields->addFieldsToTab('Root.MethodReturnObj', $this->getSingleField());
         }
 
@@ -86,7 +58,7 @@ namespace App\Test {
                 $heroTabFields[] = Wrapper::create(...$smallHeroFields);
             }
 
-            // THIS MUST REMAIN AS addFieldsToTab
+            // THIS MUST REMAIN AS addFieldsToTab (matches heuristic 'Fields')
             if ($heroTabFields !== []) {
                 $fields->addFieldsToTab('Root.Hero', $heroTabFields);
             }
@@ -101,35 +73,7 @@ namespace App\Test {
 -----
 <?php
 
-namespace SilverStripe\Forms {
-    class FormField {
-        /** @return static */
-        public static function create(...$args) { return new static(); }
-        public function setTitle($title) { return $this; }
-        public function displayIf($field) { return $this; }
-        public function isEqualTo($val) { return $this; }
-        public function isNotEqualTo($val) { return $this; }
-        public function end() { return $this; }
-    }
-    class TextField extends FormField {}
-    class DropdownField extends FormField {}
-    class HeaderField extends FormField {}
-    class Wrapper extends FormField {}
-    class FieldList {
-        public function addFieldsToTab($tab, $fields) {}
-        public function addFieldToTab($tab, $field) {}
-        public function removeByName($name) {}
-        public function insertAfter($name, $field) {}
-    }
-}
-
 namespace App\Test {
-
-    use SilverStripe\Forms\FieldList;
-    use SilverStripe\Forms\TextField;
-    use SilverStripe\Forms\Wrapper;
-    use SilverStripe\Forms\DropdownField;
-    use SilverStripe\Forms\HeaderField;
 
     class SomeClass
     {
@@ -140,7 +84,7 @@ namespace App\Test {
             // Test Case 1: Direct Object should be renamed
             $fields->addFieldToTab('Root.Main', TextField::create('Name'));
 
-            // Test Case 2: Object in Variable should be renamed
+            // Test Case 2: Object in Variable should be renamed (matches heuristic because singular 'Field')
             $singleField = TextField::create('Title');
             $fields->addFieldToTab('Root.Main', $singleField);
 
@@ -160,10 +104,10 @@ namespace App\Test {
             // Test Case 5: Nullsafe Object Method Call should be renamed
             $fields?->addFieldToTab('Root.Nullsafe', TextField::create('Nullsafe'));
 
-            // Test Case 6: Method call returning array should NOT be renamed
+            // Test Case 6: Method call returning array should NOT be renamed (matches heuristic plural 'Fields')
             $fields->addFieldsToTab('Root.MethodReturn', $this->getExtraFields());
 
-            // Test Case 7: Method call returning single object should be renamed
+            // Test Case 7: Method call returning single object should be renamed (matches heuristic singular)
             $fields->addFieldToTab('Root.MethodReturnObj', $this->getSingleField());
         }
 
@@ -187,7 +131,7 @@ namespace App\Test {
                 $heroTabFields[] = Wrapper::create(...$smallHeroFields);
             }
 
-            // THIS MUST REMAIN AS addFieldsToTab
+            // THIS MUST REMAIN AS addFieldsToTab (matches heuristic 'Fields')
             if ($heroTabFields !== []) {
                 $fields->addFieldsToTab('Root.Hero', $heroTabFields);
             }
