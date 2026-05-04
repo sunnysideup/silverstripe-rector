@@ -9,6 +9,7 @@ use PhpParser\Node\Expr\Array_;
 use PhpParser\Node\Expr\MethodCall;
 use PhpParser\Node\Expr\NullsafeMethodCall;
 use PhpParser\Node\Identifier;
+use PhpParser\Node\Scalar\String_;
 use PHPStan\Type\ObjectType;
 use Rector\Rector\AbstractRector;
 use Symplify\RuleDocGenerator\Contract\DocumentedRuleInterface;
@@ -20,8 +21,7 @@ final class RenameFieldListMethodsWithoutArrayParamRector extends AbstractRector
     public function getRuleDefinition(): RuleDefinition
     {
         return new RuleDefinition(
-            'Silverstripe 5.3: Renames ->addFieldsToTab($name, $singleField) ' .
-            'to ->addFieldToTab($name, $singleField) safely',
+            'Silverstripe 5.3: Renames ->addFieldsToTab() and ->removeFieldsFromTab() to their singular equivalents safely',
             [
                 new CodeSample(
                     <<<'CODE_SAMPLE'
@@ -30,6 +30,7 @@ class SomeClass extends \SilverStripe\ORM\DataObject
     public function getCMSFields() {
         $myfield = FormField::create();
         $fields->addFieldsToTab('Root.Main', $myfield);
+        $fields->removeFieldsFromTab('Root.Main', 'Content');
     }
 }
 CODE_SAMPLE,
@@ -39,6 +40,7 @@ class SomeClass extends \SilverStripe\ORM\DataObject
     public function getCMSFields() {
         $myfield = FormField::create();
         $fields->addFieldToTab('Root.Main', $myfield);
+        $fields->removeFieldFromTab('Root.Main', 'Content');
     }
 }
 CODE_SAMPLE
@@ -60,7 +62,13 @@ CODE_SAMPLE
      */
     public function refactor(Node $node): ?Node
     {
-        if (! $this->isName($node->name, 'addFieldsToTab')) {
+        $methodName = $this->getName($node->name);
+        
+        if ($methodName === 'addFieldsToTab') {
+            $targetMethod = 'addFieldToTab';
+        } elseif ($methodName === 'removeFieldsFromTab') {
+            $targetMethod = 'removeFieldFromTab';
+        } else {
             return null;
         }
 
@@ -71,41 +79,50 @@ CODE_SAMPLE
 
         $secondArgValue = $args[1]->value;
 
-        // 1. Explicit array node
+        // 1. Explicit array node (Skip immediately)
         if ($secondArgValue instanceof Array_) {
             return null;
         }
 
-        // 2. FieldList objects act as arrays of fields
+        // 2. Explicit string node (Guaranteed safe for removeFieldFromTab)
+        if ($secondArgValue instanceof String_) {
+            $node->name = new Identifier($targetMethod);
+            return $node;
+        }
+
+        // 3. Do not mutate FieldList objects (act as arrays of fields)
         if ($this->isObjectType($secondArgValue, new ObjectType('SilverStripe\Forms\FieldList'))) {
             return null;
         }
 
-        // 3. Fast AST fallbacks for guaranteed single objects.
-        // This is crucial for isolated tests where PHPStan degrades classes to MixedType.
+        // 4. Fast AST fallbacks for guaranteed single objects.
         if ($secondArgValue instanceof \PhpParser\Node\Expr\New_) {
-            $node->name = new Identifier('addFieldToTab');
+            $node->name = new Identifier($targetMethod);
             return $node;
         }
 
         if ($secondArgValue instanceof \PhpParser\Node\Expr\StaticCall && $this->isName($secondArgValue->name, 'create')) {
-            $node->name = new Identifier('addFieldToTab');
+            $node->name = new Identifier($targetMethod);
             return $node;
         }
 
-        // 4. Strict Type Inference Fallback
+        // 5. Strict Type Inference Fallback
         $type = $this->getType($secondArgValue);
         
-        // SAFETY FIRST POLICY:
-        // isArray()->no() means "I am mathematically certain this is NOT an array."
-        // If it evaluates to an Object, this returns true (we rename).
-        // If it evaluates to MixedType (e.g. your complex $heroTabFields loop), this returns false (we skip).
-        if ($type->isArray()->no()) {
-            $node->name = new Identifier('addFieldToTab');
+        // If it evaluates to a string explicitly (e.g. from variable), rename.
+        if ($type->isString()->yes()) {
+            $node->name = new Identifier($targetMethod);
             return $node;
         }
 
-        // When in doubt, do not modify.
+        // SAFETY FIRST POLICY:
+        // isArray()->no() returns TRUE if it is mathematically certain this is NOT an array.
+        // MixedType degrades to false, keeping complex loops (like your $heroTabFields) safe.
+        if ($type->isArray()->no()) {
+            $node->name = new Identifier($targetMethod);
+            return $node;
+        }
+
         return null;
     }
 }

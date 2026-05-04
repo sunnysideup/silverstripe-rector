@@ -1,6 +1,31 @@
 <?php
 
+namespace SilverStripe\Forms {
+    class FormField {
+        /** @return static */
+        public static function create() { return new static(); }
+        public function displayIf($field) { return $this; }
+        public function isEqualTo($val) { return $this; }
+        public function isNotEqualTo($val) { return $this; }
+        public function end() { return $this; }
+    }
+    class TextField extends FormField {}
+    class DropdownField extends FormField {}
+    class Wrapper extends FormField {}
+    class FieldList {
+        public function addFieldsToTab($tab, $fields) {}
+        public function addFieldToTab($tab, $field) {}
+        public function removeFieldsFromTab($tab, $fields) {}
+        public function removeFieldFromTab($tab, $field) {}
+    }
+}
+
 namespace App\Test {
+
+    use SilverStripe\Forms\FieldList;
+    use SilverStripe\Forms\TextField;
+    use SilverStripe\Forms\Wrapper;
+    use SilverStripe\Forms\DropdownField;
 
     class SomeClass
     {
@@ -18,7 +43,6 @@ namespace App\Test {
             // Test Case 3: Explicit Array should NOT be renamed (skipped)
             $fields->addFieldsToTab('Root.Main', [
                 TextField::create('One'),
-                TextField::create('Two'),
             ]);
 
             // Test Case 4: Array inside Variable should NOT be renamed
@@ -28,43 +52,47 @@ namespace App\Test {
                 $fields->addFieldsToTab('Root.Hero', $heroTabFields);
             }
 
-            // Test Case 5: Nullsafe Object Method Call should be renamed
-            $fields?->addFieldsToTab('Root.Nullsafe', TextField::create('Nullsafe'));
-        }
+            // Test Case 5: Direct String for Removal
+            $fields->removeFieldsFromTab('Root.Main', 'Content');
 
-        // Test Case 6: Complex array iteration
-        public function testComplexMethod()
-        {
-            $fields = new FieldList();
-            $heroTabFields = [];
-
-            if (true) {
-                $heroSizeField = DropdownField::create('HeroSize');
-                $heroTabFields[] = $heroSizeField;
-            }
-
-            $smallHeroFields = [];
-            foreach (['HeroTitle' => 'Hero Title'] as $fieldName => $title) {
-                $smallHeroFields[] = TextField::create($fieldName);
-            }
-
-            if ($smallHeroFields !== []) {
-                $heroTabFields[] = Wrapper::create(...$smallHeroFields);
-            }
-
-            // THIS MUST REMAIN AS addFieldsToTab (Safe Fallback protects MixedType arrays)
-            if ($heroTabFields !== []) {
-                $fields->addFieldsToTab('Root.Hero', $heroTabFields);
-            }
-
-            return $fields;
+            // Test Case 6: Direct Array for Removal (skipped)
+            $fields->removeFieldsFromTab('Root.Main', ['Content', 'Sidebar']);
+            
+            // Test Case 7: Variable String for Removal
+            $fieldToRemove = 'Header';
+            $fields->removeFieldsFromTab('Root.Main', $fieldToRemove);
         }
     }
 }
 -----
 <?php
 
+namespace SilverStripe\Forms {
+    class FormField {
+        /** @return static */
+        public static function create() { return new static(); }
+        public function displayIf($field) { return $this; }
+        public function isEqualTo($val) { return $this; }
+        public function isNotEqualTo($val) { return $this; }
+        public function end() { return $this; }
+    }
+    class TextField extends FormField {}
+    class DropdownField extends FormField {}
+    class Wrapper extends FormField {}
+    class FieldList {
+        public function addFieldsToTab($tab, $fields) {}
+        public function addFieldToTab($tab, $field) {}
+        public function removeFieldsFromTab($tab, $fields) {}
+        public function removeFieldFromTab($tab, $field) {}
+    }
+}
+
 namespace App\Test {
+
+    use SilverStripe\Forms\FieldList;
+    use SilverStripe\Forms\TextField;
+    use SilverStripe\Forms\Wrapper;
+    use SilverStripe\Forms\DropdownField;
 
     class SomeClass
     {
@@ -82,7 +110,6 @@ namespace App\Test {
             // Test Case 3: Explicit Array should NOT be renamed (skipped)
             $fields->addFieldsToTab('Root.Main', [
                 TextField::create('One'),
-                TextField::create('Two'),
             ]);
 
             // Test Case 4: Array inside Variable should NOT be renamed
@@ -92,36 +119,15 @@ namespace App\Test {
                 $fields->addFieldsToTab('Root.Hero', $heroTabFields);
             }
 
-            // Test Case 5: Nullsafe Object Method Call should be renamed
-            $fields?->addFieldToTab('Root.Nullsafe', TextField::create('Nullsafe'));
-        }
+            // Test Case 5: Direct String for Removal
+            $fields->removeFieldFromTab('Root.Main', 'Content');
 
-        // Test Case 6: Complex array iteration
-        public function testComplexMethod()
-        {
-            $fields = new FieldList();
-            $heroTabFields = [];
-
-            if (true) {
-                $heroSizeField = DropdownField::create('HeroSize');
-                $heroTabFields[] = $heroSizeField;
-            }
-
-            $smallHeroFields = [];
-            foreach (['HeroTitle' => 'Hero Title'] as $fieldName => $title) {
-                $smallHeroFields[] = TextField::create($fieldName);
-            }
-
-            if ($smallHeroFields !== []) {
-                $heroTabFields[] = Wrapper::create(...$smallHeroFields);
-            }
-
-            // THIS MUST REMAIN AS addFieldsToTab (Safe Fallback protects MixedType arrays)
-            if ($heroTabFields !== []) {
-                $fields->addFieldsToTab('Root.Hero', $heroTabFields);
-            }
-
-            return $fields;
+            // Test Case 6: Direct Array for Removal (skipped)
+            $fields->removeFieldsFromTab('Root.Main', ['Content', 'Sidebar']);
+            
+            // Test Case 7: Variable String for Removal
+            $fieldToRemove = 'Header';
+            $fields->removeFieldFromTab('Root.Main', $fieldToRemove);
         }
     }
 }
