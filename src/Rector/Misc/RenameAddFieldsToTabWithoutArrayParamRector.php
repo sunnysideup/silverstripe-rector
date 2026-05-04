@@ -9,6 +9,7 @@ use PhpParser\Node\Expr\Array_;
 use PhpParser\Node\Expr\MethodCall;
 use PhpParser\Node\Expr\NullsafeMethodCall;
 use PhpParser\Node\Identifier;
+use PHPStan\Type\ObjectType;
 use Rector\Rector\AbstractRector;
 use Symplify\RuleDocGenerator\Contract\DocumentedRuleInterface;
 use Symplify\RuleDocGenerator\ValueObject\CodeSample\CodeSample;
@@ -75,20 +76,28 @@ CODE_SAMPLE
 
         $secondArgValue = $args[1]->value;
 
-        // 1. Fast check for an explicit Array node
+        // 1. Fast check for explicit Array node
         if ($secondArgValue instanceof Array_) {
             return null;
         }
 
-        // 2. Deep type check via PHPStan for variables resolving to arrays
-        $type = $this->getType($secondArgValue);
-        
-        // If the variable type is unequivocally an array (e.g. built via $var = []), skip it
-        if ($type->isArray()->yes()) {
+        // 2. Do not mutate FieldList objects (they act as arrays of fields)
+        if ($this->isObjectType($secondArgValue, new ObjectType('SilverStripe\Forms\FieldList'))) {
             return null;
         }
 
-        // Change method name to addFieldToTab for all single variables/objects
+        // 3. Deep conservative type check via PHPStan
+        $type = $this->getType($secondArgValue);
+        
+        // isArray()->no() returns TRUE only if the type is definitively NOT an array.
+        // If it is an array, or if PHPStan evaluates it to MixedType because of complex conditional
+        // loops, it will evaluate to false. By returning null here, we skip unknown variables 
+        // entirely, preventing destructive false-positive refactors.
+        if (! $type->isArray()->no()) {
+            return null;
+        }
+
+        // Safely change method name to addFieldToTab
         $node->name = new Identifier('addFieldToTab');
         return $node;
     }
