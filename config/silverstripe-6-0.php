@@ -262,7 +262,6 @@ return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->rule(UpdateControllerRenderSignatureRector::class);
     $rectorConfig->rule(BuildTaskDescriptionPropertyRector::class);
     $rectorConfig->rule(BuildTaskIsEnabledPropertyRector::class);
-    $rectorConfig->rule(RequestToInputOptionVisitor::class);
     $rectorConfig->rule(RemoveVersionedGridFieldStateRector::class);
     $rectorConfig->rule(RenameAddFieldsToTabWithoutArrayParamRector::class);
 };
