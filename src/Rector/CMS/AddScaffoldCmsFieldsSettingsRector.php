@@ -25,28 +25,23 @@ final class AddScaffoldCmsFieldsSettingsRector extends AbstractRector
 {
     public function getRuleDefinition(): RuleDefinition
     {
-        return new RuleDefinition('Adds $scaffold_cms_fields_settings to SiteTree subclasses and Extensions applied to SiteTree.', [
+        return new RuleDefinition('Adds $scaffold_cms_fields_settings to SiteTree subclasses and Extensions, auto-populating ignoreFields.', [
             new CodeSample(
                 <<<'CODE_SAMPLE'
-class MyPage extends \SilverStripe\CMS\Model\SiteTree {
-    private static $db = ['Feature' => 'Boolean'];
+class BlogPage extends \SilverStripe\CMS\Model\SiteTree {
+    private static $db = ['Author' => 'Varchar'];
 }
 CODE_SAMPLE
                 ,
                 <<<'CODE_SAMPLE'
-class MyPage extends \SilverStripe\CMS\Model\SiteTree {
-    private static $db = ['Feature' => 'Boolean'];
+class BlogPage extends \SilverStripe\CMS\Model\SiteTree {
+    private static $db = ['Author' => 'Varchar'];
     /**
-     * This property is used by the Rector upgrader to manage CMS field scaffolding.
-     * Manual modifications to the array values are permitted, but the property should remain defined.
-     * @see https://github.com/wernerkrauss/silverstripe-rector
+     * ...
      */
     private static array $scaffold_cms_fields_settings = [
-        'ignoreFields' => [],
-        'includeRelations' => [],
-        'restrictRelations' => [],
-        'ignoreRelations' => [],
-        'restrictFields' => [],
+        'ignoreFields' => ['Author'],
+        // ...
     ];
 }
 CODE_SAMPLE
@@ -69,17 +64,11 @@ CODE_SAMPLE
         }
 
         $isSiteTree = $this->isObjectType($node, new ObjectType('SilverStripe\CMS\Model\SiteTree'));
-        
-        // We only target SiteTree or Extensions that are likely Page-related
-        // In Silverstripe, Extensions applied to SiteTree usually have 'Page' in the name or are explicitly defined
         $isExtension = $this->isObjectType($node, new ObjectType('SilverStripe\Core\Extension'));
         
         $isTarget = $isSiteTree;
-        
         if ($isExtension) {
             $className = $this->getName($node);
-            // Strict check: Extension must contain 'Page' or 'SiteTree' to be considered a candidate here
-            // to avoid polluting DataObject extensions.
             if ($className !== null && (str_contains($className, 'Page') || str_contains($className, 'SiteTree'))) {
                 $isTarget = true;
             }
@@ -93,22 +82,58 @@ CODE_SAMPLE
             return null;
         }
 
-        $node->stmts[] = $this->createSettingsProperty();
+        $ignoreFields = $this->extractFieldsToIgnore($node);
+        $node->stmts[] = $this->createSettingsProperty($ignoreFields);
 
         return $node;
     }
 
-    private function createSettingsProperty(): Property
+    private function extractFieldsToIgnore(Class_ $class): array
     {
-        $keys = ['ignoreFields', 'includeRelations', 'restrictRelations', 'ignoreRelations', 'restrictFields'];
-        $items = [];
-        foreach ($keys as $key) {
-            $items[] = new ArrayItem(new Array_([]), new String_($key));
+        $fieldsToIgnore = [];
+        $propertiesToCheck = ['db', 'has_one', 'has_many', 'many_many'];
+
+        foreach ($propertiesToCheck as $propName) {
+            $property = $class->getProperty($propName);
+            if (!$property) {
+                continue;
+            }
+
+            foreach ($property->props as $prop) {
+                if ($prop->default instanceof Array_) {
+                    foreach ($prop->default->items as $item) {
+                        if ($item !== null && $item->key instanceof String_) {
+                            $fieldsToIgnore[] = $item->key->value;
+                        }
+                    }
+                }
+            }
         }
+
+        return array_unique($fieldsToIgnore);
+    }
+
+    private function createSettingsProperty(array $ignoreFields): Property
+    {
+        $ignoreFieldArrayItems = [];
+        foreach ($ignoreFields as $field) {
+            $ignoreFieldArrayItems[] = new ArrayItem(new String_($field));
+        }
+
+        $items = [
+            new ArrayItem(new Array_($ignoreFieldArrayItems), new String_('ignoreFields')),
+            new ArrayItem(new Array_([]), new String_('includeRelations')),
+            new ArrayItem(new Array_([]), new String_('restrictRelations')),
+            new ArrayItem(new Array_([]), new String_('ignoreRelations')),
+            new ArrayItem(new Array_([]), new String_('restrictFields')),
+        ];
+
+        $arrayExpr = new Array_($items);
+        $arrayExpr->setAttribute('kind', Array_::KIND_SHORT); // Force short array syntax
 
         $property = new Property(
             Modifiers::PRIVATE | Modifiers::STATIC,
-            [new PropertyProperty('scaffold_cms_fields_settings', new Array_($items))],
+            [new PropertyProperty('scaffold_cms_fields_settings', $arrayExpr)],
             [],
             new Identifier('array')
         );
