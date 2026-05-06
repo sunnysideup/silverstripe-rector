@@ -69,7 +69,7 @@ namespace App {
  * Manual modifications to the array values are permitted, but the property should remain defined.
  * @see https://github.com/wernerkrauss/silverstripe-rector
  */
-        private static array $scaffold_cms_fields_settings = ['ignoreFields' => [], 'includeRelations' => [], 'restrictRelations' => [], 'ignoreRelations' => [], 'restrictFields' => []];
+        private static array $scaffold_cms_fields_settings = ['ignoreFields' => ['Author'], 'includeRelations' => [], 'restrictRelations' => [], 'ignoreRelations' => [], 'restrictFields' => []];
     }
 }
 -----
@@ -126,197 +126,28 @@ namespace App {
  * Manual modifications to the array values are permitted, but the property should remain defined.
  * @see https://github.com/wernerkrauss/silverstripe-rector
  */
-        private static array $scaffold_cms_fields_settings = ['ignoreFields' => [], 'includeRelations' => [], 'restrictRelations' => [], 'ignoreRelations' => [], 'restrictFields' => []];
+        private static array $scaffold_cms_fields_settings = ['ignoreFields' => ['Link'], 'includeRelations' => [], 'restrictRelations' => [], 'ignoreRelations' => [], 'restrictFields' => []];
     }
 }
 -----
 <?php
 namespace App {
-    class SubPage extends HomePage {}
+    class MultiFieldPage extends \SilverStripe\CMS\Model\SiteTree {
+        private static $db = ['Content' => 'HTMLText'];
+        private static $has_many = ['Images' => 'Image'];
+    }
 }
 -----
 <?php
 namespace App {
-    class SubPage extends HomePage {
+    class MultiFieldPage extends \SilverStripe\CMS\Model\SiteTree {
+        private static $db = ['Content' => 'HTMLText'];
+        private static $has_many = ['Images' => 'Image'];
         /**
  * This property is used by the Rector upgrader to manage CMS field scaffolding.
  * Manual modifications to the array values are permitted, but the property should remain defined.
  * @see https://github.com/wernerkrauss/silverstripe-rector
  */
-        private static array $scaffold_cms_fields_settings = ['ignoreFields' => [], 'includeRelations' => [], 'restrictRelations' => [], 'ignoreRelations' => [], 'restrictFields' => []];
+        private static array $scaffold_cms_fields_settings = ['ignoreFields' => ['Content', 'Images'], 'includeRelations' => [], 'restrictRelations' => [], 'ignoreRelations' => [], 'restrictFields' => []];
     }
-}
------
-<?php
-namespace App {
-    class VirtualPage extends \SilverStripe\CMS\Model\SiteTree {
-        private static $has_many = ['Versions' => 'Page'];
-    }
-}
------
-<?php
-namespace App {
-    class VirtualPage extends \SilverStripe\CMS\Model\SiteTree {
-        private static $has_many = ['Versions' => 'Page'];
-        /**
- * This property is used by the Rector upgrader to manage CMS field scaffolding.
- * Manual modifications to the array values are permitted, but the property should remain defined.
- * @see https://github.com/wernerkrauss/silverstripe-rector
- */
-        private static array $scaffold_cms_fields_settings = ['ignoreFields' => [], 'includeRelations' => [], 'restrictRelations' => [], 'ignoreRelations' => [], 'restrictFields' => []];
-    }
-}
------
-<?php
-namespace App {
-    class NewsPage extends \SilverStripe\CMS\Model\SiteTree {
-        private static $many_many = ['Tags' => 'Tag'];
-    }
-}
------
-<?php
-namespace App {
-    class NewsPage extends \SilverStripe\CMS\Model\SiteTree {
-        private static $many_many = ['Tags' => 'Tag'];
-        /**
- * This property is used by the Rector upgrader to manage CMS field scaffolding.
- * Manual modifications to the array values are permitted, but the property should remain defined.
- * @see https://github.com/wernerkrauss/silverstripe-rector
- */
-        private static array $scaffold_cms_fields_settings = ['ignoreFields' => [], 'includeRelations' => [], 'restrictRelations' => [], 'ignoreRelations' => [], 'restrictFields' => []];
-    }
-}
------
-<?php
-namespace App {
-    class PageControllerExtension extends \SilverStripe\Core\Extension {}
-}
------
-<?php
-namespace App {
-    class PageControllerExtension extends \SilverStripe\Core\Extension {
-        /**
- * This property is used by the Rector upgrader to manage CMS field scaffolding.
- * Manual modifications to the array values are permitted, but the property should remain defined.
- * @see https://github.com/wernerkrauss/silverstripe-rector
- */
-        private static array $scaffold_cms_fields_settings = ['ignoreFields' => [], 'includeRelations' => [], 'restrictRelations' => [], 'ignoreRelations' => [], 'restrictFields' => []];
-    }
-}
------
-<?php
-namespace App {
-    class ErrorPage extends \SilverStripe\CMS\Model\SiteTree {
-        private static $db = ['ErrorCode' => 'Int'];
-    }
-}
------
-<?php
-namespace App {
-    class ErrorPage extends \SilverStripe\CMS\Model\SiteTree {
-        private static $db = ['ErrorCode' => 'Int'];
-        /**
- * This property is used by the Rector upgrader to manage CMS field scaffolding.
- * Manual modifications to the array values are permitted, but the property should remain defined.
- * @see https://github.com/wernerkrauss/silverstripe-rector
- */
-        private static array $scaffold_cms_fields_settings = ['ignoreFields' => [], 'includeRelations' => [], 'restrictRelations' => [], 'ignoreRelations' => [], 'restrictFields' => []];
-    }
-}
------
-<?php
-namespace App {
-    class UserDefinedForm extends \SilverStripe\CMS\Model\SiteTree {
-        private static $has_many = ['Fields' => 'FormField'];
-    }
-}
------
-<?php
-namespace App {
-    class UserDefinedForm extends \SilverStripe\CMS\Model\SiteTree {
-        private static $has_many = ['Fields' => 'FormField'];
-        /**
- * This property is used by the Rector upgrader to manage CMS field scaffolding.
- * Manual modifications to the array values are permitted, but the property should remain defined.
- * @see https://github.com/wernerkrauss/silverstripe-rector
- */
-        private static array $scaffold_cms_fields_settings = ['ignoreFields' => [], 'includeRelations' => [], 'restrictRelations' => [], 'ignoreRelations' => [], 'restrictFields' => []];
-    }
-}
------
-<?php
-namespace App {
-    class SiteTree_Something extends \SilverStripe\Core\Extension {}
-}
------
-<?php
-namespace App {
-    class SiteTree_Something extends \SilverStripe\Core\Extension {
-        /**
- * This property is used by the Rector upgrader to manage CMS field scaffolding.
- * Manual modifications to the array values are permitted, but the property should remain defined.
- * @see https://github.com/wernerkrauss/silverstripe-rector
- */
-        private static array $scaffold_cms_fields_settings = ['ignoreFields' => [], 'includeRelations' => [], 'restrictRelations' => [], 'ignoreRelations' => [], 'restrictFields' => []];
-    }
-}
------
-<?php
-namespace App {
-    class SearchPage extends \SilverStripe\CMS\Model\SiteTree {
-        private static $db = ['Query' => 'Text'];
-    }
-}
------
-<?php
-namespace App {
-    class SearchPage extends \SilverStripe\CMS\Model\SiteTree {
-        private static $db = ['Query' => 'Text'];
-        /**
- * This property is used by the Rector upgrader to manage CMS field scaffolding.
- * Manual modifications to the array values are permitted, but the property should remain defined.
- * @see https://github.com/wernerkrauss/silverstripe-rector
- */
-        private static array $scaffold_cms_fields_settings = ['ignoreFields' => [], 'includeRelations' => [], 'restrictRelations' => [], 'ignoreRelations' => [], 'restrictFields' => []];
-    }
-}
------
-<?php
-namespace App {
-    class SilverStripeExtension extends \SilverStripe\Core\Extension {}
-}
------
-<?php
-namespace App {
-    class SilverStripeExtension extends \SilverStripe\Core\Extension {}
-}
------
-<?php
-namespace App {
-    class Folder extends \SilverStripe\Assets\Folder {}
-}
------
-<?php
-namespace App {
-    class Folder extends \SilverStripe\Assets\Folder {}
-}
------
-<?php
-namespace App {
-    class SiteConfig extends \SilverStripe\SiteConfig\SiteConfig {}
-}
------
-<?php
-namespace App {
-    class SiteConfig extends \SilverStripe\SiteConfig\SiteConfig {}
-}
------
-<?php
-namespace App {
-    class MemberExtension extends \SilverStripe\Core\Extension {}
-}
------
-<?php
-namespace App {
-    class MemberExtension extends \SilverStripe\Core\Extension {}
 }
