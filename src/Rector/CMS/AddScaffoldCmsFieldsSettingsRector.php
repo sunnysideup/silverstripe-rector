@@ -68,12 +68,18 @@ CODE_SAMPLE
             return null;
         }
 
+        $className = $this->getName($node);
+        
+        // Skip modifying the core framework classes themselves if they appear in tests or scans
+        if ($className === 'SilverStripe\CMS\Model\SiteTree' || $className === 'SilverStripe\Core\Extension') {
+            return null;
+        }
+
         $isSiteTree = $this->isObjectType($node, new ObjectType('SilverStripe\CMS\Model\SiteTree'));
         $isExtension = $this->isObjectType($node, new ObjectType('SilverStripe\Core\Extension'));
         
         $isTarget = $isSiteTree;
         if ($isExtension) {
-            $className = $this->getName($node);
             if ($className !== null && (str_contains($className, 'Page') || str_contains($className, 'SiteTree'))) {
                 $isTarget = true;
             }
@@ -142,7 +148,6 @@ CODE_SAMPLE
             new Identifier('array')
         );
 
-        // Pre-indented with 9 spaces (8 for standard class/namespace depth + 1 space for doc alignment)
         $docText = "/**\n" .
                    "         * This property is used by the Rector upgrader to manage CMS field scaffolding.\n" .
                    "         * Manual modifications to the array values are permitted, but the property should remain defined.\n" .
