@@ -37,11 +37,16 @@ CODE_SAMPLE
 class BlogPage extends \SilverStripe\CMS\Model\SiteTree {
     private static $db = ['Author' => 'Varchar'];
     /**
-     * ...
+     * This property is used by the Rector upgrader to manage CMS field scaffolding.
+     * Manual modifications to the array values are permitted, but the property should remain defined.
+     * @see https://github.com/wernerkrauss/silverstripe-rector
      */
     private static array $scaffold_cms_fields_settings = [
         'ignoreFields' => ['Author'],
-        // ...
+        'includeRelations' => [],
+        'restrictRelations' => [],
+        'ignoreRelations' => [],
+        'restrictFields' => [],
     ];
 }
 CODE_SAMPLE
@@ -121,15 +126,14 @@ CODE_SAMPLE
         }
 
         $items = [
-            new ArrayItem(new Array_($ignoreFieldArrayItems), new String_('ignoreFields')),
-            new ArrayItem(new Array_([]), new String_('includeRelations')),
-            new ArrayItem(new Array_([]), new String_('restrictRelations')),
-            new ArrayItem(new Array_([]), new String_('ignoreRelations')),
-            new ArrayItem(new Array_([]), new String_('restrictFields')),
+            new ArrayItem(new Array_($ignoreFieldArrayItems, ['kind' => Array_::KIND_SHORT]), new String_('ignoreFields')),
+            new ArrayItem(new Array_([], ['kind' => Array_::KIND_SHORT]), new String_('includeRelations')),
+            new ArrayItem(new Array_([], ['kind' => Array_::KIND_SHORT]), new String_('restrictRelations')),
+            new ArrayItem(new Array_([], ['kind' => Array_::KIND_SHORT]), new String_('ignoreRelations')),
+            new ArrayItem(new Array_([], ['kind' => Array_::KIND_SHORT]), new String_('restrictFields')),
         ];
 
-        $arrayExpr = new Array_($items);
-        $arrayExpr->setAttribute('kind', Array_::KIND_SHORT); // Force short array syntax
+        $arrayExpr = new Array_($items, ['kind' => Array_::KIND_SHORT]);
 
         $property = new Property(
             Modifiers::PRIVATE | Modifiers::STATIC,
@@ -138,11 +142,12 @@ CODE_SAMPLE
             new Identifier('array')
         );
 
+        // Pre-indented with 9 spaces (8 for standard class/namespace depth + 1 space for doc alignment)
         $docText = "/**\n" .
-                   " * This property is used by the Rector upgrader to manage CMS field scaffolding.\n" .
-                   " * Manual modifications to the array values are permitted, but the property should remain defined.\n" .
-                   " * @see https://github.com/wernerkrauss/silverstripe-rector\n" .
-                   " */";
+                   "         * This property is used by the Rector upgrader to manage CMS field scaffolding.\n" .
+                   "         * Manual modifications to the array values are permitted, but the property should remain defined.\n" .
+                   "         * @see https://github.com/wernerkrauss/silverstripe-rector\n" .
+                   "         */";
         $property->setDocComment(new \PhpParser\Comment\Doc($docText));
 
         return $property;
