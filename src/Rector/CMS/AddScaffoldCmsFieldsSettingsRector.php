@@ -114,6 +114,11 @@ CODE_SAMPLE
             }
 
             foreach ($property->props as $prop) {
+                // Skip other grouped properties in the same statement
+                if ($prop->name->toString() !== $propName) {
+                    continue;
+                }
+
                 if ($prop->default instanceof Array_) {
                     foreach ($prop->default->items as $item) {
                         if ($item !== null && $item->key instanceof String_) {
