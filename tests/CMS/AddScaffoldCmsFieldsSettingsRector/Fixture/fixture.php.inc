@@ -19,8 +19,7 @@ namespace SilverStripe\ORM { class DataObject {} }
 
 namespace App {
     use SilverStripe\CMS\Model\SiteTree;
-    class MixedPage extends SiteTree
-    {
+    class MixedPage extends SiteTree {
         private static $db = ['Intro' => 'Text'];
         private static $many_many = ['Tags' => 'Tag'];
         private static $belongs_many_many = ['Categories' => 'Category'];
@@ -55,8 +54,7 @@ namespace SilverStripe\ORM { class DataObject {} }
 namespace App {
     use SilverStripe\CMS\Model\SiteTree;
     // Edge Case 1: Empty arrays
-    class EdgeEmptyArrays extends SiteTree
-    {
+    class EdgeEmptyArrays extends SiteTree {
         private static $db = [];
         private static $has_one = [];
         /**
@@ -93,8 +91,7 @@ namespace App {
 
 namespace App {
     // Edge Case 2: Deep inheritance
-    class EdgeDeepInheritance extends BasePage
-    {
+    class EdgeDeepInheritance extends BasePage {
         private static $db = ['Deep' => 'Varchar'];
         /**
          * This property is used by the Rector upgrader to manage CMS field scaffolding.
@@ -127,8 +124,7 @@ namespace SilverStripe\ORM { class DataObject {} }
 namespace App {
     use SilverStripe\CMS\Model\SiteTree;
     // Edge Case 3: Public / Protected properties
-    class EdgeVisibility extends SiteTree
-    {
+    class EdgeVisibility extends SiteTree {
         protected static $db = ['Prot' => 'Varchar'];
         public static $has_one = ['Pub' => 'Image'];
         /**
@@ -161,8 +157,7 @@ namespace SilverStripe\ORM { class DataObject {} }
 namespace App {
     use SilverStripe\CMS\Model\SiteTree;
     // Edge Case 4: Non-string keys (should skip numeric keys)
-    class EdgeNonStringKeys extends SiteTree
-    {
+    class EdgeNonStringKeys extends SiteTree {
         private static $db = ['Valid' => 'Varchar', 'InvalidBecauseNumeric'];
         /**
          * This property is used by the Rector upgrader to manage CMS field scaffolding.
@@ -194,8 +189,7 @@ namespace SilverStripe\ORM { class DataObject {} }
 namespace App {
     use SilverStripe\CMS\Model\SiteTree;
     // Edge Case 5: Grouped property declaration
-    class EdgeGrouped extends SiteTree
-    {
+    class EdgeGrouped extends SiteTree {
         private static $db = ['A' => 'Varchar'], $has_one = ['B' => 'Image'];
         /**
          * This property is used by the Rector upgrader to manage CMS field scaffolding.
@@ -228,8 +222,7 @@ namespace SilverStripe\ORM { class DataObject {} }
 namespace App {
     use SilverStripe\CMS\Model\SiteTree;
     // Edge Case 6: No default value defined
-    class EdgeNoDefault extends SiteTree
-    {
+    class EdgeNoDefault extends SiteTree {
         private static $db;
         private static $has_one;
         /**
@@ -336,8 +329,7 @@ namespace SilverStripe\ORM { class DataObject {} }
 
 namespace App {
     // Edge Case 10: Extension explicitly named for SiteTree
-    class EdgeSiteTreeExtension extends \SilverStripe\Core\Extension
-    {
+    class EdgeSiteTreeExtension extends \SilverStripe\Core\Extension {
         private static $has_one = ['Owner' => 'Member'];
         /**
          * This property is used by the Rector upgrader to manage CMS field scaffolding.
