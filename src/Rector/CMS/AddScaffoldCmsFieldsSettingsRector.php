@@ -25,17 +25,19 @@ final class AddScaffoldCmsFieldsSettingsRector extends AbstractRector
 {
     public function getRuleDefinition(): RuleDefinition
     {
-        return new RuleDefinition('Adds $scaffold_cms_fields_settings to SiteTree subclasses and Extensions, auto-populating ignoreFields.', [
+        return new RuleDefinition('Adds $scaffold_cms_fields_settings to SiteTree subclasses and Extensions, auto-populating ignoreFields and ignoreRelations.', [
             new CodeSample(
                 <<<'CODE_SAMPLE'
 class BlogPage extends \SilverStripe\CMS\Model\SiteTree {
     private static $db = ['Author' => 'Varchar'];
+    private static $has_one = ['HeroImage' => 'Image'];
 }
 CODE_SAMPLE
                 ,
                 <<<'CODE_SAMPLE'
 class BlogPage extends \SilverStripe\CMS\Model\SiteTree {
     private static $db = ['Author' => 'Varchar'];
+    private static $has_one = ['HeroImage' => 'Image'];
     /**
      * This property is used by the Rector upgrader to manage CMS field scaffolding.
      * Manual modifications to the array values are permitted, but the property should remain defined.
@@ -45,7 +47,7 @@ class BlogPage extends \SilverStripe\CMS\Model\SiteTree {
         'ignoreFields' => ['Author'],
         'includeRelations' => [],
         'restrictRelations' => [],
-        'ignoreRelations' => [],
+        'ignoreRelations' => ['HeroImage'],
         'restrictFields' => [],
     ];
 }
@@ -70,7 +72,7 @@ CODE_SAMPLE
 
         $className = $this->getName($node);
         
-        // Skip modifying the core framework classes themselves if they appear in tests or scans
+        // Skip modifying the core framework classes themselves
         if ($className === 'SilverStripe\CMS\Model\SiteTree' || $className === 'SilverStripe\Core\Extension') {
             return null;
         }
@@ -93,16 +95,17 @@ CODE_SAMPLE
             return null;
         }
 
-        $ignoreFields = $this->extractFieldsToIgnore($node);
-        $node->stmts[] = $this->createSettingsProperty($ignoreFields);
+        $ignoreFields = $this->extractArrayKeys($node, ['db']);
+        $ignoreRelations = $this->extractArrayKeys($node, ['has_one', 'has_many', 'many_many', 'belongs_to', 'belongs_many_many']);
+        
+        $node->stmts[] = $this->createSettingsProperty($ignoreFields, $ignoreRelations);
 
         return $node;
     }
 
-    private function extractFieldsToIgnore(Class_ $class): array
+    private function extractArrayKeys(Class_ $class, array $propertiesToCheck): array
     {
-        $fieldsToIgnore = [];
-        $propertiesToCheck = ['db', 'has_one', 'has_many', 'many_many'];
+        $keys = [];
 
         foreach ($propertiesToCheck as $propName) {
             $property = $class->getProperty($propName);
@@ -114,28 +117,33 @@ CODE_SAMPLE
                 if ($prop->default instanceof Array_) {
                     foreach ($prop->default->items as $item) {
                         if ($item !== null && $item->key instanceof String_) {
-                            $fieldsToIgnore[] = $item->key->value;
+                            $keys[] = $item->key->value;
                         }
                     }
                 }
             }
         }
 
-        return array_unique($fieldsToIgnore);
+        return array_unique($keys);
     }
 
-    private function createSettingsProperty(array $ignoreFields): Property
+    private function createSettingsProperty(array $ignoreFields, array $ignoreRelations): Property
     {
         $ignoreFieldArrayItems = [];
         foreach ($ignoreFields as $field) {
             $ignoreFieldArrayItems[] = new ArrayItem(new String_($field));
         }
 
+        $ignoreRelationArrayItems = [];
+        foreach ($ignoreRelations as $relation) {
+            $ignoreRelationArrayItems[] = new ArrayItem(new String_($relation));
+        }
+
         $items = [
             new ArrayItem(new Array_($ignoreFieldArrayItems, ['kind' => Array_::KIND_SHORT]), new String_('ignoreFields')),
             new ArrayItem(new Array_([], ['kind' => Array_::KIND_SHORT]), new String_('includeRelations')),
             new ArrayItem(new Array_([], ['kind' => Array_::KIND_SHORT]), new String_('restrictRelations')),
-            new ArrayItem(new Array_([], ['kind' => Array_::KIND_SHORT]), new String_('ignoreRelations')),
+            new ArrayItem(new Array_($ignoreRelationArrayItems, ['kind' => Array_::KIND_SHORT]), new String_('ignoreRelations')),
             new ArrayItem(new Array_([], ['kind' => Array_::KIND_SHORT]), new String_('restrictFields')),
         ];
 
