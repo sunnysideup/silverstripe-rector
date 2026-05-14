@@ -43,8 +43,10 @@ final class SilverstripeLevelSetList
     public const UP_TO_SS_5_4 = __DIR__ . '/../../config/level/up-to-silverstripe-5-4.php';
 
     public const UP_TO_SS_6_0 = __DIR__ . '/../../config/level/up-to-silverstripe-6-0.php';
-
+    
     public const UP_TO_SS_6_1 = __DIR__ . '/../../config/level/up-to-silverstripe-6-1.php';
-
+    
     public const UP_TO_SS_6_2 = __DIR__ . '/../../config/level/up-to-silverstripe-6-2.php';
+    public const UP_TO_SS_6_0_ADDITIONAL = __DIR__ . '/../../config/level/silverstripe-6-0-additional-run-once.php';
+    public const UP_TO_SS_6_0_PAGE_CMS_FIELDS = __DIR__ . '/../../config/level/silverstripe-6-0-page-cms-fields-run-once.php';
 }
