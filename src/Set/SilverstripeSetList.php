@@ -48,7 +48,8 @@ final class SilverstripeSetList
 
     public const SS_6_0 = __DIR__ . '/../../config/silverstripe-6-0.php';
 
-    public const SS_6_0_ADDITIONAL = __DIR__ . '/../../config/silverstripe-6-0-additional.php';
+    public const SS_6_0_ADDITIONAL = __DIR__ . '/../../config/silverstripe-6-0-additional-run-once.php';
+    public const SS_6_0_PAGE_CMS_FIELDS = __DIR__ . '/../../config/silverstripe-6-0-page-cms-fields-run-once.php';
 
     public const SS_6_1 = __DIR__ . '/../../config/silverstripe-6-1.php';
 
