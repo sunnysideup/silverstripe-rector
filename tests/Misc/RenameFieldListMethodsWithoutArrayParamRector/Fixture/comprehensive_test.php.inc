@@ -77,11 +77,11 @@ namespace App {
             $fields->addFieldsToTab('Root.Main', FieldList::create());
             
             // Case 6: Unknown Variable to Add (Adds TODO)
-            // @TODO SSU RECTOR UPGRADE TASK: FieldList::addFieldsToTab() - Mixed type detected. If this is a single field/string, change to addFieldToTab() manually.
+            // @TODO SSU RECTOR UPGRADE TASK - FieldList::addFieldsToTab: Mixed type detected. If this is a single field/string, change to addFieldToTab() manually.
             $fields->addFieldsToTab('Root.Main', $unknownVariable);
             
             // Case 7: Unknown Method Return to Remove (Adds TODO)
-            // @TODO SSU RECTOR UPGRADE TASK: FieldList::removeFieldsFromTab() - Mixed type detected. If this is a single field/string, change to removeFieldFromTab() manually.
+            // @TODO SSU RECTOR UPGRADE TASK - FieldList::removeFieldsFromTab: Mixed type detected. If this is a single field/string, change to removeFieldFromTab() manually.
             $fields->removeFieldsFromTab('Root.Main', $this->getDynamicFields());
             
             // Case 8: Singular variable heuristic -> Renames

@@ -36,7 +36,7 @@ $fields->addFieldsToTab('Root.Main', $unknownVariable);
 $fields->removeFieldsFromTab('Root.Main', 'Content');
 CODE_SAMPLE,
                     <<<'CODE_SAMPLE'
-// @TODO SSU RECTOR UPGRADE TASK: FieldList::addFieldsToTab() - Mixed type detected. If this is a single field/string, change to addFieldToTab() manually.
+// @TODO SSU RECTOR UPGRADE TASK - FieldList::addFieldsToTab: Mixed type detected. If this is a single field/string, change to addFieldToTab() manually.
 $fields->addFieldsToTab('Root.Main', $unknownVariable);
 $fields->removeFieldFromTab('Root.Main', 'Content');
 CODE_SAMPLE
