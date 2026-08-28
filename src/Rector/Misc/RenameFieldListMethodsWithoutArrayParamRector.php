@@ -14,6 +14,7 @@ use PhpParser\Node\Expr\Variable;
 use PhpParser\Node\Identifier;
 use PhpParser\Node\Name;
 use PhpParser\Node\Scalar\String_;
+use PhpParser\Node\Stmt\Expression;
 use PHPStan\Type\ObjectType;
 use Rector\Rector\AbstractRector;
 use Symplify\RuleDocGenerator\Contract\DocumentedRuleInterface;
@@ -27,7 +28,7 @@ final class RenameFieldListMethodsWithoutArrayParamRector extends AbstractRector
     public function getRuleDefinition(): RuleDefinition
     {
         return new RuleDefinition(
-            'Silverstripe 5.3: Safely renames ->addFieldsToTab() and ->removeFieldsFromTab() to their singular equivalents, or adds a TODO comment for unknown variables.',
+            'Silverstripe 5.3: Safely renames ->addFieldsToTab() and ->removeFieldsFromTab() to singular equivalents, or adds a TODO for unknown variables.',
             [
                 new CodeSample(
                     <<<'CODE_SAMPLE'
@@ -45,19 +46,26 @@ CODE_SAMPLE
     }
 
     /**
+     * Target Expression to ensure comments render correctly on the statement line.
      * @return array<class-string<Node>>
      */
     public function getNodeTypes(): array
     {
-        return [MethodCall::class, NullsafeMethodCall::class];
+        return [Expression::class];
     }
 
     /**
-     * @param MethodCall|NullsafeMethodCall $node
+     * @param Expression $node
      */
     public function refactor(Node $node): ?Node
     {
-        $methodName = $this->getName($node->name);
+        $methodCall = $node->expr;
+        
+        if (! $methodCall instanceof MethodCall && ! $methodCall instanceof NullsafeMethodCall) {
+            return null;
+        }
+
+        $methodName = $this->getName($methodCall->name);
         
         if ($methodName === 'addFieldsToTab') {
             $targetMethod = 'addFieldToTab';
@@ -67,42 +75,43 @@ CODE_SAMPLE
             return null;
         }
 
-        $args = $node->getArgs();
+        $args = $methodCall->getArgs();
         if (count($args) < 2) {
             return null;
         }
 
         $secondArgValue = $args[1]->value;
 
-        // 1. Explicit AST Ignores (Arrays and Collections)[cite: 1]
+        // 1. Explicit Arrays -> Ignore immediately
         if ($secondArgValue instanceof Array_) {
             return null; 
         }
 
+        // 2. Explicit FieldList (AST string checks for tests without full class reflection)
+        $className = null;
         if ($secondArgValue instanceof \PhpParser\Node\Expr\New_ && $secondArgValue->class instanceof Name) {
-            if ($this->isName($secondArgValue->class, 'FieldList')) {
-                return null;
-            }
+            $className = $secondArgValue->class->toString();
+        } elseif ($secondArgValue instanceof \PhpParser\Node\Expr\StaticCall && $secondArgValue->class instanceof Name) {
+            $className = $secondArgValue->class->toString();
         }
-        
-        if ($secondArgValue instanceof \PhpParser\Node\Expr\StaticCall && $secondArgValue->class instanceof Name) {
-            if ($this->isName($secondArgValue->class, 'FieldList')) {
-                return null;
-            }
+
+        if ($className !== null && str_ends_with($className, 'FieldList')) {
+            return null;
         }
 
         if ($this->isObjectType($secondArgValue, new ObjectType('SilverStripe\Forms\FieldList'))) {
             return null; 
         }
 
-        // 2. Strict Type Inference for Arrays/Iterables[cite: 1]
+        // 3. Strict Type Inference
         $type = $this->getType($secondArgValue);
         if ($type->isArray()->yes() || $type->isIterable()->yes()) {
             return null;
         }
 
-        // 3. Explicit AST/Type Renames (Safe Single Entities)[cite: 1]
+        // 4. Safe Single Entity Resolution
         $shouldRename = false;
+        
         if ($secondArgValue instanceof String_) {
             $shouldRename = true;
         } elseif (
@@ -110,16 +119,13 @@ CODE_SAMPLE
             ($secondArgValue instanceof \PhpParser\Node\Expr\StaticCall && $this->isName($secondArgValue->name, 'create'))
         ) {
             $shouldRename = true;
-        } elseif ($type->isString()->yes() || $type->isObject()->yes()) {
+        } elseif ($type instanceof ObjectType && ! $this->isObjectType($secondArgValue, new ObjectType('SilverStripe\Forms\FieldList'))) {
+            $shouldRename = true; // Known object, but definitively not a FieldList
+        } elseif ($type->isString()->yes()) {
             $shouldRename = true;
         }
 
-        if ($shouldRename) {
-            $node->name = new Identifier($targetMethod);
-            return $node;
-        }
-
-        // 4. Naming Heuristics for MixedType (Unresolved Variables)
+        // 5. Naming Heuristics for MixedType Unresolved variables
         $nameToCheck = null;
         if ($secondArgValue instanceof Variable && is_string($secondArgValue->name)) {
             $nameToCheck = $secondArgValue->name;
@@ -129,20 +135,26 @@ CODE_SAMPLE
 
         if ($nameToCheck !== null) {
             if (preg_match('/fields$/i', $nameToCheck)) {
-                return null; // Assumed Array/FieldList -> Ignore
+                return null; // Assumed Array/FieldList -> Force ignore
             }
             if (preg_match('/field$/i', $nameToCheck)) {
-                $node->name = new Identifier($targetMethod);
-                return $node; // Assumed Object -> Rename
+                $shouldRename = true; // Assumed Object -> Rename
             }
         }
 
-        // 5. MIXED/UNKNOWN TYPE: Inject safe TODO note[cite: 1]
+        // 6. Execute Rename
+        if ($shouldRename) {
+            $methodCall->name = new Identifier($targetMethod);
+            return $node; // Return outer Expression to save changes
+        }
+
+        // 7. MIXED/UNKNOWN TYPE: Inject safe TODO note on the Expression statement
         $todoLine = $this->buildTodoLine(
             'FieldList', 
             $methodName, 
             "Mixed type detected. If this is a single field/string, change to {$targetMethod}() manually."
         );
+        
         $this->appendTodoDocCommentSafely($node, $todoLine);
 
         return $node;
