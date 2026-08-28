@@ -2,11 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Netwerkstatt\SilverstripeRector\Tests\Misc\RenameFieldListMethodsWithoutArrayParamRector;
+namespace Netwerkstatt\SilverstripeRector\Tests\Rector\Misc\RenameFieldListMethodsWithoutArrayParamRector;
 
-use Iterator;
-use PHPUnit\Framework\Attributes\DataProvider;
 use Rector\Testing\PHPUnit\AbstractRectorTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 final class RenameFieldListMethodsWithoutArrayParamRectorTest extends AbstractRectorTestCase
 {
@@ -16,7 +15,7 @@ final class RenameFieldListMethodsWithoutArrayParamRectorTest extends AbstractRe
         $this->doTestFile($filePath);
     }
 
-    public static function provideData(): Iterator
+    public static function provideData(): \Iterator
     {
         return self::yieldFilesFromDirectory(__DIR__ . '/Fixture');
     }
