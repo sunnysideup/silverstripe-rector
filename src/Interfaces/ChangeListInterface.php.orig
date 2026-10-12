@@ -1,0 +1,15 @@
+<?php
+
+
+declare(strict_types=1);
+
+namespace Netwerkstatt\SilverstripeRector\Interfaces;
+
+<<<<<<< HEAD
+interface ChangeListInterface {}
+=======
+interface ChangeListInterface
+{
+    private const LIST = [];
+}
+>>>>>>> 92a2f7e (WIP)
