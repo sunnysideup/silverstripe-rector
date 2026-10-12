@@ -48,6 +48,77 @@ use Rector\Renaming\ValueObject\RenameStaticMethod;
 use Netwerkstatt\SilverstripeRector\Rector\Misc\BuildTaskUpdateRector\RequestToInputOptionVisitor;
 use Netwerkstatt\SilverstripeRector\Rector\Misc\RenameAddFieldsToTabWithoutArrayParamRector;
 
+use Netwerkstatt\SilverstripeRector\Rector\DataObject\DataObjectDebugReturnTypeRector;
+use Netwerkstatt\SilverstripeRector\Rector\Forms\FormFieldCompositeDatabaseFieldsReturnTypeRector;
+use Netwerkstatt\SilverstripeRector\Rector\BuildTask\BuildTaskSegmentToCommandNameRector;
+use Netwerkstatt\SilverstripeRector\Rector\BuildTask\BuildTaskTitlePropertyRector;
+use Netwerkstatt\SilverstripeRector\Rector\BuildTask\EnsureExecuteReturnsCommandSuccessRector;
+use Netwerkstatt\SilverstripeRector\Rector\BuildTask\MigrateTaskRunToPolyExecutionRector;
+use Netwerkstatt\SilverstripeRector\Rector\BuildTask\BuildTaskToExecuteRector;
+use Netwerkstatt\SilverstripeRector\Rector\BuildTask\PolyCommandGetOptionsPublicRector;
+use Netwerkstatt\SilverstripeRector\Rector\CMS\RenameCurrentPageIdToCurrentRecordIdRector;
+use Netwerkstatt\SilverstripeRector\Rector\CMS\ReplacePageTypeClassesRector;
+use Netwerkstatt\SilverstripeRector\Rector\Console\ConvertArrayToInputOptionRector;
+use Netwerkstatt\SilverstripeRector\Rector\Control\AddParentConstructToControllerRector;
+use Netwerkstatt\SilverstripeRector\Rector\Control\ReplaceHasCurrWithCurrRector;
+use Netwerkstatt\SilverstripeRector\Rector\Control\UpdateControllerRenderSignatureRector;
+use Netwerkstatt\SilverstripeRector\Rector\DataObject\DataObjectDebugReturnTypeRector;
+use Netwerkstatt\SilverstripeRector\Rector\DataObject\DataObjectGetByIdToByIDRector;
+use Netwerkstatt\SilverstripeRector\Rector\Forms\FormFieldValidateSignatureRector;
+use Netwerkstatt\SilverstripeRector\Rector\Forms\FormFieldValueToGetValueRector;
+use Netwerkstatt\SilverstripeRector\Rector\Forms\FormFieldCompositeDatabaseFieldsReturnTypeRector;
+u
+use Netwerkstatt\SilverstripeRector\Rector\BuildTask\BuildTaskTitlePropertyRector;
+use Netwerkstatt\SilverstripeRector\Rector\BuildTask\BuildTaskToExecuteRector;
+use Netwerkstatt\SilverstripeRector\Rector\CMS\RenameCurrentPageIdToCurrentRecordIdRector;
+use Netwerkstatt\SilverstripeRector\Rector\CMS\ReplacePageTypeClassesRector;
+use Netwerkstatt\SilverstripeRector\Rector\Console\ConvertArrayToInputOptionRector;
+use Netwerkstatt\SilverstripeRector\Rector\Control\AddParentConstructToControllerRector;
+use Netwerkstatt\SilverstripeRector\Rector\Control\ReplaceHasCurrWithCurrRector;
+use Netwerkstatt\SilverstripeRector\Rector\DataObject\DataObjectGetByIdToByIDRector;
+use Netwerkstatt\SilverstripeRector\Rector\Forms\FormFieldValueToGetValueRector;
+use Netwerkstatt\SilverstripeRector\Rector\Injector\FactoryCreateMethodSignatureRector;
+use Netwerkstatt\SilverstripeRector\Rector\Misc\ModelDataExistsReturnTypeRector;
+use Netwerkstatt\SilverstripeRector\Rector\ORM\ModelDataForTemplateReturnTypeRector;
+use Netwerkstatt\SilverstripeRector\Rector\ORM\AddUnionReturnTypeToPrepValueForDBRector;
+use Netwerkstatt\SilverstripeRector\Rector\ORM\AddVoidReturnTypeToSaveIntoRector;
+use Netwerkstatt\SilverstripeRector\Rector\DataObject\DataObjectDebugReturnTypeRector;
+use Netwerkstatt\SilverstripeRector\Rector\ORM\DBFieldScaffoldFormFieldSignatureRector;
+use Netwerkstatt\SilverstripeRector\Rector\Control\ReplaceHasCurrWithCurrRector;
+use Netwerkstatt\SilverstripeRector\Rector\DataObject\DataObjectGetByIdToByIDRector;
+use Netwerkstatt\SilverstripeRector\Rector\ORM\DBFieldSetValueSignatureRector;
+use Netwerkstatt\SilverstripeRector\Rector\Injector\FactoryCreateMethodSignatureRector;
+use Netwerkstatt\SilverstripeRector\Rector\Misc\ModelDataExistsReturnTypeRector;
+use Netwerkstatt\SilverstripeRector\Rector\ORM\DataObjectGetToClassGetRector;
+use Netwerkstatt\SilverstripeRector\Rector\ORM\DBCompositeWriteToManipulationSignatureRector;
+use Netwerkstatt\SilverstripeRector\Rector\ORM\DBFieldAddToQuerySignatureRector;
+use Netwerkstatt\SilverstripeRector\Rector\ORM\DBFieldScaffoldFormFieldSignatureRector;
+use Netwerkstatt\SilverstripeRector\Rector\ORM\DBFieldSetValueSignatureRector;
+use Netwerkstatt\SilverstripeRector\Rector\ORM\DBFieldScaffoldFormFieldSignatureRector;
+use Netwerkstatt\SilverstripeRector\Rector\ORM\AddStringReturnTypeToForTemplateRector;
+use Netwerkstatt\SilverstripeRector\Rector\ORM\AddUnionReturnTypeToPrepValueForDBRector;
+use Netwerkstatt\SilverstripeRector\Rector\ORM\AddVoidReturnTypeToSaveIntoRector;
+
+se Netwerkstatt\SilverstripeRector\Rector\Misc\ModelDataExistsReturnTypeRector;
+use Netwerkstatt\SilverstripeRector\Rector\Control\ReplaceHasCurrWithCurrRector;
+use Netwerkstatt\SilverstripeRector\Rector\DataObject\DataObjectGetByIdToByIDRector;
+use Netwerkstatt\SilverstripeRector\Rector\Misc\BuildTaskUpdateRector;
+use Netwerkstatt\SilverstripeRector\Rector\Misc\RemoveSilverstripeDeprecationCommentRector;
+use Netwerkstatt\SilverstripeRector\Rector\ORM\DBCompositeWriteToManipulationSignatureRector;
+use Netwerkstatt\SilverstripeRector\Rector\ORM\DBVarcharURLReturnTypeRector;
+use Rector\Config\RectorConfig;
+use Netwerkstatt\SilverstripeRector\Rector\Injector\FactoryCreateMethodSignatureRector;
+use Netwerkstatt\SilverstripeRector\Rector\Misc\ModelDataExistsReturnTypeRector;
+use Rector\Renaming\Rector\ClassConstFetch\RenameClassConstFetchRector;
+use Rector\Renaming\Rector\MethodCall\RenameMethodRector;
+use Rector\Renaming\Rector\Name\RenameClassRector;
+use Rector\Renaming\Rector\PropertyFetch\RenamePropertyRector;
+use Rector\Renaming\Rector\StaticCall\RenameStaticMethodRector;
+use Rector\Renaming\ValueObject\MethodCallRename;
+use Rector\Renaming\ValueObject\RenameClassAndConstFetch;
+use Rector\Renaming\ValueObject\RenameProperty;
+use Rector\Renaming\ValueObject\RenameStaticMethod;
+
 return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->rule(BuildTaskUpdateRector::class);
     $rectorConfig->ruleWithConfiguration(RenameClassRector::class, [
@@ -208,7 +279,15 @@ return static function (RectorConfig $rectorConfig): void {
         new MethodCallRename('SilverStripe\Core\Extension', 'MetaTags', 'updateMetaTags'),
         // DataObject validation hook
         new MethodCallRename('SilverStripe\Core\Extension', 'validate', 'updateValidate'),
+        // CMSMain hooks
+        new MethodCallRename('SilverStripe\Core\Extension', 'updateLinkPageAdd', 'updateLinkRecordAdd'),
+        new MethodCallRename('SilverStripe\Core\Extension', 'updateSiteTreeAsUL', 'updateTreeAsUL'),
+        new MethodCallRename('SilverStripe\Core\Extension', 'updateSiteTreeHints', 'updateTreeHints'),
+        new MethodCallRename('SilverStripe\Core\Extension', 'updateCurrentPageID', 'updateCurrentRecordID'),
+        // RememberLoginHash hooks
+        new MethodCallRename('SilverStripe\Core\Extension', 'onAfterRenewToken', 'onAfterRenewSession'),
     ]);
+    $rectorConfig->rule(FactoryCreateMethodSignatureRector::class);
     $rectorConfig->rule(ReplaceHasCurrWithCurrRector::class);
     $rectorConfig->rule(DataObjectGetByIdToByIDRector::class);
     $rectorConfig->ruleWithConfiguration(RemoveSilverstripeDeprecationCommentRector::class, [
@@ -234,6 +313,14 @@ return static function (RectorConfig $rectorConfig): void {
         ],
     ]);
     $rectorConfig->ruleWithConfiguration(RenameClassConstFetchRector::class, [
+        new RenameClassAndConstFetch('SilverStripe\Admin\LeftAndMain', 'SCHEMA_HEADER',
+            'SilverStripe\Forms\Schema\FormSchema', 'SCHEMA_HEADER'),
+    ]);
+    $rectorConfig->rule(DBVarcharURLReturnTypeRector::class);
+    $rectorConfig->rule(DBCompositeWriteToManipulationSignatureRector::class);
+    $rectorConfig->rule(FactoryCreateMethodSignatureRector::class);
+    $rectorConfig->rule(ModelDataExistsReturnTypeRector::class);
+    $rectorConfig->ruleWithConfiguration(RenameClassConstFetchRector::class, [
         new RenameClassAndConstFetch(
             'SilverStripe\Admin\LeftAndMain',
             'SCHEMA_HEADER',
@@ -241,7 +328,74 @@ return static function (RectorConfig $rectorConfig): void {
             'SCHEMA_HEADER'
         ),
     ]);
+    $rectorConfig->rule(ModelDataExistsReturnTypeRector::class);
+    $rectorConfig->rule(DBFieldAddToQuerySignatureRector::class);
+    $rectorConfig->rule(ModelDataExistsReturnTypeRector::class);
+    $rectorConfig->rule(DBFieldAddToQuerySignatureRector::class);
+    $rectorConfig->rule(DBFieldSetValueSignatureRector::class);
+    $rectorConfig->rule(ModelDataExistsReturnTypeRector::class); 
+    $rectorConfig->rule(DBFieldAddToQuerySignatureRector::class);
+    $rectorConfig->rule(DBFieldSetValueSignatureRector::class);
+    $rectorConfig->rule(DBFieldScaffoldFormFieldSignatureRector::class);
+    $rectorConfig->rule(BuildTaskTitlePropertyRector::class);
+    $rectorConfig->rule(DataObjectGetToClassGetRector::class);
+    $rectorConfig->rule(ModelDataExistsReturnTypeRector::class);
+    $rectorConfig->rule(DBFieldAddToQuerySignatureRector::class);
+    $rectorConfig->rule(DBFieldSetValueSignatureRector::class);
+    $rectorConfig->rule(DBFieldScaffoldFormFieldSignatureRector::class);
+    $rectorConfig->rule(ModelDataExistsReturnTypeRector::class);
+    $rectorConfig->rule(DBFieldAddToQuerySignatureRector::class);
+    $rectorConfig->rule(DBFieldSetValueSignatureRector::class);
+    $rectorConfig->rule(DBFieldScaffoldFormFieldSignatureRector::class);
+    $rectorConfig->rule(RenameCurrentPageIdToCurrentRecordIdRector::class);
+    $rectorConfig->rule(ReplacePageTypeClassesRector::class);
+    $rectorConfig->rule(ConvertArrayToInputOptionRector::class);
+    $rectorConfig->rule(AddParentConstructToControllerRector::class);
+    $rectorConfig->rule(ModelDataForTemplateReturnTypeRector::class);
+    $rectorConfig->rule(AddUnionReturnTypeToPrepValueForDBRector::class);
+    $rectorConfig->rule(AddVoidReturnTypeToSaveIntoRector::class);
+    $rectorConfig->rule(ModelDataExistsReturnTypeRector::class);
+    $rectorConfig->rule(DBFieldAddToQuerySignatureRector::class);
+    $rectorConfig->rule(DBFieldSetValueSignatureRector::class);
+    $rectorConfig->rule(DBFieldScaffoldFormFieldSignatureRector::class);
+    $rectorConfig->rule(DataObjectDebugReturnTypeRector::class);  
+    $rectorConfig->rule(DBFieldAddToQuerySignatureRector::class);
+    $rectorConfig->rule(DBFieldSetValueSignatureRector::class);
+    $rectorConfig->rule(DBFieldScaffoldFormFieldSignatureRector::class);
+    $rectorConfig->rule(ModelDataExistsReturnTypeRector::class);
+     $rectorConfig->rule(ModelDataExistsReturnTypeRector::class);
+    $rectorConfig->rule(DBFieldAddToQuerySignatureRector::class);
+    $rectorConfig->rule(DBFieldSetValueSignatureRector::class);
+    $rectorConfig->rule(DBFieldScaffoldFormFieldSignatureRector::class);
+    $rectorConfig->rule(DataObjectDebugReturnTypeRector::class);
+    $rectorConfig->rule(FormFieldCompositeDatabaseFieldsReturnTypeRector::class);
+    $rectorConfig->rule(FormFieldValueToGetValueRector::class);
+
+     $rectorConfig->rule(DBFieldAddToQuerySignatureRector::class);
+    $rectorConfig->rule(DBFieldSetValueSignatureRector::class);
+    $rectorConfig->rule(DBFieldScaffoldFormFieldSignatureRector::class);
+    $rectorConfig->rule(ModelDataExistsReturnTypeRector::class);
+    $rectorConfig->rule(DataObjectDebugReturnTypeRector::class);
+    $rectorConfig->rule(FormFieldValidateSignatureRector::class);
+    $rectorConfig->rule(FormFieldValueToGetValueRector::class);
+    $rectorConfig->rule(FormFieldCompositeDatabaseFieldsReturnTypeRector::class);
+    $rectorConfig->rule(MigrateTaskRunToPolyExecutionRector::class);
+    $rectorConfig->rule(PolyCommandGetOptionsPublicRector::class);
+      $rectorConfig->rule(ModelDataExistsReturnTypeRector::class);
+    $rectorConfig->rule(DBFieldAddToQuerySignatureRector::class);
+    $rectorConfig->rule(DBFieldSetValueSignatureRector::class);
+    $rectorConfig->rule(DBFieldScaffoldFormFieldSignatureRector::class);
     $rectorConfig->rule(BuildTaskSegmentToCommandNameRector::class);
+    $rectorConfig->rule(EnsureExecuteReturnsCommandSuccessRector::class);
+    $rectorConfig->rule(BuildTaskToExecuteRector::class);
+    $rectorConfig->rule(DataObjectDebugReturnTypeRector::class);
+    $rectorConfig->rule(FormFieldValidateSignatureRector::class);
+    $rectorConfig->rule(FormFieldValueToGetValueRector::class);
+    $rectorConfig->rule(FormFieldCompositeDatabaseFieldsReturnTypeRector::class);
+    $rectorConfig->rule(BuildTaskSegmentToCommandNameRector::class);
+
+   
+ $rectorConfig->rule(BuildTaskSegmentToCommandNameRector::class);
     $rectorConfig->rule(BuildTaskTitlePropertyRector::class);
     $rectorConfig->rule(EnsureExecuteReturnsCommandSuccessRector::class);
     $rectorConfig->rule(MigrateTaskRunToPolyExecutionRector::class);

@@ -13,7 +13,7 @@ jobs:
   docs:
     runs-on: ubuntu-latest
     steps:
-      -   uses: actions/checkout@v6
+      -   uses: actions/checkout@v7
 
       -   uses: shivammathur/setup-php@v2
           with:
@@ -34,7 +34,7 @@ jobs:
       -   name: Uninstall rule doc generator
           run: composer remove symplify/rule-doc-generator
 
-      -   uses: stefanzweifel/git-auto-commit-action@v7.1.0
+      -   uses: stefanzweifel/git-auto-commit-action@v7.2.0
           with:
             commit_message: '[DOCS] Generate documentation'
             commit_options: '--no-verify --signoff'

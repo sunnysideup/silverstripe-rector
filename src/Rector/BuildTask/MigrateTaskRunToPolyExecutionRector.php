@@ -216,4 +216,47 @@ CODE
 
         return $nodes;
     }
+
+    private function collectAndRemoveSetters(Node $currentNode, string $varName): array
+    {
+        $params = [];
+        $parent = $currentNode->getAttribute('parent');
+
+        if (!$parent instanceof Node\Stmt\ClassMethod && !$parent instanceof Node\Stmt\Function_ && !$parent instanceof Node\File) {
+            return [];
+        }
+
+        $stmts = $parent instanceof Node\File ? $parent->stmts : $parent->stmts;
+        if ($stmts === null) {
+            return [];
+        }
+
+        foreach ($stmts as $stmt) {
+            if ($stmt === $currentNode) {
+                break;
+            }
+
+            if ($stmt instanceof Expression) {
+                // Reset params if the variable is reassigned to avoid bleeding between instances
+                if ($stmt->expr instanceof Assign && $stmt->expr->var instanceof Variable && $this->isName($stmt->expr->var, $varName)) {
+                    $params = [];
+                    continue;
+                }
+
+                if ($stmt->expr instanceof MethodCall) {
+                    $call = $stmt->expr;
+                    if ($this->isName($call->var, $varName) && str_starts_with($this->getName($call->name) ?? '', 'set')) {
+                        $key = str_replace('set', '', $this->getName($call->name));
+                        $args = $call->getArgs();
+                        if (isset($args[0])) {
+                            $params[] = new ArrayItem($args[0]->value, new String_($key));
+                            $this->removeNode($stmt);
+                        }
+                    }
+                }
+            }
+        }
+
+        return $params;
+    }
 }

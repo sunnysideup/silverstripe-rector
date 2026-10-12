@@ -209,6 +209,23 @@ Code Style: Replace specific property fetches with method calls
 
 <br>
 
+### RenameAddFieldsToTabWithoutArrayParamRector
+
+Silverstripe 5.3: Renames ->addFieldsToTab($name, `$singleField)` to ->addFieldToTab($name, `$singleField)`
+
+- class: [`Netwerkstatt\SilverstripeRector\Rector\Misc\RenameAddFieldsToTabWithoutArrayParamRector`](../src/Rector/Misc/RenameAddFieldsToTabWithoutArrayParamRector.php)
+
+```diff
+ class SomeClass extends \SilverStripe\ORM\DataObject
+ {
+     public function getCMSFields() {
+         $myfield = FormField::create();
+-        $fields->addFieldsToTab('Root.Main', $myfield);
++        $fields->addFieldToTab('Root.Main', $myfield);
+     }
+ }
+```
+
 ### PropertyToConfigRector
 
 Convert protected properties to private static config properties
