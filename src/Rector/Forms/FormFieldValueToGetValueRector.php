@@ -18,7 +18,8 @@ final class FormFieldValueToGetValueRector extends AbstractRector
     public function getDefinition(): RuleDefinition
     {
         return new RuleDefinition(
-            'Renames Value() and value() methods to getValue() for classes extending FormField',
+            'Renames Value() and value() methods to getValue() for classes extending FormField. 
+            See https://docs.silverstripe.org/en/6/changelogs/6.0.0/#formfield-value',
             [
                 new CodeSample(
                     <<<'CODE_SAMPLE'

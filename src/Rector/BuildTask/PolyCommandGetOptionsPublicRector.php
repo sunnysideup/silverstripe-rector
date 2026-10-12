@@ -17,7 +17,8 @@ final class PolyCommandGetOptionsPublicRector extends AbstractRector
     public function getDefinition(): RuleDefinition
     {
         return new RuleDefinition(
-            'Changes getOptions() method visibility to public for classes extending SilverStripe\PolyExecution\PolyCommand',
+            'Changes getOptions() method visibility to public for classes extending SilverStripe\PolyExecution\PolyCommand. 
+            See https://docs.silverstripe.org/en/6/developer_guides/cli/polycommand/#buildtask',
             [
                 new CodeSample(
                     <<<'CODE_SAMPLE'

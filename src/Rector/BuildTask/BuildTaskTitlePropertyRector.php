@@ -18,7 +18,8 @@ final class BuildTaskTitlePropertyRector extends AbstractRector
     public function getDefinition(): RuleDefinition
     {
         return new RuleDefinition(
-            'Ensures the $title property on BuildTask classes is protected and typed as string',
+            'Ensures the $title property on BuildTask classes is protected and typed as string. 
+            See https://docs.silverstripe.org/en/6/developer_guides/cli/polycommand/#buildtask',
             [
                 new CodeSample(
                     <<<'CODE_SAMPLE'

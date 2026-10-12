@@ -21,7 +21,8 @@ final class ConvertArrayToInputOptionRector extends AbstractRector
     public function getRuleDefinition(): RuleDefinition
     {
         return new RuleDefinition(
-            'Convert array option definitions to InputOption objects in getOptions()',
+            'Convert array option definitions to InputOption objects in getOptions(). 
+            See https://docs.silverstripe.org/en/6/developer_guides/cli/polycommand/#buildtask',
             [
                 new CodeSample(
                     <<<'CODE_SAMPLE'

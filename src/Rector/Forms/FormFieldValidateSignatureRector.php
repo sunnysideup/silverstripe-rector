@@ -25,7 +25,8 @@ final class FormFieldValidateSignatureRector extends AbstractRector
     public function getDefinition(): RuleDefinition
     {
         return new RuleDefinition(
-            'Migrates validate() method on FormField to return ValidationResult and use addError()',
+            'Migrates validate() method on FormField to return ValidationResult and use addError(). 
+            See https://docs.silverstripe.org/en/6/changelogs/6.0.0/#formfield-validation',
             [
                 new CodeSample(
                     <<<'CODE_SAMPLE'
