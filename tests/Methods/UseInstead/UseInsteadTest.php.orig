@@ -2,13 +2,21 @@
 
 declare(strict_types=1);
 
+<<<<<<< HEAD
 namespace Netwerkstatt\SilverstripeRector\Tests\Methods\UseInstead;
+=======
+namespace Netwerkstatt\SilverstripeRector\Tests\Methods\ReturnType;
+>>>>>>> wernerkrauss-main
 
 use Iterator;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Rector\Testing\PHPUnit\AbstractRectorTestCase;
 
+<<<<<<< HEAD
 final class UseInsteadTest extends AbstractRectorTestCase
+=======
+final class ReturnTypeTest extends AbstractRectorTestCase
+>>>>>>> wernerkrauss-main
 {
     #[DataProvider('provideData')]
     public function test(string $filePath): void
@@ -18,15 +26,15 @@ final class UseInsteadTest extends AbstractRectorTestCase
 
     public static function provideData(): Iterator
     {
-<<<<<<< HEAD
         return self::yieldFilesFromDirectory(__DIR__ . '/Fixture');
-=======
-        return self::yieldFilesFromDirectory(__DIR__ . '/Fixtures');
->>>>>>> ff45b4d (WIP)
     }
 
     public function provideConfigFilePath(): string
     {
         return __DIR__ . '/config/configured_rule.php';
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> wernerkrauss-main

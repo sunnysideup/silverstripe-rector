@@ -18,15 +18,15 @@ final class ObsoleteMethodTest extends AbstractRectorTestCase
 
     public static function provideData(): Iterator
     {
-<<<<<<< HEAD
         return self::yieldFilesFromDirectory(__DIR__ . '/Fixture');
-=======
-        return self::yieldFilesFromDirectory(__DIR__ . '/Fixtures');
->>>>>>> ff45b4d (WIP)
     }
 
     public function provideConfigFilePath(): string
     {
         return __DIR__ . '/config/configured_rule.php';
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> wernerkrauss-main

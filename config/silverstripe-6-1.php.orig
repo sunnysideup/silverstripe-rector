@@ -4,24 +4,31 @@ declare(strict_types=1);
 
 use Netwerkstatt\SilverstripeRector\Rector\BuildTask\BuildTaskTitlePropertyRector;
 use Netwerkstatt\SilverstripeRector\Rector\DataObject\DataObjectStaticMethodsToFluentRector;
+<<<<<<< HEAD
 
 use Netwerkstatt\SilverstripeRector\Rector\BuildTask\PolyCommandGetOptionsPublicRector;
-<<<<<<< HEAD
-use Netwerkstatt\SilverstripeRector\Rector\ORM\DataObjectGetToClassGetRector;
+use Netwerkstatt\SilverstripeRector\Rector\ORM\RemoveEmptyFilterRector;
+use Netwerkstatt\SilverstripeRector\Tests\ORM\RemoveEmptyFilterRector\RemoveEmptyFilterRectorTest;
 =======
 use Netwerkstatt\SilverstripeRector\Rector\ORM\RemoveEmptyFilterRector;
 use Netwerkstatt\SilverstripeRector\Tests\ORM\RemoveEmptyFilterRector\RemoveEmptyFilterRectorTest;
->>>>>>> 6e250c9 (FIX)
+use Netwerkstatt\SilverstripeRector\Rector\BuildTask\PolyCommandGetOptionsPublicRector;
+use Netwerkstatt\SilverstripeRector\Rector\ORM\DataObjectGetToClassGetRector;
+>>>>>>> wernerkrauss-main
 use Rector\Config\RectorConfig;
 use Netwerkstatt\SilverstripeRector\Tests\ORM\RemoveEmptyFilterRector\RemoveEmptyFilterRectorTest;
+
 
 return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->importNames();
     $rectorConfig->removeUnusedImports();
     $rectorConfig->rule(DataObjectStaticMethodsToFluentRector::class);
+<<<<<<< HEAD
+    $rectorConfig->rule(PolyCommandGetOptionsPublicRector::class); // this is after you have manually upgraded the buildTask.
+    $rectorConfig->rule(RemoveEmptyFilterRector::class); // this is after you have manually upgraded the buildTask.
+=======
 
     $rectorConfig->rule(PolyCommandGetOptionsPublicRector::class); // this is after you have manually upgraded the buildTask.
-<<<<<<< HEAD
     $rectorConfig->rule(RemoveEmptyFilterRectorTest::class); // this is after you have manually upgraded the buildTask.
     $rectorConfig->ruleWithConfiguration(SilverstripeDeprecationCommentRector::class, [
         'SilverStripe\UserForms\Extension\UpgradePolymorphicExtension' => [
@@ -31,7 +38,7 @@ return static function (RectorConfig $rectorConfig): void {
     ]);
     $rectorConfig->rule(BuildTaskTitlePropertyRector::class);
     $rectorConfig->rule(DataObjectGetToClassGetRector::class);
-=======
     $rectorConfig->rule(RemoveEmptyFilterRector::class); // this is after you have manually upgraded the buildTask.
->>>>>>> 6e250c9 (FIX)
+}
+>>>>>>> wernerkrauss-main
 };
