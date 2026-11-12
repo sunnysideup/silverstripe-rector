@@ -10,9 +10,9 @@ use PhpParser\Node\Expr\ArrayItem;
 use PhpParser\Node\Expr\MethodCall;
 use PhpParser\Node\Scalar\String_;
 use Rector\Rector\AbstractRector;
-use Symplify\RuleDocGenerator\Contract\DocumentedRuleInterface;
-use Symplify\RuleDocGenerator\ValueObject\CodeSample\CodeSample;
-use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
+use Rector\RuleDoc\Contract\DocumentedRuleInterface;
+use Rector\RuleDoc\CodeSample\CodeSample;
+use Rector\RuleDoc\RuleDefinition;
 
 /**
  * @see \Netwerkstatt\SilverstripeRector\Tests\ORM\ListSortToArrayRector\ListSortToArrayRectorTest
@@ -110,7 +110,7 @@ CODE_SAMPLE
             $direction = 'ASC';
             if (isset($subParts[1])) {
                 $dir = strtoupper($subParts[1]);
-                if (in_array($dir, ['ASC', 'DESC'])) {
+                if (in_array($dir, ['ASC', 'DESC'], true)) {
                     $direction = $dir;
                 }
             }

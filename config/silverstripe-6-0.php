@@ -40,60 +40,16 @@ use Rector\Renaming\Rector\ClassConstFetch\RenameClassConstFetchRector;
 use Rector\Renaming\Rector\MethodCall\RenameMethodRector;
 use Rector\Renaming\Rector\Name\RenameClassRector;
 use Rector\Renaming\Rector\PropertyFetch\RenamePropertyRector;
-use Rector\Renaming\Rector\StaticCall\RenameStaticMethodRector;
 use Rector\Renaming\ValueObject\MethodCallRename;
 use Rector\Renaming\ValueObject\RenameClassAndConstFetch;
 use Rector\Renaming\ValueObject\RenameProperty;
-use Rector\Renaming\ValueObject\RenameStaticMethod;
 use Netwerkstatt\SilverstripeRector\Rector\Misc\BuildTaskUpdateRector\RequestToInputOptionVisitor;
-use Netwerkstatt\SilverstripeRector\Rector\Misc\RenameAddFieldsToTabWithoutArrayParamRector;
+use Netwerkstatt\SilverstripeRector\Rector\Misc\RenameFieldListMethodsWithoutArrayParamRector;
 
 return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->rule(BuildTaskUpdateRector::class);
     $rectorConfig->ruleWithConfiguration(RenameClassRector::class, [
-        'SilverStripe\ORM\ArrayLib' => 'SilverStripe\Core\ArrayLib',
-        'SilverStripe\ORM\ArrayList' => 'SilverStripe\Model\List\ArrayList',
-        'SilverStripe\ORM\GroupedList' => 'SilverStripe\Model\List\GroupedList',
-        'SilverStripe\ORM\ListDecorator' => 'SilverStripe\Model\List\ListDecorator',
-        'SilverStripe\ORM\Map' => 'SilverStripe\Model\List\Map',
-        'SilverStripe\ORM\PaginatedList' => 'SilverStripe\Model\List\PaginatedList',
-        'SilverStripe\ORM\SS_List' => 'SilverStripe\Model\List\SS_List',
-        'SilverStripe\ORM\ValidationException' => 'SilverStripe\Core\Validation\ValidationException',
-        'SilverStripe\ORM\ValidationResult' => 'SilverStripe\Core\Validation\ValidationResult',
-        'SilverStripe\View\ArrayData' => 'SilverStripe\Model\ArrayData',
-        'SilverStripe\View\ViewableData' => 'SilverStripe\Model\ModelData',
-        'SilverStripe\View\ViewableData_Customised' => 'SilverStripe\Model\ModelDataCustomised',
-        'SilverStripe\View\ViewableData_Debugger' => 'SilverStripe\Model\ModelDataDebugger',
-        'SilverStripe\Logging\HTTPOutputHandler' => 'SilverStripe\Logging\ErrorOutputHandler',
-        'SilverStripe\GraphQL\Extensions\DevBuildExtension' => 'SilverStripe\GraphQL\Extensions\DbBuildExtension',
-        'SilverStripe\Security\PasswordValidator' => 'SilverStripe\Security\Validation\RulesPasswordValidator',
-        'SilverStripe\View\SSViewer_Scope' => 'SilverStripe\TemplateEngine\ScopeManager',
-        'SilverStripe\View\SSViewer_DataPresenter' => 'SilverStripe\TemplateEngine\ScopeManager',
-        'SilverStripe\Forms\Validator' => 'SilverStripe\Forms\Validation\Validator',
-        'SilverStripe\Forms\RequiredFields' => 'SilverStripe\Forms\Validation\RequiredFieldsValidator',
-        'SilverStripe\Forms\CompositeValidator' => 'SilverStripe\Forms\Validation\CompositeValidator',
-        'SilverStripe\UserForms\Form\UserFormsRequiredFields' => 'SilverStripe\UserForms\Form\UserFormsRequiredFieldsValidator',
-        'Symbiote\AdvancedWorkflow\Forms\AWRequiredFields' => 'Symbiote\AdvancedWorkflow\Forms\AWRequiredFieldsValidator',
-        'SilverStripe\CMS\Model\CurrentPageIdentifier' => 'SilverStripe\CMS\Model\CurrentRecordIdentifier',
-        'DNADesign\Elemental\TopPage\DataExtension' => 'DNADesign\Elemental\Extensions\TopPageElementExtension',
-        'DNADesign\Elemental\TopPage\FluentExtension' => 'DNADesign\Elemental\Extensions\TopPageFluentElementExtension',
-        'DNADesign\Elemental\TopPage\SiteTreeExtension' => 'DNADesign\Elemental\Extensions\TopPageSiteTreeExtension',
-        'SilverStripe\View\SSViewer_BasicIteratorSupport' => 'SilverStripe\TemplateEngine\BasicIteratorSupport',
-        'SilverStripe\View\SSTemplateParseException' => 'SilverStripe\TemplateEngine\Exception\SSTemplateParseException',
-        'SilverStripe\View\SSTemplateParser' => 'SilverStripe\TemplateEngine\SSTemplateParser',
-        'SilverStripe\View\TemplateIteratorProvider' => 'SilverStripe\TemplateEngine\TemplateIteratorProvider',
-        'SilverStripe\View\TemplateParser' => 'SilverStripe\TemplateEngine\TemplateParser',
-        'SilverStripe\AssetAdmin\Extensions\CampaignAdminExtension' => 'SilverStripe\CampaignAdmin\Extensions\FileFormFactoryExtension',
-        'SilverStripe\CMS\Controllers\LeftAndMainPageIconsExtension' => 'SilverStripe\CMS\Controllers\LeftAndMainRecordIconsExtension',
-        'SilverStripe\Forms\HTMLEditor\TinyMCECombinedGenerator' => 'SilverStripe\TinyMCE\TinyMCECombinedGenerator',
-        'SilverStripe\Forms\HTMLEditor\TinyMCEConfig' => 'SilverStripe\TinyMCE\TinyMCEConfig',
-        'SilverStripe\Forms\HTMLEditor\TinyMCEScriptGenerator' => 'SilverStripe\TinyMCE\TinyMCEScriptGenerator',
-        'SilverStripe\Dev\Constraint\ViewableDataContains' => 'SilverStripe\Dev\Constraint\ModelDataContains',
-        'SilverStripe\Dev\Validation\DatabaseAdminExtension' => 'SilverStripe\Dev\Validation\DbBuildExtension',
 
-        'SilverStripe\ORM\Filterable' => 'SilverStripe\Model\List\Filterable',
-        'SilverStripe\ORM\Limitable' => 'SilverStripe\Model\List\Limitable',
-        'SilverStripe\ORM\Sortable' => 'SilverStripe\Model\List\Sortable',
 
         'SilverStripe\SecurityReport\Forms\GridFieldExportReportButton' => 'SilverStripe\Reports\SecurityReport\Forms\GridFieldExportReportButton',
         'SilverStripe\SecurityReport\Forms\GridFieldPrintReportButton' => 'SilverStripe\Reports\SecurityReport\Forms\GridFieldPrintReportButton',
@@ -121,20 +77,6 @@ return static function (RectorConfig $rectorConfig): void {
     ]);
     $rectorConfig->importNames();
     $rectorConfig->removeUnusedImports();
-    $rectorConfig->ruleWithConfiguration(RenameStaticMethodRector::class, [
-        new RenameStaticMethod(
-            'SilverStripe\View\SSViewer',
-            'flush',
-            'SilverStripe\TemplateEngine\SSTemplateEngine',
-            'flush'
-        ),
-        new RenameStaticMethod(
-            'SilverStripe\ORM\FieldType\DBEnum',
-            'flushCache',
-            'SilverStripe\ORM\FieldType\DBEnum',
-            'reset'
-        ),
-    ]);
     $rectorConfig->ruleWithConfiguration(RenamePropertyRector::class, [
         new RenameProperty('SilverStripe\Admin\LeftAndMain', 'tree_class', 'model_class'),
         new RenameProperty('SilverStripe\CMS\Model\SiteTree', 'description', 'class_description'),
@@ -168,14 +110,9 @@ return static function (RectorConfig $rectorConfig): void {
         new MethodCallRename('SilverStripe\CMS\Controllers\CMSMain', 'getPageTypes', 'getRecordTypes'),
         new MethodCallRename('SilverStripe\CMS\Controllers\CMSMain', 'PageTypes', 'RecordTypes'),
         new MethodCallRename('SilverStripe\CMS\Controllers\CMSMain', 'SiteTreeHints', 'TreeHints'),
-        new MethodCallRename(
-            'SilverStripe\CMS\Controllers\LeftAndMainRecordIconsExtension',
-            'generatePageIconsCss',
-            'generateRecordIconsCss'
-        ),
-        new MethodCallRename('SilverStripe\Forms\Form', 'validationResult', 'validate'),
+        new MethodCallRename('SilverStripe\CMS\Controllers\LeftAndMainRecordIconsExtension', 'generatePageIconsCss',
+            'generateRecordIconsCss'),
         new MethodCallRename('SilverStripe\Forms\FormField', 'Value', 'getFormattedValue'),
-        new MethodCallRename('SilverStripe\Forms\TextareaField', 'ValueEntities', 'getFormattedValueEntities'),
         new MethodCallRename('SilverStripe\Model\List\ListDecorator', 'TotalItems', 'getTotalItems'),
         new MethodCallRename('SilverStripe\Model\List\PaginatedList', 'TotalItems', 'getTotalItems'),
         new MethodCallRename('SilverStripe\Control\Director', 'get_session_environment_type', 'get_environment_type'),
@@ -208,6 +145,13 @@ return static function (RectorConfig $rectorConfig): void {
         new MethodCallRename('SilverStripe\Core\Extension', 'MetaTags', 'updateMetaTags'),
         // DataObject validation hook
         new MethodCallRename('SilverStripe\Core\Extension', 'validate', 'updateValidate'),
+        // CMSMain hooks
+        new MethodCallRename('SilverStripe\Core\Extension', 'updateLinkPageAdd', 'updateLinkRecordAdd'),
+        new MethodCallRename('SilverStripe\Core\Extension', 'updateSiteTreeAsUL', 'updateTreeAsUL'),
+        new MethodCallRename('SilverStripe\Core\Extension', 'updateSiteTreeHints', 'updateTreeHints'),
+        new MethodCallRename('SilverStripe\Core\Extension', 'updateCurrentPageID', 'updateCurrentRecordID'),
+        // RememberLoginHash hooks
+        new MethodCallRename('SilverStripe\Core\Extension', 'onAfterRenewToken', 'onAfterRenewSession'),
     ]);
     $rectorConfig->rule(ReplaceHasCurrWithCurrRector::class);
     $rectorConfig->rule(DataObjectGetByIdToByIDRector::class);
@@ -220,12 +164,12 @@ return static function (RectorConfig $rectorConfig): void {
             'message' => 'PaginatedList::TotalItems() has been deprecated. Use getTotalItems() instead.',
             'link' => 'https://docs.silverstripe.org/en/5/changelogs/5.4.0/#deprecated-api',
         ],
-        'SilverStripe\Forms\TextareaField::getFormattedValueEntities' => [
-            'message' => 'TextareaField::ValueEntities() has been deprecated. Use getFormattedValueEntities() instead.',
-            'link' => 'https://docs.silverstripe.org/en/5/changelogs/5.4.0/#deprecated-api',
-        ],
         'SilverStripe\Forms\FormField::getFormattedValue' => [
             'message' => 'FormField::Value() has been deprecated. It will be replaced by getFormattedValue() and getValue().',
+            'link' => 'https://docs.silverstripe.org/en/5/changelogs/5.4.0/#deprecated-api',
+        ],
+        'SilverStripe\Forms\FormField::validate' => [
+            'message' => 'FormField::validate() will take zero arguments and return a ValidationResult object instead of a boolean in CMS 6.0.0.',
             'link' => 'https://docs.silverstripe.org/en/5/changelogs/5.4.0/#deprecated-api',
         ],
         'SilverStripe\Control\Director::get_environment_type' => [
@@ -263,5 +207,5 @@ return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->rule(BuildTaskDescriptionPropertyRector::class);
     $rectorConfig->rule(BuildTaskIsEnabledPropertyRector::class);
     $rectorConfig->rule(RemoveVersionedGridFieldStateRector::class);
-    $rectorConfig->rule(RenameAddFieldsToTabWithoutArrayParamRector::class);
+    $rectorConfig->rule(RenameFieldListMethodsWithoutArrayParamRector::class);
 };

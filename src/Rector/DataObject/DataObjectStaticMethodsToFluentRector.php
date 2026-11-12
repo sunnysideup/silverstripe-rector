@@ -11,9 +11,9 @@ use PhpParser\Node\Expr\ClassConstFetch;
 use PHPStan\Type\ObjectType;
 use Rector\Rector\AbstractRector;
 use Rector\PhpParser\Node\Value\ValueResolver;
-use Symplify\RuleDocGenerator\Contract\DocumentedRuleInterface;
-use Symplify\RuleDocGenerator\ValueObject\CodeSample\CodeSample;
-use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
+use Rector\RuleDoc\Contract\DocumentedRuleInterface;
+use Rector\RuleDoc\CodeSample\CodeSample;
+use Rector\RuleDoc\RuleDefinition;
 
 /**
  * @see \Netwerkstatt\SilverstripeRector\Tests\DataObject\DataObjectStaticMethodsToFluentRector\DataObjectStaticMethodsToFluentRectorTest

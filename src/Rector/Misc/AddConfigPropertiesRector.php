@@ -4,7 +4,8 @@ namespace Netwerkstatt\SilverstripeRector\Rector\Misc;
 
 use PhpParser\Node;
 use PhpParser\Node\Stmt\Class_;
-use PHPStan\PhpDocParser\Ast\PhpDoc\PhpDocTextNode;
+use PHPStan\PhpDocParser\Ast\PhpDoc\GenericTagValueNode;
+use PHPStan\PhpDocParser\Ast\PhpDoc\PhpDocTagNode;
 use PHPStan\Type\ObjectType;
 use Rector\BetterPhpDocParser\PhpDocInfo\PhpDocInfoFactory;
 use Rector\BetterPhpDocParser\PhpDocManipulator\PhpDocTypeChanger;
@@ -16,9 +17,9 @@ use SilverStripe\Admin\ModelAdmin;
 use SilverStripe\Control\Controller;
 use SilverStripe\Core\Extensible;
 use SilverStripe\ORM\DataObject;
-use Symplify\RuleDocGenerator\Contract\DocumentedRuleInterface;
-use Symplify\RuleDocGenerator\ValueObject\CodeSample\ConfiguredCodeSample;
-use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
+use Rector\RuleDoc\Contract\DocumentedRuleInterface;
+use Rector\RuleDoc\CodeSample\ConfiguredCodeSample;
+use Rector\RuleDoc\RuleDefinition;
 
 class AddConfigPropertiesRector extends AbstractRector implements ConfigurableRectorInterface, DocumentedRuleInterface
 {
@@ -97,17 +98,17 @@ class AddConfigPropertiesRector extends AbstractRector implements ConfigurableRe
             'defaults',
             'required_fields'
         ],
-        'SilverStripe\Dev\BuildTask' => [
+        \SilverStripe\Dev\BuildTask::class => [
             'segment',
             'title',
             'description',
             'is_enabled'
         ],
-        'SilverStripe\CMS\Model\SiteTree' => [
+        \SilverStripe\CMS\Model\SiteTree::class => [
             'icon'
         ],
         //Elemental
-        'DNADesign\Elemental\Models\BaseElement' => [
+        \DNADesign\Elemental\Models\BaseElement::class => [
             'icon',
             'inline_editable',
             'description'
@@ -221,7 +222,7 @@ CODE_SAMPLE,
                 continue;
             }
 
-            $phpDocInfo->addPhpDocTagNode(new PhpDocTextNode('@config'));
+            $phpDocInfo->addPhpDocTagNode(new PhpDocTagNode('@config', new GenericTagValueNode('')));
             $this->docBlockUpdater->updateRefactoredNodeWithPhpDocInfo($property);
 
             $this->nodeIsChanged = true;

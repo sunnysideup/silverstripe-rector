@@ -17,7 +17,7 @@
     "phpunit/phpunit": "^11.3",
     "squizlabs/php_codesniffer": "^4",
     "phpstan/phpstan": "^2",
-    "rector/jack": "^0.5.1"
+    "rector/swiss-knife": "^2.4"
   },
   "autoload": {
     "psr-4": {
@@ -37,7 +37,16 @@
     ]
   },
   "scripts": {
-    "docs:generate": "vendor/bin/rule-doc-generator generate src --output-file docs/all_rectors_overview.md  --ansi --categorize 2"
+    "test": "@php vendor/bin/phpunit",
+    "lint": "@php vendor/bin/phpcs",
+    "fix": "@php vendor/bin/phpcbf",
+    "stan": "@php vendor/bin/phpstan",
+    "rector": "@php vendor/bin/rector",
+    "rector:dry": "@php vendor/bin/rector --dry-run --no-ansi",
+    "ci": "composer test && composer lint && composer rector:dry && composer stan",
+    "docs:generate": "@php scripts/docs-exporter.php markdown",
+    "docs:export:rules": "@php scripts/docs-exporter.php rules-json",
+    "docs:export": "@php scripts/docs-exporter.php json"
   },
   "minimum-stability": "dev",
   "prefer-stable": true
