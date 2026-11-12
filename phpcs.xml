@@ -19,6 +19,20 @@
         </properties>
     </rule>
 
+    <!-- Show warnings (e.g. long lines) but do not fail the lint run because of them -->
+    <config name="ignore_warnings_on_exit" value="1"/>
+
+    <!-- ChangeList classes and the lookup maps in MethodChangeHelper are data tables with long descriptions -->
+    <rule ref="Generic.Files.LineLength">
+        <exclude-pattern>src/ChangeLists/*</exclude-pattern>
+        <exclude-pattern>src/Traits/MethodChangeHelper.php</exclude-pattern>
+    </rule>
+
+    <!-- get_list_cleaned() & co. are public static API called from the config/ files, keep snake_case -->
+    <rule ref="PSR1.Methods.CamelCapsMethodName">
+        <exclude-pattern>src/Traits/MethodChangeHelper.php</exclude-pattern>
+    </rule>
+
     <!-- include php files only -->
     <arg name="extensions" value="php,lib,inc,php5"/>
 

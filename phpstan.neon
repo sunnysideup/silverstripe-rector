@@ -1,5 +1,9 @@
 parameters:
     level: 4
+    # Minimum supported PHP is 8.3 (see composer.json); CI also runs newer versions
+    phpVersion:
+        min: 80300
+        max: 80500
     paths:
         - src
         - tests
