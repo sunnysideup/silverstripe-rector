@@ -76,18 +76,18 @@ Code Style: Changes DataObject::get_by_id('ClassName', `$id)` to `ClassName::get
 
 ### DataObjectStaticMethodsToFluentRector
 
-Silverstripe 6.1: Replace DataObject static methods `get_by_id()`, `get_one()`, and `delete_by_id()` with fluent equivalents.
+Silverstripe 6.1: Replace DataObject static methods with fluent equivalents using Late Static Binding.
 
 - class: [`Netwerkstatt\SilverstripeRector\Rector\DataObject\DataObjectStaticMethodsToFluentRector`](../src/Rector/DataObject/DataObjectStaticMethodsToFluentRector.php)
 
 ```diff
 @@ -1,3 +1,3 @@
--DataObject::get_by_id($className, $id);
--DataObject::get_one($className, $filter);
--DataObject::delete_by_id($className, $id);
-+DataObject::get($className)->setUseCache(true)->byID($id);
-+DataObject::get($className)->setUseCache(true)->filter($filter)->first();
-+DataObject::get($className)->setUseCache(true)->byID($id)->delete();
+-DataObject::get_by_id(MyClass::class, 1);
+-DataObject::get_one(MyClass::class, ['Email' => $email]);
+-DataObject::delete_by_id(MyClass::class, 1);
++MyClass::get()->byID(1);
++MyClass::get()->setUseCache(true)->filter(['Email' => $email])->first();
++MyClass::get()->byID(1)->delete();
 ```
 
 <br>
@@ -309,16 +309,16 @@ Silverstripe: Remove deprecation comments that are no longer applicable after up
 
 ### RenameFieldListMethodsWithoutArrayParamRector
 
-Silverstripe 5.3: Renames FieldList plural methods to singular if second argument is not an array
+Silverstripe 5.3: Safely renames `->addFieldsToTab()` and `->removeFieldsFromTab()` to singular equivalents, or adds a TODO for unknown variables.
 
 - class: [`Netwerkstatt\SilverstripeRector\Rector\Misc\RenameFieldListMethodsWithoutArrayParamRector`](../src/Rector/Misc/RenameFieldListMethodsWithoutArrayParamRector.php)
 
 ```diff
-@@ -1,2 +1,2 @@
--$fields->addFieldsToTab('Root.Main', $myfield);
--$fields->removeFieldsFromTab('Root.Main', $myfield);
-+$fields->addFieldToTab('Root.Main', $myfield);
-+$fields->removeFieldFromTab('Root.Main', $myfield);
+@@ -1,2 +1,3 @@
++// @TODO SSU RECTOR UPGRADE TASK - FieldList::addFieldsToTab: Mixed type detected. If this is a single field/string, change to addFieldToTab() manually.
+ $fields->addFieldsToTab('Root.Main', $unknownVariable);
+-$fields->removeFieldsFromTab('Root.Main', 'Content');
++$fields->removeFieldFromTab('Root.Main', 'Content');
 ```
 
 <br>
@@ -469,27 +469,6 @@ Code Style: Change new Object to static call for classes that use Injectable tra
      {
 -        new InjectableClass($name);
 +        InjectableClass::create($name);
-     }
- }
-```
-
-<br>
-
-### FindUniqueMethodsThatMayNeedUpdating
-
-Finds methods that are hopefully unique enough in name to produce limited false positives, and 
-marks them in need of upgrade with a small upgrade note
-
-- class: [`Netwerkstatt\SilverstripeRector\Rector\Methods\UseCreateRector`](../src/Rector/ORM/UseCreateRector.php)
-
-```diff
- class SomeClass
- {
-+    /** @TODO SSU RECTOR UPGRADE TASK: someMethod has changed in this or that way
-     public function someMethod()
-     {
-+        
-         $this->anotherMethod($fooBar)    
      }
  }
 ```
