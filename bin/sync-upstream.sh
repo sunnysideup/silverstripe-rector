@@ -14,11 +14,11 @@
 #   G. Shows you a summary and asks once: commit, update main and push? [y/N]
 #
 # Usage:
-#   scripts/sync-upstream.sh             # the whole thing, A to Z
-#   scripts/sync-upstream.sh --no-ai     # stop at the conflicts so you can fix them yourself
-#   scripts/sync-upstream.sh --resume    # after fixing by hand (or re-running opencode): F + G
-#   scripts/sync-upstream.sh --abort     # throw the attempt away and go back to main
-#   scripts/sync-upstream.sh --yes       # don't ask at G, just commit + push (only if tests pass)
+#   bin/sync-upstream.sh             # the whole thing, A to Z
+#   bin/sync-upstream.sh --no-ai     # stop at the conflicts so you can fix them yourself
+#   bin/sync-upstream.sh --resume    # after fixing by hand (or re-running opencode): F + G
+#   bin/sync-upstream.sh --abort     # throw the attempt away and go back to main
+#   bin/sync-upstream.sh --yes       # don't ask at G, just commit + push (only if tests pass)
 #
 # Optional env vars:
 #   REPO_DIR        where your checkout is / should be cloned to

@@ -2,4 +2,4 @@ rector.php export-ignore
 /stubs export-ignore
 /tests export-ignore
 /.ddev export-ignore
-/scripts/sync-upstream.sh export-ignore
+/bin/sync-upstream.sh export-ignore
