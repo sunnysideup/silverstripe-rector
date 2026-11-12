@@ -24,12 +24,14 @@ use PHPStan\Type\Type;
 use PHPStan\Type\UnionType;
 use Rector\Contract\Rector\ConfigurableRectorInterface;
 use Rector\Rector\AbstractRector;
-use Symplify\RuleDocGenerator\ValueObject\CodeSample\ConfiguredCodeSample;
-use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
+use Rector\RuleDoc\Contract\DocumentedRuleInterface;
+use Rector\RuleDoc\CodeSample\ConfiguredCodeSample;
+use Rector\RuleDoc\RuleDefinition;
 
-final class RenamedTo extends AbstractRector implements ConfigurableRectorInterface
+final class RenamedTo extends AbstractRector implements ConfigurableRectorInterface, DocumentedRuleInterface
 {
     use MethodHelper;
+
     /**
      * @var array<int, array{c: string, m: string, n: string, u?: bool}>
      */
@@ -37,7 +39,8 @@ final class RenamedTo extends AbstractRector implements ConfigurableRectorInterf
 
     public function __construct(
         private readonly ReflectionProvider $reflectionProvider
-    ) {}
+    ) {
+    }
 
     public function getRuleDefinition(): RuleDefinition
     {
@@ -62,9 +65,6 @@ CODE_SAMPLE,
 
 // public function getNodeTypes(): array - see Trait
 
-    /**
-     * @param Expression|ClassMethod $node
-     */
     // public function refactor(Node $node): ?Node - see Trait
 
     private function refactorExpression(Expression $expression): ?Node
@@ -110,15 +110,11 @@ CODE_SAMPLE,
 
     private function refactorClassMethod(ClassMethod $classMethod): ?Node
     {
-        if (!$classMethod->name instanceof Identifier) {
-            return null;
-        }
-
         // Fetch scope dynamically here
         $scope = ScopeFetcher::fetch($classMethod);
         $classReflection = $scope->getClassReflection();
 
-        if ($classReflection === null) {
+        if (!$classReflection instanceof \PHPStan\Reflection\ClassReflection) {
             return null;
         }
 
@@ -162,5 +158,4 @@ CODE_SAMPLE,
 
         return null;
     }
-
 }

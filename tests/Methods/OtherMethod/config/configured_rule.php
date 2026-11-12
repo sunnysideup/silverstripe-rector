@@ -14,14 +14,14 @@ return RectorConfig::configure()
             'u' => false
         ],
         [
-            'c' => 'SiteTree', 
-            'm' => 'getPermissionChecker', 
+            'c' => 'SiteTree',
+            'm' => 'getPermissionChecker',
             'n' => 'Method SiteTree::getPermissionChecker() is no longer static',
             'u' => true // Set to true to test unknown receiver fallback
         ],
         [
-            'c' => 'MigrationTask', 
-            'm' => 'up', 
+            'c' => 'MigrationTask',
+            'm' => 'up',
             'n' => 'Method MigrationTask::up() is now abstract',
             'u' => false
         ],

@@ -49,11 +49,8 @@ final class SilverstripeDeprecationCommentRector extends AbstractRector implemen
      */
     private array $configuration = [];
 
-    private BetterNodeFinder $betterNodeFinder;
-
-    public function __construct(BetterNodeFinder $betterNodeFinder)
+    public function __construct(private readonly BetterNodeFinder $betterNodeFinder)
     {
-        $this->betterNodeFinder = $betterNodeFinder;
     }
 
     public function getRuleDefinition(): RuleDefinition
@@ -125,7 +122,7 @@ PHP,
     private function refactorDeclaration(Node $node): ?Node
     {
         foreach ($this->configuration as $target => $info) {
-            if (strpos($target, '::') !== false) {
+            if (str_contains($target, '::')) {
                 if (!$node instanceof ClassMethod) {
                     continue;
                 }
@@ -167,7 +164,7 @@ PHP,
     {
         $hasChanged = false;
         foreach ($this->configuration as $target => $info) {
-            if (strpos($target, '::') === false) {
+            if (!str_contains($target, '::')) {
                 continue;
             }
 
@@ -221,7 +218,7 @@ PHP,
         // Check if comment already exists to avoid duplicates
         $comments = $node->getComments();
         foreach ($comments as $comment) {
-            if (strpos($comment->getText(), $info['link']) !== false) {
+            if (str_contains($comment->getText(), $info['link'])) {
                 return null;
             }
         }

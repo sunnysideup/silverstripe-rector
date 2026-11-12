@@ -21,12 +21,12 @@ use Rector\RuleDoc\RuleDefinition;
  */
 final class GetIDListToColumnIDRector extends AbstractRector implements DocumentedRuleInterface
 {
-    private const CLASSES_WITH_SORT = [
+    private const array CLASSES_WITH_SORT = [
         \SilverStripe\ORM\DataList::class,
         \SilverStripe\ORM\Relation::class,
     ];
 
-    private const CLASSES_WITHOUT_SORT = [
+    private const array CLASSES_WITHOUT_SORT = [
         \SilverStripe\ORM\EagerLoadedList::class,
         \SilverStripe\ORM\UnsavedRelationList::class,
     ];

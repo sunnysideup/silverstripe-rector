@@ -11,12 +11,13 @@ use PhpParser\Node\Identifier;
 use PhpParser\Node\Name\FullyQualified;
 use PhpParser\Node\Scalar\String_;
 use Rector\Rector\AbstractRector;
-use Symplify\RuleDocGenerator\ValueObject\CodeSample\CodeSample;
-use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
+use Rector\RuleDoc\Contract\DocumentedRuleInterface;
+use Rector\RuleDoc\CodeSample\CodeSample;
+use Rector\RuleDoc\RuleDefinition;
 
-final class DataObjectGetToClassGetRector extends AbstractRector
+final class DataObjectGetToClassGetRector extends AbstractRector implements DocumentedRuleInterface
 {
-    public function getDefinition(): RuleDefinition
+    public function getRuleDefinition(): RuleDefinition
     {
         return new RuleDefinition(
             'Converts DataObject::get(SomeClass::class) to SomeClass::get()',
@@ -48,7 +49,7 @@ CODE_SAMPLE
     public function refactor(Node $node): ?Node
     {
         // 1. Ensure the method is being called EXACTLY on DataObject (resolves FQCN if imported)
-        if (! $this->isName($node->class, 'SilverStripe\ORM\DataObject')) {
+        if (! $this->isName($node->class, \SilverStripe\ORM\DataObject::class)) {
             return null;
         }
 
@@ -69,9 +70,8 @@ CODE_SAMPLE
         // 4A. Handle DataObject::get(OrderStep::class)
         if ($firstArgValue instanceof ClassConstFetch && $this->isName($firstArgValue->name, 'class')) {
             $targetClassNode = $firstArgValue->class;
-        } 
-        // 4B. Handle DataObject::get('App\Models\OrderStep')
-        elseif ($firstArgValue instanceof String_) {
+        } elseif ($firstArgValue instanceof String_) {
+            // 4B. Handle DataObject::get('App\Models\OrderStep')
             // Strip any leading slashes from the string to avoid double slashes in the AST
             $className = ltrim($firstArgValue->value, '\\');
             $targetClassNode = new FullyQualified($className);

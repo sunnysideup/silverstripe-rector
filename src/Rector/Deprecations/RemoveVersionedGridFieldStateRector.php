@@ -18,10 +18,11 @@ use PhpParser\NodeTraverser;
 use PhpParser\NodeVisitor;
 use PhpParser\NodeVisitorAbstract;
 use Rector\Rector\AbstractRector;
-use Symplify\RuleDocGenerator\ValueObject\CodeSample\CodeSample;
-use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
+use Rector\RuleDoc\Contract\DocumentedRuleInterface;
+use Rector\RuleDoc\CodeSample\CodeSample;
+use Rector\RuleDoc\RuleDefinition;
 
-final class RemoveVersionedGridFieldStateRector extends AbstractRector
+final class RemoveVersionedGridFieldStateRector extends AbstractRector implements DocumentedRuleInterface
 {
     public function getRuleDefinition(): RuleDefinition
     {
@@ -60,24 +61,23 @@ CODE_SAMPLE
         
         $visitor = new class($node) extends NodeVisitorAbstract {
             public bool $hasChanged = false;
-            private Stmt $rootNode;
 
-            public function __construct(Stmt $rootNode)
+            public function __construct(private readonly Stmt $rootNode)
             {
-                $this->rootNode = $rootNode;
             }
 
             // Top-down: Stop traversal from escaping into nested statements
-            public function enterNode(Node $n): int|Node|null
+            public function enterNode(Node $n): ?int
             {
                 if ($n instanceof Stmt && $n !== $this->rootNode) {
                     return NodeVisitor::DONT_TRAVERSE_CHILDREN;
                 }
+
                 return null;
             }
 
             // Bottom-up: Safely collapse infinite chains from the inside-out
-            public function leaveNode(Node $n): int|Node|array|null
+            public function leaveNode(Node $n): ?Node
             {
                 if (! $n instanceof MethodCall) {
                     return null;
@@ -116,10 +116,12 @@ CODE_SAMPLE
                 return null;
             }
 
-            private function isVersionedState(Node $classNode): bool {
+            private function isVersionedState(Node $classNode): bool
+            {
                 if ($classNode instanceof Name) {
                     return str_ends_with($classNode->toString(), 'VersionedGridFieldState');
                 }
+
                 return false;
             }
         };

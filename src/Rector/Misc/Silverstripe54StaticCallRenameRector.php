@@ -19,7 +19,7 @@ use Rector\RuleDoc\RuleDefinition;
 final class Silverstripe54StaticCallRenameRector extends AbstractRector implements DocumentedRuleInterface
 {
     /** @var array<string, array{class: string, method: string}> */
-    private const RENAMES = [
+    private const array RENAMES = [
         'SilverStripe\\View\\SSViewer::flush' => [
             'class' => 'SilverStripe\\TemplateEngine\\SSTemplateEngine',
             'method' => 'flush',

@@ -8,13 +8,13 @@ use Rector\Config\RectorConfig;
 return RectorConfig::configure()
     ->withConfiguredRule(UseInstead::class, [
         [
-            'c' => 'SilverStripe\Admin\LeftAndMain',
+            'c' => \SilverStripe\Admin\LeftAndMain::class,
             'm' => 'currentPage',
             'n' => 'use currentRecord() instead.',
             'u' => false
         ],
         [
-            'c' => 'SilverStripe\CMS\Controllers\CMSMain',
+            'c' => \SilverStripe\CMS\Controllers\CMSMain::class,
             'm' => 'CanOrganiseSitetree',
             'n' => 'use canOrganiseTree instead.',
             'u' => true // fallback allowed for tests

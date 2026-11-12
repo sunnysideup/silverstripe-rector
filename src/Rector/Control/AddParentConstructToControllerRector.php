@@ -15,10 +15,11 @@ use PhpParser\Node\Stmt\ClassMethod;
 use PhpParser\Node\Stmt\Expression;
 use PHPStan\Type\ObjectType;
 use Rector\Rector\AbstractRector;
-use Symplify\RuleDocGenerator\ValueObject\CodeSample\CodeSample;
-use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
+use Rector\RuleDoc\Contract\DocumentedRuleInterface;
+use Rector\RuleDoc\CodeSample\CodeSample;
+use Rector\RuleDoc\RuleDefinition;
 
-final class AddParentConstructToControllerRector extends AbstractRector
+final class AddParentConstructToControllerRector extends AbstractRector implements DocumentedRuleInterface
 {
     public function getRuleDefinition(): RuleDefinition
     {
@@ -62,12 +63,12 @@ CODE_SAMPLE
     public function refactor(Node $node): ?Node
     {
         // Verify class extends SilverStripe\Control\Controller
-        if (! $this->isObjectType($node, new ObjectType('SilverStripe\Control\Controller'))) {
+        if (! $this->isObjectType($node, new ObjectType(\SilverStripe\Control\Controller::class))) {
             return null;
         }
 
         // CRITICAL FIX: Do not apply this to the base Controller class itself!
-        if ($this->isName($node, 'SilverStripe\Control\Controller')) {
+        if ($this->isName($node, \SilverStripe\Control\Controller::class)) {
             return null;
         }
 
@@ -80,12 +81,13 @@ CODE_SAMPLE
         // Check if parent::__construct is already being called
         $hasParentCall = false;
         $this->traverseNodesWithCallable($constructMethod->stmts, function (Node $subNode) use (&$hasParentCall) {
-            if ($subNode instanceof StaticCall && 
-                $this->isName($subNode->class, 'parent') && 
+            if ($subNode instanceof StaticCall &&
+                $this->isName($subNode->class, 'parent') &&
                 $this->isName($subNode->name, '__construct')
             ) {
                 $hasParentCall = true;
             }
+
             return null;
         });
 

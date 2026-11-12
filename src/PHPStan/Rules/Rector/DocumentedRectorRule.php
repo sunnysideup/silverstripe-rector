@@ -18,13 +18,10 @@ use Rector\RuleDoc\CodeSample\ConfiguredCodeSample;
 /**
  * @implements Rule<Class_>
  */
-final class DocumentedRectorRule implements Rule
+final readonly class DocumentedRectorRule implements Rule
 {
-    private ReflectionProvider $reflectionProvider;
-
-    public function __construct(ReflectionProvider $reflectionProvider)
+    public function __construct(private ReflectionProvider $reflectionProvider)
     {
-        $this->reflectionProvider = $reflectionProvider;
     }
 
     public function getNodeType(): string

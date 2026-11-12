@@ -13,13 +13,14 @@ use PhpParser\Node\Stmt\Function_;
 use PhpParser\Node\Stmt\Expression;
 use PHPStan\Type\ObjectType;
 use Rector\Rector\AbstractRector;
-use Symplify\RuleDocGenerator\ValueObject\CodeSample\CodeSample;
-use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
+use Rector\RuleDoc\Contract\DocumentedRuleInterface;
+use Rector\RuleDoc\CodeSample\CodeSample;
+use Rector\RuleDoc\RuleDefinition;
 
 /**
  * @see \Netwerkstatt\SilverstripeRector\Tests\CMS\ReplacePageTypeClassesRector\ReplacePageTypeClassesRectorTest
  */
-final class ReplacePageTypeClassesRector extends AbstractRector
+final class ReplacePageTypeClassesRector extends AbstractRector implements DocumentedRuleInterface
 {
     public function getRuleDefinition(): RuleDefinition
     {
@@ -78,7 +79,7 @@ CODE_SAMPLE
                     return null;
                 }
 
-                if (! $this->isObjectType($subNode->class, new ObjectType('SilverStripe\CMS\Model\SiteTree')) && ! $this->isName($subNode->class, 'SiteTree')) {
+                if (! $this->isObjectType($subNode->class, new ObjectType(\SilverStripe\CMS\Model\SiteTree::class)) && ! $this->isName($subNode->class, 'SiteTree')) {
                     return null;
                 }
 
@@ -87,15 +88,15 @@ CODE_SAMPLE
             });
 
             if ($foundTarget) {
-                $siteTreeClassConst = $this->nodeFactory->createClassConstFetch('SilverStripe\CMS\Model\SiteTree', 'class');
+                $siteTreeClassConst = $this->nodeFactory->createClassConstFetch(\SilverStripe\CMS\Model\SiteTree::class, 'class');
                 $classesVar = new Variable('classes');
 
                 $assign = new Assign(
                     $classesVar,
-                    $this->nodeFactory->createStaticCall('SilverStripe\Core\ClassInfo', 'getValidSubClasses', [$siteTreeClassConst])
+                    $this->nodeFactory->createStaticCall(\SilverStripe\Core\ClassInfo::class, 'getValidSubClasses', [$siteTreeClassConst])
                 );
                 
-                $singletonCall = $this->nodeFactory->createStaticCall('SilverStripe\ORM\DataObject', 'singleton', [$siteTreeClassConst]);
+                $singletonCall = $this->nodeFactory->createStaticCall(\SilverStripe\ORM\DataObject::class, 'singleton', [$siteTreeClassConst]);
                 $invokeCall = $this->nodeFactory->createMethodCall($singletonCall, 'invokeWithExtensions', [
                     'updateAllowedSubClasses',
                     $classesVar

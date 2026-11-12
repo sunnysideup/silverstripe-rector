@@ -14,12 +14,13 @@ use PhpParser\Node\Param;
 use PhpParser\Node\Stmt\Class_;
 use PHPStan\Type\ObjectType;
 use Rector\Rector\AbstractRector;
-use Symplify\RuleDocGenerator\ValueObject\CodeSample\CodeSample;
-use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
+use Rector\RuleDoc\Contract\DocumentedRuleInterface;
+use Rector\RuleDoc\CodeSample\CodeSample;
+use Rector\RuleDoc\RuleDefinition;
 
-final class FactoryCreateMethodSignatureRector extends AbstractRector
+final class FactoryCreateMethodSignatureRector extends AbstractRector implements DocumentedRuleInterface
 {
-    public function getDefinition(): RuleDefinition
+    public function getRuleDefinition(): RuleDefinition
     {
         return new RuleDefinition(
             'Ensures create() method on Injector Factories is public, has correct parameters, and returns ?object',

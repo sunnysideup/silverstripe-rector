@@ -10,12 +10,13 @@ use PhpParser\Node\Stmt\Class_;
 use PhpParser\Node\Stmt\ClassMethod;
 use PHPStan\Type\ObjectType;
 use Rector\Rector\AbstractRector;
-use Symplify\RuleDocGenerator\ValueObject\CodeSample\CodeSample;
-use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
+use Rector\RuleDoc\Contract\DocumentedRuleInterface;
+use Rector\RuleDoc\CodeSample\CodeSample;
+use Rector\RuleDoc\RuleDefinition;
 
-final class ModelDataForTemplateReturnTypeRector extends AbstractRector
+final class ModelDataForTemplateReturnTypeRector extends AbstractRector implements DocumentedRuleInterface
 {
-    public function getDefinition(): RuleDefinition
+    public function getRuleDefinition(): RuleDefinition
     {
         return new RuleDefinition(
             'Adds strict string return type to forTemplate() on all ModelData subclasses (including DBField, DataObject, etc.)',
@@ -63,10 +64,10 @@ CODE_SAMPLE
         // This makes the rule highly resilient to autoloader failures and isolated test environments.
         $targetClasses = [
             'SilverStripe\Model\ModelData',
-            'SilverStripe\View\ViewableData',
+            \SilverStripe\View\ViewableData::class,
             'SilverStripe\ORM\FieldType\DBField',
-            'SilverStripe\ORM\DataObject',
-            'SilverStripe\CMS\Model\SiteTree'
+            \SilverStripe\ORM\DataObject::class,
+            \SilverStripe\CMS\Model\SiteTree::class
         ];
 
         $isMatch = false;
@@ -88,7 +89,7 @@ CODE_SAMPLE
         }
 
         // If it already has exactly a 'string' return type, skip to prevent infinite loops
-        if ($method->returnType !== null && $this->isName($method->returnType, 'string')) {
+        if ($method->returnType instanceof \PhpParser\Node && $this->isName($method->returnType, 'string')) {
             return null;
         }
 

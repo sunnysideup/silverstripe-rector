@@ -15,12 +15,13 @@ use PhpParser\Node\Stmt\Class_;
 use PhpParser\Node\UnionType;
 use PHPStan\Type\ObjectType;
 use Rector\Rector\AbstractRector;
-use Symplify\RuleDocGenerator\ValueObject\CodeSample\CodeSample;
-use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
+use Rector\RuleDoc\Contract\DocumentedRuleInterface;
+use Rector\RuleDoc\CodeSample\CodeSample;
+use Rector\RuleDoc\RuleDefinition;
 
-final class DBFieldSetValueSignatureRector extends AbstractRector
+final class DBFieldSetValueSignatureRector extends AbstractRector implements DocumentedRuleInterface
 {
-    public function getDefinition(): RuleDefinition
+    public function getRuleDefinition(): RuleDefinition
     {
         return new RuleDefinition(
             'Ensures setValue() method on classes extending DBField has the correct PHP 8 signature',
@@ -81,10 +82,12 @@ CODE_SAMPLE
             if ($params[0]->type === null || ! $this->isName($params[0]->type, 'mixed')) {
                 $needsParamUpdate = true;
             }
+
             // Check Param 1: null|array|ModelData
             if (! $params[1]->type instanceof UnionType || count($params[1]->type->types) !== 3) {
                 $needsParamUpdate = true;
             }
+
             // Check Param 2: bool
             if ($params[2]->type === null || ! $this->isName($params[2]->type, 'bool')) {
                 $needsParamUpdate = true;

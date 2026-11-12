@@ -15,13 +15,14 @@ use PhpParser\Node\Identifier;
 use PhpParser\Modifiers;
 use PHPStan\Type\ObjectType;
 use Rector\Rector\AbstractRector;
-use Symplify\RuleDocGenerator\ValueObject\CodeSample\CodeSample;
-use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
+use Rector\RuleDoc\Contract\DocumentedRuleInterface;
+use Rector\RuleDoc\CodeSample\CodeSample;
+use Rector\RuleDoc\RuleDefinition;
 
 /**
  * @see \Netwerkstatt\SilverstripeRector\Tests\CMS\AddScaffoldCmsFieldsSettingsRector\AddScaffoldCmsFieldsSettingsRectorTest
  */
-final class AddScaffoldCmsFieldsSettingsRector extends AbstractRector
+final class AddScaffoldCmsFieldsSettingsRector extends AbstractRector implements DocumentedRuleInterface
 {
     public function getRuleDefinition(): RuleDefinition
     {
@@ -73,12 +74,12 @@ CODE_SAMPLE
         $className = $this->getName($node);
         
         // Skip modifying the core framework classes themselves
-        if ($className === 'SilverStripe\CMS\Model\SiteTree' || $className === 'SilverStripe\Core\Extension') {
+        if ($className === \SilverStripe\CMS\Model\SiteTree::class || $className === \SilverStripe\Core\Extension::class) {
             return null;
         }
 
-        $isSiteTree = $this->isObjectType($node, new ObjectType('SilverStripe\CMS\Model\SiteTree'));
-        $isExtension = $this->isObjectType($node, new ObjectType('SilverStripe\Core\Extension'));
+        $isSiteTree = $this->isObjectType($node, new ObjectType(\SilverStripe\CMS\Model\SiteTree::class));
+        $isExtension = $this->isObjectType($node, new ObjectType(\SilverStripe\Core\Extension::class));
         
         $isTarget = $isSiteTree;
         if ($isExtension) {
@@ -109,7 +110,7 @@ CODE_SAMPLE
 
         foreach ($propertiesToCheck as $propName) {
             $property = $class->getProperty($propName);
-            if (!$property) {
+            if (!$property instanceof \PhpParser\Node\Stmt\Property) {
                 continue;
             }
 

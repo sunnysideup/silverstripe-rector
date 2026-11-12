@@ -16,14 +16,15 @@ use PhpParser\Node\Scalar\String_;
 use PhpParser\Node\Stmt\Expression;
 use PHPStan\Type\ObjectType;
 use Rector\Rector\AbstractRector;
+use Rector\RuleDoc\Contract\DocumentedRuleInterface;
 use Rector\PhpParser\Enum\NodeGroup;
-use Symplify\RuleDocGenerator\ValueObject\CodeSample\CodeSample;
-use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
+use Rector\RuleDoc\CodeSample\CodeSample;
+use Rector\RuleDoc\RuleDefinition;
 
 /**
  * @see \Netwerkstatt\SilverstripeRector\Tests\BuildTask\MigrateTaskRunToPolyExecutionRector\MigrateTaskRunToPolyExecutionRectorTest
  */
-final class MigrateTaskRunToPolyExecutionRector extends AbstractRector
+final class MigrateTaskRunToPolyExecutionRector extends AbstractRector implements DocumentedRuleInterface
 {
     public function getRuleDefinition(): RuleDefinition
     {
@@ -52,7 +53,10 @@ CODE
     }
 
     /**
-     * @param StmtsAwareInterface $node
+     * @param Node\Stmt\Block|Node\Expr\Closure|Node\Stmt\Case_|Node\Stmt\Catch_|Node\Stmt\ClassMethod
+     *     |Node\Stmt\Do_|Node\Stmt\Else_|Node\Stmt\ElseIf_|Node\Stmt\Finally_|Node\Stmt\For_
+     *     |Node\Stmt\Foreach_|Node\Stmt\Function_|Node\Stmt\If_|Node\Stmt\Namespace_|Node\Stmt\TryCatch
+     *     |Node\Stmt\While_|\Rector\PhpParser\Node\FileNode|Node\Stmt\Declare_ $node
      */
     public function refactor(Node $node): ?Node
     {
@@ -85,12 +89,10 @@ CODE
                     $methodName = $this->getName($expr->name);
 
                     if ($varName !== null && $methodName !== null) {
-                        if (!isset($taskVars[$varName])) {
-                            $taskVars[$varName] = [
-                                'isTask' => $this->isTaskType($expr->var),
-                                'setterIndices' => []
-                            ];
-                        }
+                        $taskVars[$varName] ??= [
+                            'isTask' => $this->isTaskType($expr->var),
+                            'setterIndices' => []
+                        ];
 
                         if ($taskVars[$varName]['isTask']) {
                             if (str_starts_with($methodName, 'set')) {
@@ -166,12 +168,12 @@ CODE
 
     private function isTaskType(Node $expr): bool
     {
-        if ($this->isObjectType($expr, new ObjectType('SilverStripe\Dev\BuildTask'))) {
+        if ($this->isObjectType($expr, new ObjectType(\SilverStripe\Dev\BuildTask::class))) {
             return true;
         }
 
         if ($expr instanceof StaticCall && $this->isName($expr->name, 'create')) {
-            return $this->isObjectType($expr->class, new ObjectType('SilverStripe\Dev\BuildTask'));
+            return $this->isObjectType($expr->class, new ObjectType(\SilverStripe\Dev\BuildTask::class));
         }
 
         return false;

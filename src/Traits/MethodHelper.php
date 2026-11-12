@@ -24,8 +24,25 @@ use PHPStan\Type\UnionType;
 trait MethodHelper
 {
     /**
+     * Hook for rename-capable rules (RenamedTo, ReplacedWith, UseInstead): they override this to derive the
+     * new method name from the change note. By default no automatic rename happens.
+     */
+    private function extractNewMethodName(string $note): ?string
+    {
+        return null;
+    }
+
+    /**
+     * Strict (conservative) variant of extractNewMethodName(); overridden by the rename-capable rules.
+     */
+    private function extractStrictNewMethodName(string $note): ?string
+    {
+        return null;
+    }
+
+    /**
      * Checks if an actual class is the same as or a subclass of a configured class.
-     * 
+     *
      * Performs case-insensitive comparison and handles both fully qualified class names
      * and short class names. Uses reflection to check inheritance hierarchy.
      *
@@ -38,8 +55,7 @@ trait MethodHelper
         $actualClass = ltrim($actualClass, '\\');
         $configuredClass = ltrim($configuredClass, '\\');
 
-        if (
-            strcasecmp($actualClass, $configuredClass) === 0 ||
+        if (strcasecmp($actualClass, $configuredClass) === 0 ||
             str_ends_with(strtolower($actualClass), '\\' . strtolower($configuredClass))
         ) {
             return true;
@@ -60,8 +76,7 @@ trait MethodHelper
                 continue;
             }
 
-            if (
-                str_ends_with(strtolower($candidate), '\\' . strtolower($configuredClass)) ||
+            if (str_ends_with(strtolower($candidate), '\\' . strtolower($configuredClass)) ||
                 strcasecmp($candidate, $configuredClass) === 0
             ) {
                 return true;
@@ -73,7 +88,7 @@ trait MethodHelper
 
     /**
      * Builds a TODO comment line with class and method information.
-     * 
+     *
      * Creates a formatted TODO line for Silverstripe upgrades, displaying the short
      * class name with the full FQCN in parentheses if different. Includes method name
      * if provided.
@@ -90,6 +105,7 @@ trait MethodHelper
         if ($displayClass !== $className) {
             $note .= " FQCN: ({$className})";
         }
+
         if ($methodName === '') {
             return trim(sprintf('@TODO SSU RECTOR UPGRADE TASK - %s: %s', $displayClass, $note));
         }
@@ -99,7 +115,7 @@ trait MethodHelper
 
     /**
      * Safely appends a TODO comment to a node with idempotency check.
-     * 
+     *
      * Adds a line comment to the node only if the same TODO doesn't already exist.
      * Preserves existing comments and appends the new comment to the array.
      *
@@ -134,7 +150,7 @@ trait MethodHelper
 
     /**
      * Checks if a PHPStan type is unknown or indeterminate.
-     * 
+     *
      * Identifies types that cannot be reliably analyzed (MixedType, ErrorType,
      * or ObjectWithoutClassType).
      *
@@ -144,13 +160,12 @@ trait MethodHelper
     private function isUnknownType(Type $type): bool
     {
         return $type instanceof MixedType
-            || $type instanceof ErrorType
-            || $type instanceof ObjectWithoutClassType;
+            || ($type->isObject()->yes() && $type->getObjectClassNames() === []);
     }
     
     /**
      * Extracts the method name from a method call, nullsafe method call, or static call.
-     * 
+     *
      * Returns the method name as a string if it's an Identifier, otherwise returns null
      * for dynamic method calls.
      *
@@ -162,12 +177,13 @@ trait MethodHelper
         if ($call->name instanceof Identifier) {
             return $call->name->toString();
         }
+
         return null;
     }
 
     /**
      * Main refactor method that delegates to specific refactoring methods.
-     * 
+     *
      * Routes the node to either refactorExpression or refactorClassMethod based
      * on the node type.
      *
@@ -185,7 +201,7 @@ trait MethodHelper
 
     /**
      * Checks if a method call matches the configured target class.
-     * 
+     *
      * For static calls, checks the class name directly. For instance calls, resolves
      * the receiver type and matches it against the configured class. Handles unknown
      * types based on the 'u' flag in the change configuration.
@@ -201,6 +217,7 @@ trait MethodHelper
             if ($classNode instanceof Name) {
                 return $this->isClassSameOrSubclassOfConfigured($classNode->toString(), (string) $change['c']);
             }
+
             return false;
         }
 
@@ -215,7 +232,7 @@ trait MethodHelper
 
     /**
      * Recursively matches a PHPStan type against a configured class name.
-     * 
+     *
      * Handles UnionTypes by checking each constituent type. For ObjectTypes,
      * delegates to isClassSameOrSubclassOfConfigured for inheritance checking.
      *
@@ -231,19 +248,22 @@ trait MethodHelper
                     return true;
                 }
             }
+
             return false;
         }
 
-        if (!$type instanceof ObjectType) {
-            return false;
+        foreach ($type->getObjectClassNames() as $className) {
+            if ($this->isClassSameOrSubclassOfConfigured($className, $configuredClass)) {
+                return true;
+            }
         }
 
-        return $this->isClassSameOrSubclassOfConfigured($type->getClassName(), $configuredClass);
+        return false;
     }
 
     /**
      * Configures the rector rule with an array of method changes.
-     * 
+     *
      * Normalizes the configuration array, ensuring each change has 'c' (class),
      * 'm' (method), 'n' (note), and optionally 'u' (unknown type flag) keys.
      *
@@ -269,7 +289,7 @@ trait MethodHelper
 
     /**
      * Refactors Expression nodes containing method calls by adding TODO comments.
-     * 
+     *
      * Checks if the expression contains a method call that matches any configured changes.
      * If a match is found, adds a TODO comment. Optionally renames the method if withRename
      * is true and a new method name can be extracted from the note.
@@ -307,6 +327,7 @@ trait MethodHelper
             if ($this->appendTodoDocCommentSafely($expression, $todoLine)) {
                 $changed = true;
             }
+
             if ($withRename) {
                 // Attempt auto-fix renaming
                 $newName = $this->extractNewMethodName($change['n']);
@@ -322,7 +343,7 @@ trait MethodHelper
 
     /**
      * Returns the AST node types that this rector rule operates on.
-     * 
+     *
      * Targets Expression nodes (for method call sites) and ClassMethod nodes
      * (for method declarations).
      *
@@ -339,7 +360,7 @@ trait MethodHelper
 
     /**
      * Refactors ClassMethod nodes by adding TODO comments and optionally renaming.
-     * 
+     *
      * Checks if the class method belongs to a class that matches any configured changes.
      * If a match is found, adds a TODO comment. Optionally renames the method if withRename
      * is true and a strict new method name can be extracted.
@@ -350,15 +371,11 @@ trait MethodHelper
      */
     private function refactorClassMethod(ClassMethod $classMethod, ?bool $withRename = false): ?Node
     {
-        if (!$classMethod->name instanceof Identifier) {
-            return null;
-        }
-
         // Fetch scope dynamically here
         $scope = ScopeFetcher::fetch($classMethod);
         $classReflection = $scope->getClassReflection();
 
-        if ($classReflection === null) {
+        if (!$classReflection instanceof \PHPStan\Reflection\ClassReflection) {
             return null;
         }
 
@@ -382,6 +399,7 @@ trait MethodHelper
             if ($this->appendTodoDocCommentSafely($classMethod, $todoLine)) {
                 $changed = true;
             }
+
             if ($withRename) {
                 // Attempt strict, conservative auto-fix
                 $newName = $this->extractStrictNewMethodName($change['n']);
@@ -397,7 +415,7 @@ trait MethodHelper
 
     /**
      * Alternative version of refactorClassMethod without the withRename parameter.
-     * 
+     *
      * Refactors ClassMethod nodes by adding TODO comments and attempting strict method
      * renaming. This appears to be a duplicate method with hardcoded behavior.
      *
@@ -406,15 +424,11 @@ trait MethodHelper
      */
     private function refactorClassMethod2(ClassMethod $classMethod): ?Node
     {
-        if (!$classMethod->name instanceof Identifier) {
-            return null;
-        }
-
         // Fetch scope dynamically here
         $scope = ScopeFetcher::fetch($classMethod);
         $classReflection = $scope->getClassReflection();
 
-        if ($classReflection === null) {
+        if (!$classReflection instanceof \PHPStan\Reflection\ClassReflection) {
             return null;
         }
 

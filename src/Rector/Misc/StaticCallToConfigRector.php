@@ -30,29 +30,8 @@ final class StaticCallToConfigRector extends AbstractRector implements
      */
     private $classMethodCallMap = [];
 
-    /**
-     * @var DocBlockUpdater
-     */
-    private $docBlockUpdater;
-
-    /**
-     * @var PhpDocInfoFactory
-     */
-    private $phpDocInfoFactory;
-
-    /**
-     * @var BetterNodeFinder
-     */
-    private $betterNodeFinder;
-
-    public function __construct(
-        DocBlockUpdater $docBlockUpdater,
-        PhpDocInfoFactory $phpDocInfoFactory,
-        BetterNodeFinder $betterNodeFinder
-    ) {
-        $this->docBlockUpdater = $docBlockUpdater;
-        $this->phpDocInfoFactory = $phpDocInfoFactory;
-        $this->betterNodeFinder = $betterNodeFinder;
+    public function __construct(private readonly DocBlockUpdater $docBlockUpdater, private readonly PhpDocInfoFactory $phpDocInfoFactory, private readonly BetterNodeFinder $betterNodeFinder)
+    {
     }
 
     public function getRuleDefinition(): RuleDefinition

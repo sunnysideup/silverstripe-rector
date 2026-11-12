@@ -11,13 +11,14 @@ use PhpParser\Node\Stmt\Return_;
 use PhpParser\Modifiers;
 use PHPStan\Type\ObjectType;
 use Rector\Rector\AbstractRector;
-use Symplify\RuleDocGenerator\ValueObject\CodeSample\CodeSample;
-use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
+use Rector\RuleDoc\Contract\DocumentedRuleInterface;
+use Rector\RuleDoc\CodeSample\CodeSample;
+use Rector\RuleDoc\RuleDefinition;
 
 /**
  * @see \Netwerkstatt\SilverstripeRector\Tests\Forms\FormFieldCompositeDatabaseFieldsReturnTypeRector\FormFieldCompositeDatabaseFieldsReturnTypeRectorTest
  */
-final class FormFieldCompositeDatabaseFieldsReturnTypeRector extends AbstractRector
+final class FormFieldCompositeDatabaseFieldsReturnTypeRector extends AbstractRector implements DocumentedRuleInterface
 {
     public function getRuleDefinition(): RuleDefinition
     {
@@ -55,7 +56,7 @@ CODE_SAMPLE
      */
     public function refactor(Node $node): ?Node
     {
-        if (!$this->isObjectType($node, new ObjectType('SilverStripe\Forms\FormField'))) {
+        if (!$this->isObjectType($node, new ObjectType(\SilverStripe\Forms\FormField::class))) {
             return null;
         }
 

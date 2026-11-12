@@ -20,6 +20,7 @@ trait MethodChangeHelper
             $list[$key]['c'] = self::SHORT_TO_LONG_CLASS_NAME[$values['c']] ?? $values['c'];
             $list[$key]['u'] = self::METHODS_AND_UNIQUENESS[$values['m']] ?? false;
         }
+
         return $list;
     }
 
@@ -34,7 +35,7 @@ trait MethodChangeHelper
         $missing = [];
         foreach ($list as $className) {
             // echo 'Checking ' . $className . ' ... ' . PHP_EOL;
-            if (strpos($className, '\\') === false) {
+            if (!str_contains($className, '\\')) {
                 if (! isset(self::SHORT_TO_LONG_CLASS_NAME[$className])) {
                     $missing[] = $className;
                 } else {
@@ -44,6 +45,7 @@ trait MethodChangeHelper
                 // echo '... ' . $className . ' ... OK' . PHP_EOL;
             }
         }
+
         return $missing;
     }
 
@@ -61,6 +63,7 @@ trait MethodChangeHelper
         foreach ($list as $key => $values) {
             $list[$key] = self::METHODS_AND_UNIQUENESS[$values['m']] ?? false;
         }
+
         return $list;
     }
 
@@ -86,6 +89,7 @@ trait MethodChangeHelper
                 $out[$row[$fieldName]] = $row[$fieldName];
             }
         }
+
         asort($out);
 
         return $out;
@@ -100,14 +104,14 @@ trait MethodChangeHelper
         'AssetAdminFile' => 'SilverStripe\\AssetAdmin\\Controller\\AssetAdminFile',
         'AssetFormFactory' => 'SilverStripe\\AssetAdmin\\Controller\\AssetFormFactory',
         'Authenticator' => 'SilverStripe\\Security\\Authenticator',
-        'BaseElement' => 'DNADesign\\Elemental\\Models\\BaseElement',
+        'BaseElement' => \DNADesign\Elemental\Models\BaseElement::class,
         'BaseElementSubsites' => 'DNADesign\\ElementalSubsites\\Extensions\\BaseElementSubsites',
         'BasicAuth' => 'SilverStripe\\Security\\BasicAuth',
         'BlogObject' => 'SilverStripe\\Blog\\Model\\BlogObject',
         'BlogPost' => 'SilverStripe\\Blog\\Model\\BlogPost',
         'BlogPostFilter' => 'SilverStripe\\Blog\\Model\\BlogPostFilter',
-        'BuildTask' => 'SilverStripe\\Dev\\BuildTask',
-        'CMSMain' => 'SilverStripe\\CMS\\Controllers\\CMSMain',
+        'BuildTask' => \SilverStripe\Dev\BuildTask::class,
+        'CMSMain' => \SilverStripe\CMS\Controllers\CMSMain::class,
         'CMSPageAddControllerExtension' => 'SilverStripe\\CMS\\Controllers\\CMSPageAddControllerExtension',
         'CMSPageEditController' => 'SilverStripe\\CMS\\Controllers\\CMSPageEditController',
         'CMSEditLinkExtension' => 'SilverStripe\\Admin\\CMSEditLinkExtension',
@@ -128,7 +132,7 @@ trait MethodChangeHelper
         'ClientConfigProvider' => 'SilverStripe\\Admin\\ClientConfigProvider',
         'ConfirmedPasswordField' => 'SilverStripe\\Forms\\ConfirmedPasswordField',
         'ContentController' => 'SilverStripe\\CMS\\Controllers\\ContentController',
-        'Controller' => 'SilverStripe\\Control\\Controller',
+        'Controller' => \SilverStripe\Control\Controller::class,
         'Convert' => 'SilverStripe\\Core\\Convert',
         'CopyMethod' => 'SilverStripe\\VendorPlugin\\Methods\\CopyMethod',
         'CoreConfigFactory' => 'SilverStripe\\Core\\Config\\CoreConfigFactory',
@@ -137,8 +141,8 @@ trait MethodChangeHelper
         'CookieJar' => 'SilverStripe\\Control\\CookieJar',
         'Cookie_Backend' => 'SilverStripe\\Control\\Cookie_Backend',
         'CredentialRepositoryProviderTrait' => 'SilverStripe\\Security\\CredentialRepositoryProviderTrait',
-        'DataList' => 'SilverStripe\\ORM\\DataList',
-        'DataObject' => 'SilverStripe\\ORM\\DataObject',
+        'DataList' => \SilverStripe\ORM\DataList::class,
+        'DataObject' => \SilverStripe\ORM\DataObject::class,
         'DataObjectInterface' => 'SilverStripe\\ORM\\DataObjectInterface',
         'DataObjectVersionFormFactory' => 'SilverStripe\\VersionedAdmin\\Forms\\DataObjectVersionFormFactory',
         'DataQuery' => 'SilverStripe\\ORM\\DataQuery',
@@ -152,7 +156,7 @@ trait MethodChangeHelper
         'DBDate' => 'SilverStripe\\ORM\\FieldType\\DBDate',
         'DBDatetime' => 'SilverStripe\\ORM\\FieldType\\DBDatetime',
         'DBDecimal' => 'SilverStripe\\ORM\\FieldType\\DBDecimal',
-        'DBEnum' => 'SilverStripe\\ORM\\FieldType\\DBEnum',
+        'DBEnum' => \SilverStripe\ORM\FieldType\DBEnum::class,
         'DBField' => 'SilverStripe\\ORM\\FieldType\\DBField',
         'DBFile' => 'SilverStripe\\Assets\\Storage\\DBFile',
         'DBFloat' => 'SilverStripe\\ORM\\FieldType\\DBFloat',
@@ -171,9 +175,9 @@ trait MethodChangeHelper
         'DefaultCacheFactory' => 'SilverStripe\\Core\\Cache\\DefaultCacheFactory',
         'DefaultPermissionChecker' => 'SilverStripe\\Security\\DefaultPermissionChecker',
         'Deprecation' => 'SilverStripe\\Dev\\Deprecation',
-        'DevelopmentAdmin' => 'SilverStripe\\Dev\\DevelopmentAdmin',
-        'Director' => 'SilverStripe\\Control\\Director',
-        'EagerLoadedList' => 'SilverStripe\\ORM\\EagerLoadedList',
+        'DevelopmentAdmin' => \SilverStripe\Dev\DevelopmentAdmin::class,
+        'Director' => \SilverStripe\Control\Director::class,
+        'EagerLoadedList' => \SilverStripe\ORM\EagerLoadedList::class,
         'EditableFileField' => 'SilverStripe\\UserForms\\Model\\EditableFormField\\EditableFileField',
         'EditableFormField' => 'SilverStripe\\UserForms\\Model\\EditableFormField',
         'EditFormFactory' => 'SilverStripe\\Admin\\Forms\\EditFormFactory',
@@ -189,7 +193,7 @@ trait MethodChangeHelper
         'ErrorPageSubsite' => 'SilverStripe\\Subsites\\Extensions\\ErrorPageSubsite',
         'Factory' => 'SilverStripe\\Core\\Injector\\Factory',
         'FieldFilterInterface' => 'SilverStripe\\Forms\\FieldFilterInterface',
-        'FieldList' => 'SilverStripe\\Forms\\FieldList',
+        'FieldList' => \SilverStripe\Forms\FieldList::class,
         'File' => 'SilverStripe\\Assets\\File',
         'FileLinkTracking' => 'SilverStripe\\CMS\\Model\\FileLinkTracking',
         'FileSearchFormFactory' => 'SilverStripe\\AssetAdmin\\Forms\\FileSearchFormFactory',
@@ -214,7 +218,7 @@ trait MethodChangeHelper
         'FolderFormFactoryExtension' => 'SilverStripe\\AssetAdmin\\Extensions\\FolderFormFactoryExtension',
         'Form' => 'SilverStripe\\Forms\\Form',
         'FormFactory' => 'SilverStripe\\Forms\\FormFactory',
-        'FormField' => 'SilverStripe\\Forms\\FormField',
+        'FormField' => \SilverStripe\Forms\FormField::class,
         'FormRequestHandler' => 'SilverStripe\\Forms\\FormRequestHandler',
         'FormSchema' => 'SilverStripe\\Forms\\Schema\\FormSchema',
         'GridFieldAddNewMultiClassHandlerExtension' => 'SilverStripe\\VersionedAdmin\\Extensions\\GridFieldAddNewMultiClassHandlerExtension',
@@ -246,7 +250,7 @@ trait MethodChangeHelper
         'InterventionBackend' => 'SilverStripe\\Assets\\InterventionBackend',
         'i18nTextCollector' => 'SilverStripe\\i18n\\TextCollection\\i18nTextCollector',
         'i18nTextCollectorTask' => 'SilverStripe\\i18n\\TextCollection\\i18nTextCollectorTask',
-        'LeftAndMain' => 'SilverStripe\\Admin\\LeftAndMain',
+        'LeftAndMain' => \SilverStripe\Admin\LeftAndMain::class,
         'LeftAndMainBatchActionsExtension' => 'SilverStripe\\CMS\\Controllers\\LeftAndMainBatchActionsExtension',
         'LeftAndMainSubsites' => 'SilverStripe\\Subsites\\Extensions\\LeftAndMainSubsites',
         'Link' => 'SilverStripe\\LinkField\\Models\\Link',
@@ -261,7 +265,7 @@ trait MethodChangeHelper
         'MigrationTask' => 'SilverStripe\\Dev\\MigrationTask',
         'MigrationTaskTrait' => 'SilverStripe\\LinkField\\Tasks\\MigrationTaskTrait',
         'ModalController' => 'SilverStripe\\Admin\\ModalController',
-        'ModelAdmin' => 'SilverStripe\\Admin\\ModelAdmin',
+        'ModelAdmin' => \SilverStripe\Admin\ModelAdmin::class,
         'ModuleManifest' => 'SilverStripe\\Core\\Manifest\\ModuleManifest',
         'MoneyField' => 'SilverStripe\\Forms\\MoneyField',
         'NotifyUsersWorkflowAction' => 'Symbiote\\AdvancedWorkflow\\Actions\\NotifyUsersWorkflowAction',
@@ -278,7 +282,7 @@ trait MethodChangeHelper
         'RememberLoginHashExtension' => 'SilverStripe\\SessionManager\\Extensions\\RememberLoginHashExtension',
         'RecursivePublishable' => 'SilverStripe\\Versioned\\RecursivePublishable',
         'RecursivePublishableHandler' => 'SilverStripe\\Versioned\\RecursivePublishableHandler',
-        'Relation' => 'SilverStripe\\ORM\\Relation',
+        'Relation' => \SilverStripe\ORM\Relation::class,
         'RemoteFileModalExtension' => 'SilverStripe\\AssetAdmin\\Extensions\\RemoteFileModalExtension',
         'ReorderElements' => 'DNADesign\\Elemental\\Extensions\\ReorderElements',
         'RequirementsExtension' => 'SilverStripe\\MFA\\Extension\\RequirementsExtension',
@@ -292,7 +296,7 @@ trait MethodChangeHelper
         'SiteConfig' => 'SilverStripe\\SiteConfig\\SiteConfig',
         'SiteConfigLeftAndMain' => 'SilverStripe\\SiteConfig\\SiteConfigLeftAndMain',
         'SiteConfigSubsites' => 'SilverStripe\\Subsites\\Extensions\\SiteConfigSubsites',
-        'SiteTree' => 'SilverStripe\\CMS\\Model\\SiteTree',
+        'SiteTree' => \SilverStripe\CMS\Model\SiteTree::class,
         'SiteTreeExtension' => 'SilverStripe\\CMS\\Model\\SiteTreeExtension',
         'SiteTreeLinkTracking' => 'SilverStripe\\CMS\\Model\\SiteTreeLinkTracking',
         'SiteTreePublishingEngine' => 'SilverStripe\\StaticPublishQueue\\Extension\\Engine\\SiteTreePublishingEngine',

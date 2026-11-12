@@ -10,10 +10,11 @@ use PhpParser\Node\Stmt\Class_;
 use PhpParser\Node\Stmt\ClassMethod;
 use PHPStan\Type\ObjectType;
 use Rector\Rector\AbstractRector;
-use Symplify\RuleDocGenerator\ValueObject\CodeSample\CodeSample;
-use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
+use Rector\RuleDoc\Contract\DocumentedRuleInterface;
+use Rector\RuleDoc\CodeSample\CodeSample;
+use Rector\RuleDoc\RuleDefinition;
 
-final class AddVoidReturnTypeToSaveIntoRector extends AbstractRector
+final class AddVoidReturnTypeToSaveIntoRector extends AbstractRector implements DocumentedRuleInterface
 {
     public function getRuleDefinition(): RuleDefinition
     {
@@ -68,7 +69,7 @@ CODE_SAMPLE
         }
 
         // Skip if it already has a return type to prevent infinite loop
-        if ($method->returnType !== null) {
+        if ($method->returnType instanceof \PhpParser\Node) {
             return null;
         }
 

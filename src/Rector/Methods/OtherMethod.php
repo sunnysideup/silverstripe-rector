@@ -25,12 +25,14 @@ use PHPStan\Type\Type;
 use PHPStan\Type\UnionType;
 use Rector\Contract\Rector\ConfigurableRectorInterface;
 use Rector\Rector\AbstractRector;
-use Symplify\RuleDocGenerator\ValueObject\CodeSample\ConfiguredCodeSample;
-use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
+use Rector\RuleDoc\Contract\DocumentedRuleInterface;
+use Rector\RuleDoc\CodeSample\ConfiguredCodeSample;
+use Rector\RuleDoc\RuleDefinition;
 
-final class OtherMethod extends AbstractRector implements ConfigurableRectorInterface
+final class OtherMethod extends AbstractRector implements ConfigurableRectorInterface, DocumentedRuleInterface
 {
     use MethodHelper;
+
     /**
      * @var array<int, array{c: string, m: string, n: string, u?: bool}>
      */
@@ -38,7 +40,8 @@ final class OtherMethod extends AbstractRector implements ConfigurableRectorInte
 
     public function __construct(
         private readonly ReflectionProvider $reflectionProvider
-    ) {}
+    ) {
+    }
 
     public function getRuleDefinition(): RuleDefinition
     {
@@ -145,15 +148,11 @@ CODE_SAMPLE,
 
     private function refactorClassMethod(ClassMethod $classMethod): ?Node
     {
-        if (!$classMethod->name instanceof Identifier) {
-            return null;
-        }
-
         // Fetch scope dynamically here
         $scope = ScopeFetcher::fetch($classMethod);
         $classReflection = $scope->getClassReflection();
 
-        if ($classReflection === null) {
+        if (!$classReflection instanceof \PHPStan\Reflection\ClassReflection) {
             return null;
         }
 
@@ -219,6 +218,7 @@ CODE_SAMPLE,
                 $className = $this->getName($classNode) ?? $classNode->toString();
                 return $this->isClassSameOrSubclassOfConfigured($className, (string) $change['c']);
             }
+
             return false;
         }
 
@@ -230,6 +230,4 @@ CODE_SAMPLE,
 
         return $this->matchesTypeAgainstConfiguredClass($receiverType, (string) $change['c']);
     }
-
-
 }

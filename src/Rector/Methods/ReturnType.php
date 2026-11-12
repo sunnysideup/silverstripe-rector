@@ -24,12 +24,14 @@ use PHPStan\Type\Type;
 use PHPStan\Type\UnionType;
 use Rector\Contract\Rector\ConfigurableRectorInterface;
 use Rector\Rector\AbstractRector;
-use Symplify\RuleDocGenerator\ValueObject\CodeSample\ConfiguredCodeSample;
-use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
+use Rector\RuleDoc\Contract\DocumentedRuleInterface;
+use Rector\RuleDoc\CodeSample\ConfiguredCodeSample;
+use Rector\RuleDoc\RuleDefinition;
 
-final class ReturnType extends AbstractRector implements ConfigurableRectorInterface
+final class ReturnType extends AbstractRector implements ConfigurableRectorInterface, DocumentedRuleInterface
 {
     use MethodHelper;
+
     /**
      * @var array<int, array{c: string, m: string, n: string, u?: bool}>
      */
@@ -37,7 +39,8 @@ final class ReturnType extends AbstractRector implements ConfigurableRectorInter
 
     public function __construct(
         private readonly ReflectionProvider $reflectionProvider
-    ) {}
+    ) {
+    }
 
     public function getRuleDefinition(): RuleDefinition
     {
@@ -57,6 +60,4 @@ CODE_SAMPLE,
             ]
         );
     }
-
-
 }

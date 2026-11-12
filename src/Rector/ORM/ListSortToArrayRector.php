@@ -93,7 +93,7 @@ CODE_SAMPLE
         $sortString = $arg0->value;
         
         // Handle SQL functions or complex expressions - skip them
-        if (strpos($sortString, '(') !== false || strpos($sortString, ')') !== false) {
+        if (str_contains($sortString, '(') || str_contains($sortString, ')')) {
             return null;
         }
 

@@ -12,12 +12,13 @@ use PhpParser\Node\Identifier;
 use PhpParser\Node\Stmt\Class_;
 use PHPStan\Type\ObjectType;
 use Rector\Rector\AbstractRector;
-use Symplify\RuleDocGenerator\ValueObject\CodeSample\CodeSample;
-use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
+use Rector\RuleDoc\Contract\DocumentedRuleInterface;
+use Rector\RuleDoc\CodeSample\CodeSample;
+use Rector\RuleDoc\RuleDefinition;
 
-final class FormFieldValueToGetValueRector extends AbstractRector
+final class FormFieldValueToGetValueRector extends AbstractRector implements DocumentedRuleInterface
 {
-    public function getDefinition(): RuleDefinition
+    public function getRuleDefinition(): RuleDefinition
     {
         return new RuleDefinition(
             'Renames Value() and value() methods to getValue(): mixed for classes extending FormField. 
@@ -65,7 +66,7 @@ CODE_SAMPLE
     public function refactor(Node $node): ?Node
     {
         if ($node instanceof Class_) {
-            if (! $this->isObjectType($node, new ObjectType('SilverStripe\Forms\FormField'))) {
+            if (! $this->isObjectType($node, new ObjectType(\SilverStripe\Forms\FormField::class))) {
                 return null;
             }
 
@@ -73,7 +74,6 @@ CODE_SAMPLE
             foreach ($node->getMethods() as $classMethod) {
                 // Target Value, value, and getValue (to fix incomplete manual upgrades)
                 if ($this->isNames($classMethod->name, ['Value', 'value', 'getValue'])) {
-                    
                     // 1. Rename method
                     if (! $this->isName($classMethod->name, 'getValue')) {
                         $classMethod->name = new Identifier('getValue');
@@ -98,7 +98,7 @@ CODE_SAMPLE
         }
 
         if ($node instanceof MethodCall || $node instanceof NullsafeMethodCall) {
-            if (! $this->isObjectType($node->var, new ObjectType('SilverStripe\Forms\FormField'))) {
+            if (! $this->isObjectType($node->var, new ObjectType(\SilverStripe\Forms\FormField::class))) {
                 return null;
             }
 

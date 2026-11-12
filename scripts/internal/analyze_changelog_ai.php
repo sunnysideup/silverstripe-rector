@@ -21,7 +21,7 @@ if (!file_exists($inputFile)) {
 
 $version = basename($inputFile);
 $version = str_replace(['ss-', '.html', '.md'], '', $version);
-$isMarkdown = substr_compare($inputFile, '.md', -strlen('.md')) === 0;
+$isMarkdown = str_ends_with($inputFile, '.md');
 $content = file_get_contents($inputFile) ?: '';
 
 $relevantContent = '';
@@ -46,7 +46,7 @@ if ($isMarkdown) {
     
     foreach ($sectionsToParse as $title) {
         // Don't duplicate if already captured in API changes
-        if (preg_match('/## ' . preg_quote($title, '/') . '(.*?)(?=\n## |$)/si', $content, $m) && strpos($relevantContent, $title) === false) {
+        if (preg_match('/## ' . preg_quote($title, '/') . '(.*?)(?=\n## |$)/si', $content, $m) && !str_contains($relevantContent, $title)) {
              $relevantContent .= sprintf('### Section: %s%s', $title, PHP_EOL) . $m[1] . "\n\n";
         }
     }
@@ -76,14 +76,14 @@ if ($isMarkdown) {
     ];
 
     foreach ($sectionsToParse as $id => $title) {
-        if (preg_match('/<h[23][^>]*>.*?' . preg_quote($title, '/') . '.*?(<\/h[23]>)(.*?)(?=<h[23]|$)/si', $html, $m) && strpos($relevantHtml, $title) === false) {
+        if (preg_match('/<h[23][^>]*>.*?' . preg_quote($title, '/') . '.*?(<\/h[23]>)(.*?)(?=<h[23]|$)/si', $html, $m) && !str_contains($relevantHtml, $title)) {
             $relevantHtml .= sprintf('## Section: %s%s', $title, PHP_EOL) . $m[2] . "\n\n";
         }
     }
 
     if ($relevantHtml === '') {
         foreach ($sectionsToParse as $id => $title) {
-            if (preg_match('/<[^>]+id="' . $id . '"[^>]*>.*?(<\/h[23]>)(.*?)(?=<h[23]|$)/si', $html, $m) && strpos($relevantHtml, $title) === false) {
+            if (preg_match('/<[^>]+id="' . $id . '"[^>]*>.*?(<\/h[23]>)(.*?)(?=<h[23]|$)/si', $html, $m) && !str_contains($relevantHtml, $title)) {
                 $relevantHtml .= sprintf('## Section: %s%s', $title, PHP_EOL) . $m[2] . "\n\n";
             }
         }

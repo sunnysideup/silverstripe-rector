@@ -15,7 +15,7 @@ return RectorConfig::configure()
             'u' => false
         ],
         [
-            'c' => 'SilverStripe\Forms\FormField',
+            'c' => \SilverStripe\Forms\FormField::class,
             'm' => 'validate',
             'parameter' => '$validator',
             'n' => 'Removed deprecated parameter $validator in FormField::validate()',

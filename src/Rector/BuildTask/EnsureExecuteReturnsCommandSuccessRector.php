@@ -11,10 +11,11 @@ use PhpParser\Node\Stmt\Class_;
 use PhpParser\Node\Stmt\Return_;
 use PHPStan\Type\ObjectType;
 use Rector\Rector\AbstractRector;
-use Symplify\RuleDocGenerator\ValueObject\CodeSample\CodeSample;
-use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
+use Rector\RuleDoc\Contract\DocumentedRuleInterface;
+use Rector\RuleDoc\CodeSample\CodeSample;
+use Rector\RuleDoc\RuleDefinition;
 
-final class EnsureExecuteReturnsCommandSuccessRector extends AbstractRector
+final class EnsureExecuteReturnsCommandSuccessRector extends AbstractRector implements DocumentedRuleInterface
 {
     public function getRuleDefinition(): RuleDefinition
     {
@@ -95,14 +96,14 @@ CODE
 
     private function isTaskClass(Class_ $class): bool
     {
-        if ($this->isObjectType($class, new ObjectType('SilverStripe\Dev\BuildTask'))) {
+        if ($this->isObjectType($class, new ObjectType(\SilverStripe\Dev\BuildTask::class))) {
             return true;
         }
 
         // Fallback for static analysis blindness in fixtures
         if ($class->extends instanceof Node\Name) {
             $parentClass = $this->getName($class->extends);
-            if ($parentClass === 'BuildTask' || $parentClass === '\SilverStripe\Dev\BuildTask') {
+            if ($parentClass === 'BuildTask' || $parentClass === \SilverStripe\Dev\BuildTask::class) {
                 return true;
             }
         }
@@ -120,7 +121,7 @@ CODE
             return false;
         }
         
-        return $this->getName($expr->class) === 'Symfony\Component\Console\Command\Command' 
+        return $this->getName($expr->class) === 'Symfony\Component\Console\Command\Command'
             && $this->getName($expr->name) === 'SUCCESS';
     }
 }

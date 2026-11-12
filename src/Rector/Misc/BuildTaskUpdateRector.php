@@ -33,14 +33,8 @@ use Rector\RuleDoc\RuleDefinition;
  */
 final class BuildTaskUpdateRector extends AbstractRector implements DocumentedRuleInterface
 {
-    /**
-     * @var PhpDocInfoFactory
-     */
-    protected $phpDocInfoFactory;
-
-    public function __construct(PhpDocInfoFactory $phpDocInfoFactory)
+    public function __construct(protected PhpDocInfoFactory $phpDocInfoFactory)
     {
-        $this->phpDocInfoFactory = $phpDocInfoFactory;
     }
 
     public function getRuleDefinition(): RuleDefinition

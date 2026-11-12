@@ -9,13 +9,14 @@ use PhpParser\Node\Expr\MethodCall;
 use PhpParser\Node\Expr\StaticCall;
 use PhpParser\Node\Scalar\String_;
 use Rector\Rector\AbstractRector;
-use Symplify\RuleDocGenerator\ValueObject\CodeSample\CodeSample;
-use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
+use Rector\RuleDoc\Contract\DocumentedRuleInterface;
+use Rector\RuleDoc\CodeSample\CodeSample;
+use Rector\RuleDoc\RuleDefinition;
 
 /**
  * @see \Netwerkstatt\SilverstripeRector\Tests\ORM\RemoveEmptyFilterRector\RemoveEmptyFilterRectorTest
  */
-final class RemoveEmptyFilterRector extends AbstractRector
+final class RemoveEmptyFilterRector extends AbstractRector implements DocumentedRuleInterface
 {
     public function getRuleDefinition(): RuleDefinition
     {
@@ -65,7 +66,7 @@ final class RemoveEmptyFilterRector extends AbstractRector
             // If the caller is a DataList-returning method, this is safe.
             // Since we're struggling with types, we check if the root of the chain is a ::get()
             $root = $this->findRootStaticCall($node->var);
-            if ($root !== null && $this->isName($root->name, 'get')) {
+            if ($root instanceof \PhpParser\Node\Expr\StaticCall && $this->isName($root->name, 'get')) {
                 return $node->var;
             }
         }
@@ -78,9 +79,11 @@ final class RemoveEmptyFilterRector extends AbstractRector
         if ($node instanceof StaticCall) {
             return $node;
         }
+
         if ($node instanceof MethodCall) {
             return $this->findRootStaticCall($node->var);
         }
+
         return null;
     }
 }

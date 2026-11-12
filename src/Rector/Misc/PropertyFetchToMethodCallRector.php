@@ -30,17 +30,10 @@ final class PropertyFetchToMethodCallRector extends AbstractRector implements
     DocumentedRuleInterface
 {
     /**
-     * @var array<class-string, array<string, string>>
-     */
-    private array $map = [];
-
-    /**
      * @param array<class-string, array<string, string>> $map
      */
-    public function __construct(array $map = [])
+    public function __construct(private array $map = [])
     {
-        // Optional defaults, overridden by configure()
-        $this->map = $map;
     }
 
     public function getRuleDefinition(): RuleDefinition

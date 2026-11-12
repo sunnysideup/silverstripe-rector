@@ -63,7 +63,7 @@ class DataObjectGetByIdToByIDRector extends AbstractRector implements Documented
         $className = null;
         if ($classNameArg instanceof String_) {
             $className = $classNameArg->value;
-            if (strpos($className, '\\') !== false) {
+            if (str_contains($className, '\\')) {
                 $className = '\\' . ltrim($className, '\\');
             }
         } elseif ($classNameArg instanceof ClassConstFetch && $this->isName($classNameArg->name, 'class')) {

@@ -17,12 +17,13 @@ use PhpParser\Node\Stmt\Expression;
 use PhpParser\NodeVisitor;
 use PHPStan\Type\ObjectType;
 use Rector\Rector\AbstractRector;
-use Symplify\RuleDocGenerator\ValueObject\CodeSample\CodeSample;
-use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
+use Rector\RuleDoc\Contract\DocumentedRuleInterface;
+use Rector\RuleDoc\CodeSample\CodeSample;
+use Rector\RuleDoc\RuleDefinition;
 
-final class FormFieldValidateSignatureRector extends AbstractRector
+final class FormFieldValidateSignatureRector extends AbstractRector implements DocumentedRuleInterface
 {
-    public function getDefinition(): RuleDefinition
+    public function getRuleDefinition(): RuleDefinition
     {
         return new RuleDefinition(
             'Migrates validate() method on FormField to return ValidationResult and use addError(). 
@@ -72,7 +73,7 @@ CODE_SAMPLE
      */
     public function refactor(Node $node): ?Node
     {
-        if (! $this->isObjectType($node, new ObjectType('SilverStripe\Forms\FormField'))) {
+        if (! $this->isObjectType($node, new ObjectType(\SilverStripe\Forms\FormField::class))) {
             return null;
         }
 
@@ -112,17 +113,18 @@ CODE_SAMPLE
                 if ($subNode instanceof MethodCall && $this->isName($subNode->name, 'validationError')) {
                     $subNode->var = new Variable('valid');
                     $subNode->name = new Identifier('addError');
-                    
+
                     // Shift arguments (keep only message and type, drop fieldName)
                     $args = $subNode->getArgs();
                     $newArgs = [];
                     if (isset($args[1])) {
                         $newArgs[] = $args[1];
                     }
+
                     if (isset($args[2])) {
                         $newArgs[] = $args[2];
                     }
-                    
+
                     $subNode->args = $newArgs;
                     $hasChanged = true;
                     return $subNode;

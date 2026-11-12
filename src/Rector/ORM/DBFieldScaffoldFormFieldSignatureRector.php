@@ -17,12 +17,13 @@ use PhpParser\Node\Param;
 use PhpParser\Node\Stmt\Class_;
 use PHPStan\Type\ObjectType;
 use Rector\Rector\AbstractRector;
-use Symplify\RuleDocGenerator\ValueObject\CodeSample\CodeSample;
-use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
+use Rector\RuleDoc\Contract\DocumentedRuleInterface;
+use Rector\RuleDoc\CodeSample\CodeSample;
+use Rector\RuleDoc\RuleDefinition;
 
-final class DBFieldScaffoldFormFieldSignatureRector extends AbstractRector
+final class DBFieldScaffoldFormFieldSignatureRector extends AbstractRector implements DocumentedRuleInterface
 {
-    public function getDefinition(): RuleDefinition
+    public function getRuleDefinition(): RuleDefinition
     {
         return new RuleDefinition(
             'Ensures scaffoldFormField() method on classes extending DBField has the correct signature',
@@ -75,8 +76,8 @@ CODE_SAMPLE
         $params = $method->params;
 
         // Verify Param 0: ?string $title = null
-        $validParam0 = isset($params[0]) 
-            && $params[0]->type instanceof NullableType 
+        $validParam0 = isset($params[0])
+            && $params[0]->type instanceof NullableType
             && $this->isName($params[0]->type->type, 'string')
             && $params[0]->default instanceof ConstFetch
             && $this->isName($params[0]->default->name, 'null');
@@ -110,10 +111,10 @@ CODE_SAMPLE
         // Verify Return Type: ?\SilverStripe\Forms\FormField
         $validReturn = $method->returnType instanceof NullableType
             && $method->returnType->type instanceof Name
-            && $this->isName($method->returnType->type, 'SilverStripe\Forms\FormField');
+            && $this->isName($method->returnType->type, \SilverStripe\Forms\FormField::class);
 
         if (! $validReturn) {
-            $method->returnType = new NullableType(new FullyQualified('SilverStripe\Forms\FormField'));
+            $method->returnType = new NullableType(new FullyQualified(\SilverStripe\Forms\FormField::class));
             $hasChanged = true;
         }
 

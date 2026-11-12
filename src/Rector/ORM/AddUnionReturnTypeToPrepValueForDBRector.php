@@ -11,10 +11,11 @@ use PhpParser\Node\Stmt\ClassMethod;
 use PhpParser\Node\UnionType as NodeUnionType;
 use PHPStan\Type\ObjectType;
 use Rector\Rector\AbstractRector;
-use Symplify\RuleDocGenerator\ValueObject\CodeSample\CodeSample;
-use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
+use Rector\RuleDoc\Contract\DocumentedRuleInterface;
+use Rector\RuleDoc\CodeSample\CodeSample;
+use Rector\RuleDoc\RuleDefinition;
 
-final class AddUnionReturnTypeToPrepValueForDBRector extends AbstractRector
+final class AddUnionReturnTypeToPrepValueForDBRector extends AbstractRector implements DocumentedRuleInterface
 {
     public function getRuleDefinition(): RuleDefinition
     {
@@ -70,9 +71,7 @@ CODE_SAMPLE
 
         // Prevent infinite loops by checking if it already has the exact union type
         if ($method->returnType instanceof NodeUnionType) {
-            $types = array_map(function ($type) {
-                return $type->toString();
-            }, $method->returnType->types);
+            $types = array_map(fn($type) => $type->toString(), $method->returnType->types);
             
             sort($types);
             

@@ -15,6 +15,7 @@ use PhpParser\Node\Identifier;
 use PhpParser\Node\Name;
 use PhpParser\Node\Scalar\String_;
 use PhpParser\Node\Stmt\Expression;
+use PHPStan\Reflection\ReflectionProvider;
 use PHPStan\Type\ObjectType;
 use Rector\Rector\AbstractRector;
 use Rector\RuleDoc\Contract\DocumentedRuleInterface;
@@ -24,6 +25,18 @@ use Rector\RuleDoc\RuleDefinition;
 final class RenameFieldListMethodsWithoutArrayParamRector extends AbstractRector implements DocumentedRuleInterface
 {
     use MethodHelper;
+
+    /**
+     * Not configurable; only needed by the shared MethodHelper trait.
+     *
+     * @var array<int, array{c: string, m: string, n: string, u?: bool}>
+     */
+    private array $changes = [];
+
+    public function __construct(
+        private readonly ReflectionProvider $reflectionProvider
+    ) {
+    }
 
     public function getRuleDefinition(): RuleDefinition
     {
@@ -84,7 +97,7 @@ CODE_SAMPLE
 
         // 1. Explicit Arrays -> Ignore immediately
         if ($secondArgValue instanceof Array_) {
-            return null; 
+            return null;
         }
 
         // 2. Explicit FieldList (AST string checks for tests without full class reflection)
@@ -99,8 +112,8 @@ CODE_SAMPLE
             return null;
         }
 
-        if ($this->isObjectType($secondArgValue, new ObjectType('SilverStripe\Forms\FieldList'))) {
-            return null; 
+        if ($this->isObjectType($secondArgValue, new ObjectType(\SilverStripe\Forms\FieldList::class))) {
+            return null;
         }
 
         // 3. Strict Type Inference
@@ -114,12 +127,11 @@ CODE_SAMPLE
         
         if ($secondArgValue instanceof String_) {
             $shouldRename = true;
-        } elseif (
-            $secondArgValue instanceof \PhpParser\Node\Expr\New_ ||
+        } elseif ($secondArgValue instanceof \PhpParser\Node\Expr\New_ ||
             ($secondArgValue instanceof \PhpParser\Node\Expr\StaticCall && $this->isName($secondArgValue->name, 'create'))
         ) {
             $shouldRename = true;
-        } elseif ($type instanceof ObjectType && ! $this->isObjectType($secondArgValue, new ObjectType('SilverStripe\Forms\FieldList'))) {
+        } elseif ($type->getObjectClassNames() !== []) {
             $shouldRename = true; // Known object, but definitively not a FieldList
         } elseif ($type->isString()->yes()) {
             $shouldRename = true;
@@ -137,6 +149,7 @@ CODE_SAMPLE
             if (preg_match('/fields$/i', $nameToCheck)) {
                 return null; // Assumed Array/FieldList -> Force ignore
             }
+
             if (preg_match('/field$/i', $nameToCheck)) {
                 $shouldRename = true; // Assumed Object -> Rename
             }
@@ -150,8 +163,8 @@ CODE_SAMPLE
 
         // 7. MIXED/UNKNOWN TYPE: Inject safe TODO note on the Expression statement
         $todoLine = $this->buildTodoLine(
-            'FieldList', 
-            $methodName, 
+            'FieldList',
+            $methodName,
             "Mixed type detected. If this is a single field/string, change to {$targetMethod}() manually."
         );
         

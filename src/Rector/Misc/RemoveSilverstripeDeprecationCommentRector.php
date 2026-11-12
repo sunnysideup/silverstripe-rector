@@ -36,11 +36,8 @@ final class RemoveSilverstripeDeprecationCommentRector extends AbstractRector im
      */
     private array $configuration = [];
 
-    private BetterNodeFinder $betterNodeFinder;
-
-    public function __construct(BetterNodeFinder $betterNodeFinder)
+    public function __construct(private readonly BetterNodeFinder $betterNodeFinder)
     {
-        $this->betterNodeFinder = $betterNodeFinder;
     }
 
     public function getRuleDefinition(): RuleDefinition
@@ -119,7 +116,7 @@ PHP,
 
     private function shouldRemoveCommentFromDeclaration(Node $node, string $target): bool
     {
-        if (strpos($target, '::') !== false) {
+        if (str_contains($target, '::')) {
             if (!$node instanceof ClassMethod) {
                 return false;
             }
@@ -177,7 +174,7 @@ PHP,
 
     private function shouldRemoveCommentFromStatement(Node $node, string $target): bool
     {
-        if (strpos($target, '::') === false) {
+        if (!str_contains($target, '::')) {
             return false;
         }
 
@@ -226,19 +223,19 @@ PHP,
             $trimmedLine = trim($line);
 
             // Start of a @deprecated tag
-            if (strpos($trimmedLine, '@deprecated') !== false) {
+            if (str_contains($trimmedLine, '@deprecated')) {
                 // Peek ahead to see if the link is in this block
                 $foundLink = false;
                 for ($j = 0; $j <= 10; $j++) {
                     if (isset($lines[$i + $j])) {
-                        if (strpos($lines[$i + $j], $link) !== false) {
+                        if (str_contains($lines[$i + $j], $link)) {
                             $foundLink = true;
                             break;
                         }
 
                         // If we hit another tag or end of comment, the block ended
                         $peekTrimmed = trim($lines[$i + $j]);
-                        if ($j > 0 && (strpos($peekTrimmed, '* @') !== false || $peekTrimmed === '*/')) {
+                        if ($j > 0 && (str_contains($peekTrimmed, '* @') || $peekTrimmed === '*/')) {
                             break;
                         }
                     }
@@ -254,7 +251,7 @@ PHP,
             if ($isInsideDeprecatedToRemove) {
                 // We are inside a block to remove.
                 // We stop removing when we hit the next tag or the end of the docblock
-                if (strpos($trimmedLine, '* @') !== false || $trimmedLine === '*/') {
+                if (str_contains($trimmedLine, '* @') || $trimmedLine === '*/') {
                     $isInsideDeprecatedToRemove = false;
                     // Don't continue, we need to keep this line (unless it's the start of another @deprecated
                     // we might want to remove, but that's handled in the next iteration)
@@ -269,7 +266,7 @@ PHP,
         if ($hasChanged) {
             // Check if only /** and */ remain (ignoring empty lines with only *)
             $contentLines = array_values(array_filter(
-                array_map('trim', $newLines),
+                array_map(trim(...), $newLines),
                 static function ($l): bool {
                     $trimmed = trim($l);
                     return !in_array($trimmed, ['*', '/**', '*/', ''], true);

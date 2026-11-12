@@ -10,12 +10,13 @@ use PhpParser\Node\NullableType;
 use PhpParser\Node\Stmt\Class_;
 use PHPStan\Type\ObjectType;
 use Rector\Rector\AbstractRector;
-use Symplify\RuleDocGenerator\ValueObject\CodeSample\CodeSample;
-use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
+use Rector\RuleDoc\Contract\DocumentedRuleInterface;
+use Rector\RuleDoc\CodeSample\CodeSample;
+use Rector\RuleDoc\RuleDefinition;
 
-final class DBVarcharURLReturnTypeRector extends AbstractRector
+final class DBVarcharURLReturnTypeRector extends AbstractRector implements DocumentedRuleInterface
 {
-    public function getDefinition(): RuleDefinition
+    public function getRuleDefinition(): RuleDefinition
     {
         return new RuleDefinition(
             'Changes return type of URL() methods to ?string for classes extending DBVarchar',
@@ -67,8 +68,8 @@ CODE_SAMPLE
         }
 
         // 3. Check if it already has the ?string return type
-        $isNullableString = $urlMethod->returnType instanceof NullableType 
-            && $urlMethod->returnType->type instanceof Identifier 
+        $isNullableString = $urlMethod->returnType instanceof NullableType
+            && $urlMethod->returnType->type instanceof Identifier
             && $this->isName($urlMethod->returnType->type, 'string');
 
         if (! $isNullableString) {

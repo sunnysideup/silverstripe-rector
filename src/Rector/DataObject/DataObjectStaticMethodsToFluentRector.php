@@ -22,7 +22,8 @@ final class DataObjectStaticMethodsToFluentRector extends AbstractRector impleme
 {
     public function __construct(
         private readonly ValueResolver $valueResolver
-    ) {}
+    ) {
+    }
 
     public function getRuleDefinition(): RuleDefinition
     {
@@ -50,9 +51,12 @@ CODE_SAMPLE
         return [StaticCall::class];
     }
 
+    /**
+     * @param StaticCall $node
+     */
     public function refactor(Node $node): ?Node
     {
-        if (!$this->isObjectType($node->class, new ObjectType('SilverStripe\ORM\DataObject'))) {
+        if (!$this->isObjectType($node->class, new ObjectType(\SilverStripe\ORM\DataObject::class))) {
             return null;
         }
 
@@ -76,6 +80,7 @@ CODE_SAMPLE
         if ($node instanceof ClassConstFetch && $this->isName($node->name, 'class')) {
             return $node->class;
         }
+
         return $node;
     }
 

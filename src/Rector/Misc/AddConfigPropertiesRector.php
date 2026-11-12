@@ -23,13 +23,6 @@ use Rector\RuleDoc\RuleDefinition;
 
 class AddConfigPropertiesRector extends AbstractRector implements ConfigurableRectorInterface, DocumentedRuleInterface
 {
-    private PhpDocInfoFactory $phpDocInfoFactory;
-
-    /**
-     * @var \Rector\Comments\NodeDocBlock\DocBlockUpdater
-     */
-    private $docBlockUpdater;
-
     /**
      * @var array|mixed[]
      */
@@ -115,12 +108,8 @@ class AddConfigPropertiesRector extends AbstractRector implements ConfigurableRe
         ],
     ];
 
-    public function __construct(
-        DocBlockUpdater $docBlockUpdater,
-        PhpDocInfoFactory $phpDocInfoFactory
-    ) {
-        $this->docBlockUpdater = $docBlockUpdater;
-        $this->phpDocInfoFactory = $phpDocInfoFactory;
+    public function __construct(private readonly DocBlockUpdater $docBlockUpdater, private readonly PhpDocInfoFactory $phpDocInfoFactory)
+    {
     }
 
     /**

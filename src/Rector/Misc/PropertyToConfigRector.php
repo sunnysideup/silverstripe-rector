@@ -25,22 +25,8 @@ final class PropertyToConfigRector extends AbstractRector implements
     ConfigurableRectorInterface,
     DocumentedRuleInterface
 {
-    /**
-     * @var DocBlockUpdater
-     */
-    private $docBlockUpdater;
-
-    /**
-     * @var PhpDocInfoFactory
-     */
-    private $phpDocInfoFactory;
-
-    public function __construct(
-        DocBlockUpdater $docBlockUpdater,
-        PhpDocInfoFactory $phpDocInfoFactory
-    ) {
-        $this->docBlockUpdater = $docBlockUpdater;
-        $this->phpDocInfoFactory = $phpDocInfoFactory;
+    public function __construct(private readonly DocBlockUpdater $docBlockUpdater, private readonly PhpDocInfoFactory $phpDocInfoFactory)
+    {
     }
 
     /**

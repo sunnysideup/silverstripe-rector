@@ -25,10 +25,11 @@ use PHPStan\Type\Type;
 use PHPStan\Type\UnionType;
 use Rector\Contract\Rector\ConfigurableRectorInterface;
 use Rector\Rector\AbstractRector;
-use Symplify\RuleDocGenerator\ValueObject\CodeSample\ConfiguredCodeSample;
-use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
+use Rector\RuleDoc\Contract\DocumentedRuleInterface;
+use Rector\RuleDoc\CodeSample\ConfiguredCodeSample;
+use Rector\RuleDoc\RuleDefinition;
 
-final class ChangedParameterType extends AbstractRector implements ConfigurableRectorInterface
+final class ChangedParameterType extends AbstractRector implements ConfigurableRectorInterface, DocumentedRuleInterface
 {
     use MethodHelper;
     
@@ -39,7 +40,8 @@ final class ChangedParameterType extends AbstractRector implements ConfigurableR
 
     public function __construct(
         private readonly ReflectionProvider $reflectionProvider
-    ) {}
+    ) {
+    }
 
     public function getRuleDefinition(): RuleDefinition
     {
@@ -177,14 +179,10 @@ CODE_SAMPLE,
      */
     private function refactorClassMethod(ClassMethod $classMethod, ?bool $withRename = false): ?Node
     {
-        if (!$classMethod->name instanceof Identifier) {
-            return null;
-        }
-
         $scope = ScopeFetcher::fetch($classMethod);
         $classReflection = $scope->getClassReflection();
 
-        if ($classReflection === null) {
+        if (!$classReflection instanceof \PHPStan\Reflection\ClassReflection) {
             return null;
         }
 
@@ -281,7 +279,7 @@ CODE_SAMPLE,
      */
     private function getTypeHintString(Param $param): ?string
     {
-        if ($param->type === null) {
+        if (!$param->type instanceof \PhpParser\Node) {
             return null;
         }
 
@@ -310,11 +308,11 @@ CODE_SAMPLE,
                     return true;
                 }
             }
+
             return false;
         }
 
-        if ($argType instanceof ObjectType) {
-            $className = $argType->getClassName();
+        foreach ($argType->getObjectClassNames() as $className) {
             return $this->typeNamesMatch($className, $expectedType);
         }
 
@@ -344,11 +342,6 @@ CODE_SAMPLE,
         // Check short name match
         $actualShort = substr(strrchr('\\' . $actualType, '\\'), 1);
         $expectedShort = substr(strrchr('\\' . $expectedType, '\\'), 1);
-        
-        if (strcasecmp($actualShort, $expectedShort) === 0) {
-            return true;
-        }
-
-        return false;
+        return strcasecmp($actualShort, $expectedShort) === 0;
     }
 }

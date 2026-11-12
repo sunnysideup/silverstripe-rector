@@ -26,11 +26,8 @@ final class ReplaceSilverstripeNullArgumentRector extends AbstractRector impleme
     /** @var list<array{class: string, method: string, position: int, replacement: mixed}> */
     private array $configuration = [];
 
-    private NodeFactory $factory;
-
-    public function __construct(NodeFactory $factory)
+    public function __construct(private readonly NodeFactory $factory)
     {
-        $this->factory = $factory;
     }
 
     public function getRuleDefinition(): RuleDefinition
@@ -81,7 +78,7 @@ final class ReplaceSilverstripeNullArgumentRector extends AbstractRector impleme
             }
 
             $isClassConstant = is_string($replacement['replacement'])
-                && strpos($replacement['replacement'], '::') !== false;
+                && str_contains($replacement['replacement'], '::');
             $argument->value = $isClassConstant
                 ? $this->factory->createClassConstFetch(...explode('::', $replacement['replacement'], 2))
                 : $this->factory->createArg($replacement['replacement'])->value;

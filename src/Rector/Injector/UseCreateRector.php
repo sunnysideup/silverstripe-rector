@@ -17,14 +17,8 @@ use Rector\RuleDoc\RuleDefinition;
 
 class UseCreateRector extends AbstractRector implements DocumentedRuleInterface
 {
-    /**
-     * @readonly
-     */
-    private \PHPStan\Reflection\ReflectionProvider $reflectionProvider;
-
-    public function __construct(ReflectionProvider $reflectionProvider)
+    public function __construct(private readonly \PHPStan\Reflection\ReflectionProvider $reflectionProvider)
     {
-        $this->reflectionProvider = $reflectionProvider;
     }
 
     public function getRuleDefinition(): RuleDefinition

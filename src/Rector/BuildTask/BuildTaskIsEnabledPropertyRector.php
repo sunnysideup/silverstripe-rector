@@ -11,12 +11,13 @@ use PhpParser\Node\VarLikeIdentifier;
 use PhpParser\Node\Stmt\Class_;
 use PHPStan\Type\ObjectType;
 use Rector\Rector\AbstractRector;
-use Symplify\RuleDocGenerator\ValueObject\CodeSample\CodeSample;
-use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
+use Rector\RuleDoc\Contract\DocumentedRuleInterface;
+use Rector\RuleDoc\CodeSample\CodeSample;
+use Rector\RuleDoc\RuleDefinition;
 
-final class BuildTaskIsEnabledPropertyRector extends AbstractRector
+final class BuildTaskIsEnabledPropertyRector extends AbstractRector implements DocumentedRuleInterface
 {
-    public function getDefinition(): RuleDefinition
+    public function getRuleDefinition(): RuleDefinition
     {
         return new RuleDefinition(
             'Renames $enabled to $is_enabled on BuildTask and ensures it is private static bool.',
@@ -53,7 +54,7 @@ CODE_SAMPLE
      */
     public function refactor(Node $node): ?Node
     {
-        if (! $this->isObjectType($node, new ObjectType('SilverStripe\Dev\BuildTask'))) {
+        if (! $this->isObjectType($node, new ObjectType(\SilverStripe\Dev\BuildTask::class))) {
             return null;
         }
 

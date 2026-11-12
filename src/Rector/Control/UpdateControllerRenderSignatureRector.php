@@ -9,13 +9,14 @@ use PhpParser\Node\Stmt\Class_;
 use PhpParser\Node\Stmt\ClassMethod;
 use PHPStan\Type\ObjectType;
 use Rector\Rector\AbstractRector;
-use Symplify\RuleDocGenerator\ValueObject\CodeSample\CodeSample;
-use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
+use Rector\RuleDoc\Contract\DocumentedRuleInterface;
+use Rector\RuleDoc\CodeSample\CodeSample;
+use Rector\RuleDoc\RuleDefinition;
 
 /**
  * @see \Netwerkstatt\SilverstripeRector\Tests\Control\UpdateControllerRenderSignatureRector\UpdateControllerRenderSignatureRectorTest
  */
-final class UpdateControllerRenderSignatureRector extends AbstractRector
+final class UpdateControllerRenderSignatureRector extends AbstractRector implements DocumentedRuleInterface
 {
     public function getRuleDefinition(): RuleDefinition
     {
@@ -50,7 +51,7 @@ CODE
      */
     public function refactor(Node $node): ?Node
     {
-        if (!$this->isObjectType($node, new ObjectType('SilverStripe\Control\Controller'))) {
+        if (!$this->isObjectType($node, new ObjectType(\SilverStripe\Control\Controller::class))) {
             return null;
         }
 
@@ -62,7 +63,7 @@ CODE
         $hasChanged = false;
 
         // 1. Update Return Type
-        if ($renderMethod->returnType === null || !$this->isName($renderMethod->returnType, 'SilverStripe\ORM\FieldType\DBHTMLText')) {
+        if (!$renderMethod->returnType instanceof \PhpParser\Node || !$this->isName($renderMethod->returnType, 'SilverStripe\ORM\FieldType\DBHTMLText')) {
             $renderMethod->returnType = new \PhpParser\Node\Name\FullyQualified('SilverStripe\ORM\FieldType\DBHTMLText');
             $hasChanged = true;
         }
@@ -76,8 +77,7 @@ CODE
             if ($firstParam->default instanceof \PhpParser\Node\Expr\ConstFetch) {
                 $defaultName = $this->getName($firstParam->default->name);
                 // Strict check: we only consider it idempotent if it is exactly lowercase 'null'
-                if (
-                    $defaultName === 'null' && 
+                if ($defaultName === 'null' &&
                     $this->isName($firstParam->var, 'params') &&
                     $firstParam->type === null
                 ) {

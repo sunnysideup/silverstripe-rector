@@ -83,7 +83,7 @@ CODE_SAMPLE
         }
 
         // 2. Do not mutate FieldList objects (they act as arrays of fields)
-        if ($this->isObjectType($secondArgValue, new ObjectType('SilverStripe\Forms\FieldList'))) {
+        if ($this->isObjectType($secondArgValue, new ObjectType(\SilverStripe\Forms\FieldList::class))) {
             return null;
         }
 

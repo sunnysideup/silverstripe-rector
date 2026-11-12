@@ -10,12 +10,13 @@ use PhpParser\Node\Identifier;
 use PhpParser\Node\Stmt\Class_;
 use PHPStan\Type\ObjectType;
 use Rector\Rector\AbstractRector;
-use Symplify\RuleDocGenerator\ValueObject\CodeSample\CodeSample;
-use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
+use Rector\RuleDoc\Contract\DocumentedRuleInterface;
+use Rector\RuleDoc\CodeSample\CodeSample;
+use Rector\RuleDoc\RuleDefinition;
 
-final class BuildTaskTitlePropertyRector extends AbstractRector
+final class BuildTaskTitlePropertyRector extends AbstractRector implements DocumentedRuleInterface
 {
-    public function getDefinition(): RuleDefinition
+    public function getRuleDefinition(): RuleDefinition
     {
         return new RuleDefinition(
             'Ensures the $title property on BuildTask classes is protected and typed as string. 
@@ -50,7 +51,7 @@ CODE_SAMPLE
     public function refactor(Node $node): ?Node
     {
         // 1. Check if the class extends BuildTask recursively
-        if (! $this->isObjectType($node, new ObjectType('SilverStripe\Dev\BuildTask'))) {
+        if (! $this->isObjectType($node, new ObjectType(\SilverStripe\Dev\BuildTask::class))) {
             return null;
         }
 

@@ -18,14 +18,8 @@ class RequestToInputOptionVisitor extends NodeVisitorAbstract
 {
     private array $options = [];
 
-    private string $inputVariableName;
-
-    private string $outputVariableName;
-
-    public function __construct(string $inputVariableName, string $outputVariableName)
+    public function __construct(private readonly string $inputVariableName, private readonly string $outputVariableName)
     {
-        $this->inputVariableName = $inputVariableName;
-        $this->outputVariableName = $outputVariableName;
     }
 
     public function leaveNode(Node $node)

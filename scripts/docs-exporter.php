@@ -5,10 +5,10 @@ declare(strict_types=1);
 use Rector\RuleDoc\Contract\CodeSampleInterface;
 use Rector\RuleDoc\Contract\DocumentedRuleInterface;
 
-require dirname(__DIR__) . '/vendor/autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
 
-$sourceDirectory = dirname(__DIR__) . '/src/Rector';
-$documentationFile = dirname(__DIR__) . '/docs/all_rectors_overview.md';
+$sourceDirectory = __DIR__ . '/../src/Rector';
+$documentationFile = __DIR__ . '/../docs/all_rectors_overview.md';
 $projectRoot = dirname(__DIR__);
 $format = $argv[1] ?? 'markdown';
 
@@ -32,7 +32,7 @@ foreach ($iterator as $file) {
     }
 
     $reflection = new ReflectionClass($className);
-    if ($reflection->isAbstract() || strpos((string) $reflection->getDocComment(), '@deprecated') !== false) {
+    if ($reflection->isAbstract() || str_contains((string) $reflection->getDocComment(), '@deprecated')) {
         continue;
     }
 
@@ -51,9 +51,7 @@ foreach ($iterator as $file) {
     ];
 }
 
-usort($rules, static function (array $first, array $second): int {
-    return $first['name'] <=> $second['name'];
-});
+usort($rules, static fn(array $first, array $second): int => $first['name'] <=> $second['name']);
 
 $setLists = collectSetLists($projectRoot);
 $ruleSetMembership = [];
@@ -71,7 +69,7 @@ $structuredRules = array_map(static function (array $rule) use ($ruleSetMembersh
     } elseif (preg_match('/^Silverstripe ([0-9]+\.[0-9]+):/', $rule['description'], $matches) === 1) {
         $category = 'Silverstripe';
         $silverstripeVersion = $matches[1];
-    } elseif (strpos($rule['description'], 'Silverstripe:') === 0) {
+    } elseif (str_starts_with($rule['description'], 'Silverstripe:')) {
         $category = 'Silverstripe';
     }
 
@@ -80,22 +78,18 @@ $structuredRules = array_map(static function (array $rule) use ($ruleSetMembersh
         'class' => $rule['class'],
         'category' => $category,
         'silverstripe_version_mentioned' => $silverstripeVersion,
-        'set_versions' => array_values(array_filter(array_map(static function (string $setName): ?string {
-            return preg_match('/^SS_([0-9]+)_([0-9]+)$/', $setName, $matches) === 1
-                ? $matches[1] . '.' . $matches[2]
-                : null;
-        }, $ruleSetMembership[$rule['class']] ?? []))),
+        'set_versions' => array_values(array_filter(array_map(static fn(string $setName): ?string => preg_match('/^SS_([0-9]+)_([0-9]+)$/', $setName, $matches) === 1
+            ? $matches[1] . '.' . $matches[2]
+            : null, $ruleSetMembership[$rule['class']] ?? []))),
         'description' => $rule['description'],
         'file' => substr($rule['file'], 3),
         'configurable' => $rule['configurable'],
         'sets' => array_values(array_unique($ruleSetMembership[$rule['class']] ?? [])),
-        'examples' => array_map(static function (CodeSampleInterface $sample): array {
-            return [
-                'before' => $sample->getBadCode(),
-                'after' => $sample->getGoodCode(),
-                'requires_configuration' => $sample instanceof ConfiguredCodeSample,
-            ];
-        }, $rule['samples']),
+        'examples' => array_map(static fn(CodeSampleInterface $sample): array => [
+            'before' => $sample->getBadCode(),
+            'after' => $sample->getGoodCode(),
+            'requires_configuration' => $sample instanceof ConfiguredCodeSample,
+        ], $rule['samples']),
     ];
 }, $rules);
 
@@ -249,18 +243,23 @@ function shouldHighlightWord(string $word): bool
     if (preg_match('/(@\w+)$/', $word) === 1) {
         return true;
     }
-    if (strpos($word, '`') === 0 || substr($word, -1) === '`') {
+
+    if (str_starts_with($word, '`') || str_ends_with($word, '`')) {
         return false;
     }
+
     if (preg_match('/\w+\(\)/', $word) === 1) {
         return true;
     }
+
     if (class_exists($word) || interface_exists($word) || trait_exists($word)) {
-        return strpos($word, '\\') !== false || in_array($word, [Throwable::class, 'Exception'], true);
+        return str_contains($word, '\\') || in_array($word, [Throwable::class, 'Exception'], true);
     }
+
     if ($word === 'composer.json') {
         return true;
     }
+
     if (preg_match('/^\$[A-Za-z_][A-Za-z0-9_>-]*(?:\(\))?[^\]]?$/', $word) === 1) {
         return true;
     }
@@ -276,8 +275,8 @@ function collectSetLists(string $projectRoot): array
     $setLists = [];
     $setFiles = [];
     $setClasses = [
-        'Netwerkstatt\\SilverstripeRector\\Set\\SilverstripeSetList' => 'versioned',
-        'Netwerkstatt\\SilverstripeRector\\Set\\SilverstripeLevelSetList' => 'cumulative',
+        \Netwerkstatt\SilverstripeRector\Set\SilverstripeSetList::class => 'versioned',
+        \Netwerkstatt\SilverstripeRector\Set\SilverstripeLevelSetList::class => 'cumulative',
     ];
 
     foreach ($setClasses as $className => $type) {
@@ -317,6 +316,7 @@ function collectSetLists(string $projectRoot): array
             $setsByName[$set['name']] = $set;
         }
     }
+
     foreach ($setLists as $className => $sets) {
         foreach ($sets as $name => $set) {
             $setLists[$className][$name]['effective_version_sets'] = $set['type'] === 'cumulative'
@@ -332,9 +332,7 @@ function collectSetLists(string $projectRoot): array
         }
     }
 
-    usort($flattened, static function (array $first, array $second): int {
-        return $first['name'] <=> $second['name'];
-    });
+    usort($flattened, static fn(array $first, array $second): int => $first['name'] <=> $second['name']);
 
     return $flattened;
 }
@@ -351,21 +349,21 @@ function resolveVersionSets(array $includedSets, array $setsByName): array
         if (!isset($setsByName[$includedSetName])) {
             continue;
         }
+
         $includedSet = $setsByName[$includedSetName];
         if ($includedSet['type'] === 'versioned') {
             $resolved[] = $includedSetName;
             continue;
         }
+
         $resolved = array_merge($resolved, resolveVersionSets($includedSet['includes'], $setsByName));
     }
 
     $resolved = array_values(array_unique($resolved));
-    usort($resolved, static function (string $first, string $second) use ($setsByName): int {
-        return version_compare(
-            (string) $setsByName[$first]['version'],
-            (string) $setsByName[$second]['version']
-        );
-    });
+    usort($resolved, static fn(string $first, string $second): int => version_compare(
+        (string) $setsByName[$first]['version'],
+        (string) $setsByName[$second]['version']
+    ));
 
     return $resolved;
 }
@@ -385,9 +383,10 @@ function inspectSetConfig(string $configPath, array $setClasses, array $setFiles
     $imports = [];
     preg_match_all('/^use\s+([^;]+);/m', $contents, $useMatches);
     foreach ($useMatches[1] as $useName) {
-        if (strpos($useName, ',') !== false || strpos($useName, '{') !== false) {
+        if (str_contains($useName, ',') || str_contains($useName, '{')) {
             continue;
         }
+
         $parts = preg_split('/\s+as\s+/i', trim($useName));
         $fullName = ltrim($parts[0], '\\');
         $aliasParts = explode('\\', $fullName);
@@ -399,6 +398,7 @@ function inspectSetConfig(string $configPath, array $setClasses, array $setFiles
     foreach ($ruleMatches[1] as $name) {
         $rules[] = resolveImportedClass($name, $imports);
     }
+
     $rules = array_values(array_unique($rules));
     sort($rules);
 
@@ -409,8 +409,10 @@ function inspectSetConfig(string $configPath, array $setClasses, array $setFiles
         if (!isset($setClasses[$className])) {
             continue;
         }
+
         $includes[] = $setMatch[2];
     }
+
     $includes = array_values(array_unique($includes));
     sort($includes);
 
