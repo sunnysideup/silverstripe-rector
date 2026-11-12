@@ -11,31 +11,32 @@ use Netwerkstatt\SilverstripeRector\Traits\MethodChangeHelper;
 class UseInsteadChanges implements ChangeListInterface
 {
     use MethodChangeHelper;
-    private const LIST =
+
+    protected const LIST =
     [
         [
-            'c' => 'DNADesign\\Elemental\\Models\\BaseElement',
+            'c' => \DNADesign\Elemental\Models\BaseElement::class,
             'm' => 'getDescription',
             'n' => 'use i18n_classDescription() instead.',
         ],
 
         [
-            'c' => 'SilverStripe\\Admin\\LeftAndMain',
+            'c' => \SilverStripe\Admin\LeftAndMain::class,
             'm' => 'currentPage',
             'n' => 'use currentRecord() instead.',
         ],
         [
-            'c' => 'SilverStripe\\Admin\\LeftAndMain',
+            'c' => \SilverStripe\Admin\LeftAndMain::class,
             'm' => 'currentPageID',
             'n' => 'use currentRecordID() instead.',
         ],
         [
-            'c' => 'SilverStripe\\Admin\\LeftAndMain',
+            'c' => \SilverStripe\Admin\LeftAndMain::class,
             'm' => 'isCurrentPage',
             'n' => 'use isCurrentRecord() instead.',
         ],
         [
-            'c' => 'SilverStripe\\Admin\\LeftAndMain',
+            'c' => \SilverStripe\Admin\LeftAndMain::class,
             'm' => 'setCurrentPageID',
             'n' => 'use setCurrentRecordID() instead.',
         ],
@@ -47,67 +48,67 @@ class UseInsteadChanges implements ChangeListInterface
         ],
 
         [
-            'c' => 'SilverStripe\\CMS\\Controllers\\CMSMain',
+            'c' => \SilverStripe\CMS\Controllers\CMSMain::class,
             'm' => 'CanOrganiseSitetree',
             'n' => 'use canOrganiseTree instead.',
         ],
         [
-            'c' => 'SilverStripe\\CMS\\Controllers\\CMSMain',
+            'c' => \SilverStripe\CMS\Controllers\CMSMain::class,
             'm' => 'LinkPageAdd',
             'n' => 'use LinkRecordAdd() instead.',
         ],
         [
-            'c' => 'SilverStripe\\CMS\\Controllers\\CMSMain',
+            'c' => \SilverStripe\CMS\Controllers\CMSMain::class,
             'm' => 'LinkPageEdit',
             'n' => 'use LinkRecordEdit() instead.',
         ],
         [
-            'c' => 'SilverStripe\\CMS\\Controllers\\CMSMain',
+            'c' => \SilverStripe\CMS\Controllers\CMSMain::class,
             'm' => 'LinkPageHistory',
             'n' => 'use LinkRecordHistory() instead.',
         ],
         [
-            'c' => 'SilverStripe\\CMS\\Controllers\\CMSMain',
+            'c' => \SilverStripe\CMS\Controllers\CMSMain::class,
             'm' => 'LinkPageSettings',
             'n' => 'use LinkRecordSettings() instead.',
         ],
         [
-            'c' => 'SilverStripe\\CMS\\Controllers\\CMSMain',
+            'c' => \SilverStripe\CMS\Controllers\CMSMain::class,
             'm' => 'LinkPages',
             'n' => 'use LinkRecords instead',
         ],
         [
-            'c' => 'SilverStripe\\CMS\\Controllers\\CMSMain',
+            'c' => \SilverStripe\CMS\Controllers\CMSMain::class,
             'm' => 'LinkPagesWithSearch',
             'n' => 'use LinkRecordsWithSearch instead',
         ],
         [
-            'c' => 'SilverStripe\\CMS\\Controllers\\CMSMain',
+            'c' => \SilverStripe\CMS\Controllers\CMSMain::class,
             'm' => 'PageTypes',
             'n' => 'use RecordTypes() instead.',
         ],
         [
-            'c' => 'SilverStripe\\CMS\\Controllers\\CMSMain',
+            'c' => \SilverStripe\CMS\Controllers\CMSMain::class,
             'm' => 'SiteTreeAsUL',
             'n' => 'use TreeAsUL() instead.',
         ],
         [
-            'c' => 'SilverStripe\\CMS\\Controllers\\CMSMain',
+            'c' => \SilverStripe\CMS\Controllers\CMSMain::class,
             'm' => 'SiteTreeHints',
             'n' => 'use TreeHints() instead.',
         ],
         [
-            'c' => 'SilverStripe\\CMS\\Controllers\\CMSMain',
+            'c' => \SilverStripe\CMS\Controllers\CMSMain::class,
             'm' => 'getPageTypes',
             'n' => 'use getRecordTypes() instead.',
         ],
         [
-            'c' => 'SilverStripe\\CMS\\Controllers\\CMSMain',
+            'c' => \SilverStripe\CMS\Controllers\CMSMain::class,
             'm' => 'getSiteTreeFor',
             'n' => 'use getTreeFor() instead.',
         ],
         [
-            'c' => 'SilverStripe\\CMS\\Controllers\\CMSMain',
+            'c' => \SilverStripe\CMS\Controllers\CMSMain::class,
             'm' => 'performPublish',
             'n' => 'use RecursivePublishable::publishRecursive() instead.',
         ],
@@ -123,7 +124,7 @@ class UseInsteadChanges implements ChangeListInterface
             'n' => 'use withSuppressedNotice() instead',
         ],
         [
-            'c' => 'SilverStripe\\Dev\\DevelopmentAdmin',
+            'c' => \SilverStripe\Dev\DevelopmentAdmin::class,
             'm' => 'get_links',
             'n' => 'use getLinks() instead to include permission checks',
         ],
@@ -133,7 +134,7 @@ class UseInsteadChanges implements ChangeListInterface
             'n' => 'use validate() instead',
         ],
         [
-            'c' => 'SilverStripe\\Forms\\FormField',
+            'c' => \SilverStripe\Forms\FormField::class,
             'm' => 'extendValidationResult',
             'n' => 'use extend() directly instead',
         ],

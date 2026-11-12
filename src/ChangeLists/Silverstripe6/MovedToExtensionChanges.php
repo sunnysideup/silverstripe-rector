@@ -10,7 +10,8 @@ use Netwerkstatt\SilverstripeRector\Traits\MethodChangeHelper;
 class MovedToExtensionChanges implements ChangeListInterface
 {
     use MethodChangeHelper;
-    private const LIST =
+
+    protected const LIST =
     [
         [
             'c' => 'SilverStripe\\AssetAdmin\\Controller\\AssetAdmin',

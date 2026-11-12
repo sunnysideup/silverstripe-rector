@@ -11,7 +11,8 @@ use Netwerkstatt\SilverstripeRector\Traits\MethodChangeHelper;
 class ChangedDefaultParameterValueChanges implements ChangeListInterface
 {
     use MethodChangeHelper;
-    private const LIST = [
+
+    protected const LIST = [
         ['c' => 'AssetFormFactory', 'm' => 'getFormActions', 'n' => 'Changed default value for parameter $controller in AssetFormFactory::getFormActions() from null to none'],
         ['c' => 'AssetFormFactory', 'm' => 'getFormFields', 'n' => 'Changed default value for parameter $controller in AssetFormFactory::getFormFields() from null to none'],
         ['c' => 'AssetFormFactory', 'm' => 'getValidator', 'n' => 'Changed default value for parameter $controller in AssetFormFactory::getValidator() from null to none'],

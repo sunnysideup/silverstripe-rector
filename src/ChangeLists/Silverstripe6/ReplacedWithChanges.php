@@ -11,10 +11,11 @@ use Netwerkstatt\SilverstripeRector\Traits\MethodChangeHelper;
 class ReplacedWithChanges implements ChangeListInterface
 {
     use MethodChangeHelper;
-    private const LIST =
+
+    protected const LIST =
     [
         [
-            'c' => 'DNADesign\\Elemental\\Models\\BaseElement',
+            'c' => \DNADesign\Elemental\Models\BaseElement::class,
             'm' => 'getGraphQLTypeName',
             'n' => 'replaced with getTypeName()',
         ],
@@ -25,7 +26,7 @@ class ReplacedWithChanges implements ChangeListInterface
             'n' => 'replaced with DataObject::getCMSEditLink() and updateCMSEditLink()',
         ],
         [
-            'c' => 'SilverStripe\\Admin\\LeftAndMain',
+            'c' => \SilverStripe\Admin\LeftAndMain::class,
             'm' => 'methodSchema',
             'n' => 'replaced with FormSchemaController::schema()',
         ],
@@ -47,12 +48,12 @@ class ReplacedWithChanges implements ChangeListInterface
         ],
 
         [
-            'c' => 'SilverStripe\\CMS\\Controllers\\CMSMain',
+            'c' => \SilverStripe\CMS\Controllers\CMSMain::class,
             'm' => 'getSearchContext',
             'n' => 'replaced with SiteTree::getDefaultSearchContext()',
         ],
         [
-            'c' => 'SilverStripe\\CMS\\Controllers\\CMSMain',
+            'c' => \SilverStripe\CMS\Controllers\CMSMain::class,
             'm' => 'getSearchFieldSchema',
             'n' => 'replaced with SearchContextForm::getSchemaData()',
         ],
@@ -62,53 +63,53 @@ class ReplacedWithChanges implements ChangeListInterface
             'n' => 'replaced with a SearchContext subclass',
         ],
         [
-            'c' => 'SilverStripe\\CMS\\Model\\SiteTree',
+            'c' => \SilverStripe\CMS\Model\SiteTree::class,
             'm' => 'creatableChildPages',
             'n' => 'replaced with CMSMain::getCreatableSubClasses()',
         ],
         [
-            'c' => 'SilverStripe\\CMS\\Model\\SiteTree',
+            'c' => \SilverStripe\CMS\Model\SiteTree::class,
             'm' => 'generateChildrenCacheKey',
             'n' => 'replaced with CMSMain::generateChildrenCacheKey()',
         ],
         [
-            'c' => 'SilverStripe\\CMS\\Model\\SiteTree',
+            'c' => \SilverStripe\CMS\Model\SiteTree::class,
             'm' => 'getCreatableChildrenCache',
             'n' => 'replaced with CMSMain::getCreatableChildrenCache()',
         ],
         [
-            'c' => 'SilverStripe\\CMS\\Model\\SiteTree',
+            'c' => \SilverStripe\CMS\Model\SiteTree::class,
             'm' => 'getIconClass',
             'n' => 'replaced with CMSMain::getRecordIconCssClass()',
         ],
         [
-            'c' => 'SilverStripe\\CMS\\Model\\SiteTree',
+            'c' => \SilverStripe\CMS\Model\SiteTree::class,
             'm' => 'getPageIconURL',
             'n' => 'replaced with CMSMain::getRecordIconUrl()',
         ],
         [
-            'c' => 'SilverStripe\\CMS\\Model\\SiteTree',
+            'c' => \SilverStripe\CMS\Model\SiteTree::class,
             'm' => 'page_type_classes',
             'n' => 'replaced with updateAllowedSubClasses()',
         ],
         [
-            'c' => 'SilverStripe\\CMS\\Model\\SiteTree',
+            'c' => \SilverStripe\CMS\Model\SiteTree::class,
             'm' => 'setCreatableChildrenCache',
             'n' => 'replaced with CMSMain::setCreatableChildrenCache()',
         ],
 
         [
-            'c' => 'SilverStripe\\Dev\\DevelopmentAdmin',
+            'c' => \SilverStripe\Dev\DevelopmentAdmin::class,
             'm' => 'buildDefaults',
             'n' => 'replaced with SilverStripe\\Dev\\Commands\\DbDefaults',
         ],
         [
-            'c' => 'SilverStripe\\Dev\\DevelopmentAdmin',
+            'c' => \SilverStripe\Dev\DevelopmentAdmin::class,
             'm' => 'generatesecuretoken',
             'n' => 'replaced with SilverStripe\\Dev\\Commands\\GenerateSecureToken',
         ],
         [
-            'c' => 'SilverStripe\\Dev\\DevelopmentAdmin',
+            'c' => \SilverStripe\Dev\DevelopmentAdmin::class,
             'm' => 'runRegisteredController',
             'n' => 'replaced with runRegisteredAction()',
         ],
@@ -120,7 +121,7 @@ class ReplacedWithChanges implements ChangeListInterface
         ],
 
         [
-            'c' => 'SilverStripe\\Forms\\FormField',
+            'c' => \SilverStripe\Forms\FormField::class,
             'm' => 'Value',
             'n' => 'replaced by getFormattedValue() and getValue()',
         ],

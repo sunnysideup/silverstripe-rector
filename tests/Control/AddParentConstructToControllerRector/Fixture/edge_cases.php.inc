@@ -65,6 +65,7 @@ namespace App {
         // Edge case 1: No parameters - should still work
         public function __construct()
         {
+            parent::__construct();
             $this->init = true;
         }
     }
@@ -74,6 +75,7 @@ namespace App {
         // Edge case 2: No parameters at all in parent, but current has args
         public function __construct($data)
         {
+            parent::__construct($data);
             $this->data = $data;
         }
     }

@@ -12,7 +12,7 @@ class RenamedToChanges implements ChangeListInterface
 {
     use MethodChangeHelper;
 
-    private const LIST =
+    protected const LIST =
     [
 
         [
@@ -21,7 +21,7 @@ class RenamedToChanges implements ChangeListInterface
             'n' => 'renamed to updateMetaTags()',
         ],
         [
-            'c' => 'SilverStripe\\CMS\\Controllers\\CMSMain',
+            'c' => \SilverStripe\CMS\Controllers\CMSMain::class,
             'm' => 'PageList',
             'n' => 'renamed to RecordList - covered in main Rector config',
         ],

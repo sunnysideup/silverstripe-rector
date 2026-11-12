@@ -11,7 +11,8 @@ use Netwerkstatt\SilverstripeRector\Traits\MethodChangeHelper;
 class RemovedParameterChanges implements ChangeListInterface
 {
     use MethodChangeHelper;
-    private const LIST =
+
+    protected const LIST =
     [
         [
             'c' => 'DNADesign\\Elemental\\Controllers\\ElementalAreaController',
@@ -50,7 +51,7 @@ class RemovedParameterChanges implements ChangeListInterface
             'n' => 'Removed deprecated parameter $request in Session::requestContainsSessionId()',
         ],
         [
-            'c' => 'SilverStripe\\Forms\\FormField',
+            'c' => \SilverStripe\Forms\FormField::class,
             'm' => 'validate',
             'parameter' => '$validator',
             'n' => 'Removed deprecated parameter $validator in FormField::validate()',

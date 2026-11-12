@@ -12,7 +12,7 @@ class ReturnTypeChanges implements ChangeListInterface
 {
     use MethodChangeHelper;
 
-    private const LIST = [
+    protected const LIST = [
         ['c' => 'BaseElement', 'm' => 'Top', 'n' => 'Changed return type for method BaseElement::Top() from dynamic to Controller|null'],
         ['c' => 'BaseElement', 'm' => 'forTemplate', 'n' => 'Changed return type for method BaseElement::forTemplate() from dynamic to string'],
         ['c' => 'BaseElement', 'm' => 'isCMSPreview', 'n' => 'Changed return type for method BaseElement::isCMSPreview() from dynamic to bool'],

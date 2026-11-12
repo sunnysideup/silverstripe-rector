@@ -1,20 +1,5 @@
 <?php
 
-
-declare(strict_types=1);
-
-namespace Netwerkstatt\SilverstripeRector\ChangeLists\Silverstripe6;
-
-use Netwerkstatt\SilverstripeRector\Interfaces\ChangeListInterface;
-use Netwerkstatt\SilverstripeRector\Traits\MethodChangeHelper;
-
-class ObsoleteMethodChanges implements ChangeListInterface
-{
-    use MethodChangeHelper;
-    private const LIST =
-    [
-<?php
-
 declare(strict_types=1);
 
 namespace Netwerkstatt\SilverstripeRector\ChangeLists\Silverstripe6;
@@ -26,7 +11,7 @@ class ObsoleteMethodChanges implements ChangeListInterface
 {
     use MethodChangeHelper;
 
-    private const LIST = [
+    protected const LIST = [
         [
             'c' => 'DNADesign\\Elemental\\Controllers\\ElementalAreaController',
             'm' => 'formAction',
@@ -38,18 +23,18 @@ class ObsoleteMethodChanges implements ChangeListInterface
             'n' => 'removed without equivalent functionality to replace it',
         ],
         [
-            'c' => 'DNADesign\\Elemental\\Models\\BaseElement',
+            'c' => \DNADesign\Elemental\Models\BaseElement::class,
             'm' => 'updateFromFormData',
             'n' => 'removed without equivalent functionality to replace it',
         ],
 
         [
-            'c' => 'SilverStripe\\Admin\\LeftAndMain',
+            'c' => \SilverStripe\Admin\LeftAndMain::class,
             'm' => 'Modals',
             'n' => 'removed without equivalent functionality to replace it',
         ],
         [
-            'c' => 'SilverStripe\\Admin\\LeftAndMain',
+            'c' => \SilverStripe\Admin\LeftAndMain::class,
             'm' => 'getSearchFilter',
             'n' => 'removed without equivalent functionality to replace it',
         ],
@@ -78,17 +63,17 @@ class ObsoleteMethodChanges implements ChangeListInterface
         ],
 
         [
-            'c' => 'SilverStripe\\CMS\\Controllers\\CMSMain',
+            'c' => \SilverStripe\CMS\Controllers\CMSMain::class,
             'm' => 'PageListSidebar',
             'n' => 'removed without equivalent functionality',
         ],
         [
-            'c' => 'SilverStripe\\CMS\\Controllers\\CMSMain',
+            'c' => \SilverStripe\CMS\Controllers\CMSMain::class,
             'm' => 'getList',
             'n' => 'removed without equivalent functionality to replace it',
         ],
         [
-            'c' => 'SilverStripe\\CMS\\Controllers\\CMSMain',
+            'c' => \SilverStripe\CMS\Controllers\CMSMain::class,
             'm' => 'getQueryFilter',
             'n' => 'removed without equivalent functionality to replace it',
         ],
@@ -126,7 +111,7 @@ class ObsoleteMethodChanges implements ChangeListInterface
         ],
 
         [
-            'c' => 'SilverStripe\\Control\\Controller',
+            'c' => \SilverStripe\Control\Controller::class,
             'm' => 'has_curr',
             'n' => 'removed without equivalent functionality to replace it',
         ],
@@ -156,7 +141,7 @@ class ObsoleteMethodChanges implements ChangeListInterface
         ],
 
         [
-            'c' => 'SilverStripe\\Dev\\DevelopmentAdmin',
+            'c' => \SilverStripe\Dev\DevelopmentAdmin::class,
             'm' => 'getRegisteredController',
             'n' => 'removed without equivalent functionality to replace it',
         ],
@@ -201,12 +186,12 @@ class ObsoleteMethodChanges implements ChangeListInterface
         ],
 
         [
-            'c' => 'SilverStripe\\ORM\\DataObject',
+            'c' => \SilverStripe\ORM\DataObject::class,
             'm' => 'disable_subclass_access',
             'n' => 'removed without equivalent functionality',
         ],
         [
-            'c' => 'SilverStripe\\ORM\\DataObject',
+            'c' => \SilverStripe\ORM\DataObject::class,
             'm' => 'enable_subclass_access',
             'n' => 'removed without equivalent functionality',
         ],
@@ -290,5 +275,4 @@ class ObsoleteMethodChanges implements ChangeListInterface
             'n' => 'removed without equivalent functionality',
         ],
     ];
-}
 }

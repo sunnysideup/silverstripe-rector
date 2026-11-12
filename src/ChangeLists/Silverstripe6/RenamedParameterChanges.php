@@ -12,7 +12,7 @@ class RenamedParameterChanges implements ChangeListInterface
 {
     use MethodChangeHelper;
 
-    private const LIST = [
+    protected const LIST = [
 
         [
             'c' => 'BuildTask',

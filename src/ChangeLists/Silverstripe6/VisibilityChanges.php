@@ -12,7 +12,7 @@ class VisibilityChanges implements ChangeListInterface
 {
     use MethodChangeHelper;
 
-    private const LIST =
+    protected const LIST =
     [
 
         [

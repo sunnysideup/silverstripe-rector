@@ -11,7 +11,8 @@ use Netwerkstatt\SilverstripeRector\Traits\MethodChangeHelper;
 class OtherMethodChanges implements ChangeListInterface
 {
     use MethodChangeHelper;
-    private const LIST =
+
+    protected const LIST =
     [
 
         [

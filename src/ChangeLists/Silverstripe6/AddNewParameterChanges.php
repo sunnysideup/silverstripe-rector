@@ -13,7 +13,7 @@ class AddNewParameterChanges implements ChangeListInterface
 
     use MethodChangeHelper;
 
-    private const LIST = [
+    protected const LIST = [
         ['c' => 'BuildTask', 'm' => 'run', 'n' => 'Added new parameter $output in BuildTask::run()'],
 
         ['c' => 'ChangePasswordHandler', 'm' => 'setSessionToken', 'n' => 'Added new parameter $alreadyEncrypted in ChangePasswordHandler::setSessionToken()'],
