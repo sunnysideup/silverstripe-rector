@@ -61,5 +61,6 @@ vendor/bin/phpcs
 - Remote: label an issue `ai-task` or comment `/ai` — see `.github/workflows/ai-task.yml`
   and `docs/ai-tasks.md`.
 - Locally: `./scripts/ai-task.sh <issue-number | prompt>`.
+- Syncing the fork with upstream (wernerkrauss): `./scripts/sync-upstream.sh` (see `--help`; never force-pushes).
 - The existing changelog-based update workflow lives in `scripts/internal/` and
   `docs/todos/` (see README "AI-assisted workflow").
