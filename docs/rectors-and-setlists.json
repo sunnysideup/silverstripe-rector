@@ -8,13 +8,231 @@
             "silverstripe_version_mentioned": null,
             "set_versions": [],
             "description": "Code Style: Adds @config property to predefined private statics, e.g. $db or $allowed_actions",
-            "file": "src/Rector/Misc/AddConfigPropertiesRector.php",
+            "file": "scripts/../src/Rector/Misc/AddConfigPropertiesRector.php",
             "configurable": true,
             "sets": [],
             "examples": [
                 {
                     "before": "class SomeClass extends \\SilverStripe\\ORM\\DataObject\n{\n    private static $db = [];\n}",
                     "after": "class SomeClass extends \\SilverStripe\\ORM\\DataObject\n{\n    /**\n    * @config\n    */\n    private static $db = [];\n}",
+                    "requires_configuration": false
+                }
+            ]
+        },
+        {
+            "name": "AddNewParameter",
+            "class": "Netwerkstatt\\SilverstripeRector\\Rector\\Methods\\AddNewParameter",
+            "category": null,
+            "silverstripe_version_mentioned": null,
+            "set_versions": [],
+            "description": "Adds TODO upgrade comments for method calls/overrides where a new parameter was added.",
+            "file": "scripts/../src/Rector/Methods/AddNewParameter.php",
+            "configurable": true,
+            "sets": [
+                "SS_6_0_ADDITIONAL",
+                "UP_TO_SS_6_0_ADDITIONAL"
+            ],
+            "examples": [
+                {
+                    "before": "$service->run($request);",
+                    "after": "/** @TODO SSU RECTOR UPGRADE TASK - BuildTask::run: Added new parameter $output in BuildTask::run() */\n$service->run($request);",
+                    "requires_configuration": false
+                }
+            ]
+        },
+        {
+            "name": "AddParentConstructToControllerRector",
+            "class": "Netwerkstatt\\SilverstripeRector\\Rector\\Control\\AddParentConstructToControllerRector",
+            "category": null,
+            "silverstripe_version_mentioned": null,
+            "set_versions": [
+                "6.0"
+            ],
+            "description": "Adds missing parent::__construct() call to Controller subclasses",
+            "file": "scripts/../src/Rector/Control/AddParentConstructToControllerRector.php",
+            "configurable": false,
+            "sets": [
+                "SS_6_0"
+            ],
+            "examples": [
+                {
+                    "before": "class PropertyHolderController extends Controller\n{\n    public function __construct(?PropertyHolder $model = null)\n    {\n        $this->locatable = $this;\n    }\n}",
+                    "after": "class PropertyHolderController extends Controller\n{\n    public function __construct(?PropertyHolder $model = null)\n    {\n        parent::__construct($model);\n        $this->locatable = $this;\n    }\n}",
+                    "requires_configuration": false
+                }
+            ]
+        },
+        {
+            "name": "AddScaffoldCmsFieldsSettingsRector",
+            "class": "Netwerkstatt\\SilverstripeRector\\Rector\\CMS\\AddScaffoldCmsFieldsSettingsRector",
+            "category": null,
+            "silverstripe_version_mentioned": null,
+            "set_versions": [],
+            "description": "Adds $scaffold_cms_fields_settings to SiteTree subclasses and Extensions, auto-populating ignoreFields and ignoreRelations.",
+            "file": "scripts/../src/Rector/CMS/AddScaffoldCmsFieldsSettingsRector.php",
+            "configurable": false,
+            "sets": [
+                "SS_6_0_PAGE_CMS_FIELDS",
+                "UP_TO_SS_6_0_PAGE_CMS_FIELDS"
+            ],
+            "examples": [
+                {
+                    "before": "class BlogPage extends \\SilverStripe\\CMS\\Model\\SiteTree {\n    private static $db = ['Author' => 'Varchar'];\n    private static $has_one = ['HeroImage' => 'Image'];\n}",
+                    "after": "class BlogPage extends \\SilverStripe\\CMS\\Model\\SiteTree {\n    private static $db = ['Author' => 'Varchar'];\n    private static $has_one = ['HeroImage' => 'Image'];\n    /**\n     * This property is used by the Rector upgrader to manage CMS field scaffolding.\n     * Manual modifications to the array values are permitted, but the property should remain defined.\n     * @see https://github.com/wernerkrauss/silverstripe-rector\n     */\n    private static array $scaffold_cms_fields_settings = [\n        'ignoreFields' => ['Author'],\n        'includeRelations' => [],\n        'restrictRelations' => [],\n        'ignoreRelations' => ['HeroImage'],\n        'restrictFields' => [],\n    ];\n}",
+                    "requires_configuration": false
+                }
+            ]
+        },
+        {
+            "name": "AddUnionReturnTypeToPrepValueForDBRector",
+            "class": "Netwerkstatt\\SilverstripeRector\\Rector\\ORM\\AddUnionReturnTypeToPrepValueForDBRector",
+            "category": null,
+            "silverstripe_version_mentioned": null,
+            "set_versions": [
+                "6.0"
+            ],
+            "description": "Adds array|string|null return type to prepValueForDB() on DBString subclasses",
+            "file": "scripts/../src/Rector/ORM/AddUnionReturnTypeToPrepValueForDBRector.php",
+            "configurable": false,
+            "sets": [
+                "SS_6_0"
+            ],
+            "examples": [
+                {
+                    "before": "class EmailAddress extends DBString\n{\n    public function prepValueForDB(mixed $value): mixed\n    {\n        return $value;\n    }\n}",
+                    "after": "class EmailAddress extends DBString\n{\n    public function prepValueForDB(mixed $value): array|string|null\n    {\n        return $value;\n    }\n}",
+                    "requires_configuration": false
+                }
+            ]
+        },
+        {
+            "name": "AddVoidReturnTypeToSaveIntoRector",
+            "class": "Netwerkstatt\\SilverstripeRector\\Rector\\ORM\\AddVoidReturnTypeToSaveIntoRector",
+            "category": null,
+            "silverstripe_version_mentioned": null,
+            "set_versions": [
+                "6.0"
+            ],
+            "description": "Adds void return type to saveInto() on DBField subclasses",
+            "file": "scripts/../src/Rector/ORM/AddVoidReturnTypeToSaveIntoRector.php",
+            "configurable": false,
+            "sets": [
+                "SS_6_0"
+            ],
+            "examples": [
+                {
+                    "before": "class MyField extends DBField\n{\n    public function saveInto($dataObject)\n    {\n        // save logic\n    }\n}",
+                    "after": "class MyField extends DBField\n{\n    public function saveInto($dataObject): void\n    {\n        // save logic\n    }\n}",
+                    "requires_configuration": false
+                }
+            ]
+        },
+        {
+            "name": "BuildTaskDescriptionPropertyRector",
+            "class": "Netwerkstatt\\SilverstripeRector\\Rector\\BuildTask\\BuildTaskDescriptionPropertyRector",
+            "category": null,
+            "silverstripe_version_mentioned": null,
+            "set_versions": [
+                "6.0"
+            ],
+            "description": "Ensures the $description property on BuildTask classes is protected, static, and typed as string.",
+            "file": "scripts/../src/Rector/BuildTask/BuildTaskDescriptionPropertyRector.php",
+            "configurable": false,
+            "sets": [
+                "SS_6_0"
+            ],
+            "examples": [
+                {
+                    "before": "use SilverStripe\\Dev\\BuildTask;\n\nclass MyTask extends BuildTask\n{\n    private $description = 'My description';\n}",
+                    "after": "use SilverStripe\\Dev\\BuildTask;\n\nclass MyTask extends BuildTask\n{\n    protected static string $description = 'My description';\n}",
+                    "requires_configuration": false
+                }
+            ]
+        },
+        {
+            "name": "BuildTaskIsEnabledPropertyRector",
+            "class": "Netwerkstatt\\SilverstripeRector\\Rector\\BuildTask\\BuildTaskIsEnabledPropertyRector",
+            "category": null,
+            "silverstripe_version_mentioned": null,
+            "set_versions": [
+                "6.0"
+            ],
+            "description": "Renames $enabled to $is_enabled on BuildTask and ensures it is private static bool.",
+            "file": "scripts/../src/Rector/BuildTask/BuildTaskIsEnabledPropertyRector.php",
+            "configurable": false,
+            "sets": [
+                "SS_6_0"
+            ],
+            "examples": [
+                {
+                    "before": "use SilverStripe\\Dev\\BuildTask;\n\nclass MyTask extends BuildTask\n{\n    private $enabled = false;\n}",
+                    "after": "use SilverStripe\\Dev\\BuildTask;\n\nclass MyTask extends BuildTask\n{\n    private static bool $is_enabled = false;\n}",
+                    "requires_configuration": false
+                }
+            ]
+        },
+        {
+            "name": "BuildTaskSegmentToCommandNameRector",
+            "class": "Netwerkstatt\\SilverstripeRector\\Rector\\BuildTask\\BuildTaskSegmentToCommandNameRector",
+            "category": null,
+            "silverstripe_version_mentioned": null,
+            "set_versions": [
+                "6.0"
+            ],
+            "description": "Changes BuildTask $segment to $commandName with protected static string signature",
+            "file": "scripts/../src/Rector/BuildTask/BuildTaskSegmentToCommandNameRector.php",
+            "configurable": false,
+            "sets": [
+                "SS_6_0"
+            ],
+            "examples": [
+                {
+                    "before": "class MyTask extends \\SilverStripe\\Dev\\BuildTask {\n    private static $segment = 'my-task';\n}",
+                    "after": "class MyTask extends \\SilverStripe\\Dev\\BuildTask {\n    protected static string $commandName = 'my-task';\n}",
+                    "requires_configuration": false
+                }
+            ]
+        },
+        {
+            "name": "BuildTaskTitlePropertyRector",
+            "class": "Netwerkstatt\\SilverstripeRector\\Rector\\BuildTask\\BuildTaskTitlePropertyRector",
+            "category": null,
+            "silverstripe_version_mentioned": null,
+            "set_versions": [
+                "6.0"
+            ],
+            "description": "Ensures the $title property on BuildTask classes is protected and typed as string. \n            See https://docs.silverstripe.org/en/6/developer_guides/cli/polycommand/#buildtask",
+            "file": "scripts/../src/Rector/BuildTask/BuildTaskTitlePropertyRector.php",
+            "configurable": false,
+            "sets": [
+                "SS_6_0"
+            ],
+            "examples": [
+                {
+                    "before": "class MyTask extends \\SilverStripe\\Dev\\BuildTask\n{\n    private $title = 'My Title';\n}",
+                    "after": "class MyTask extends \\SilverStripe\\Dev\\BuildTask\n{\n    protected string $title = 'My Title';\n}",
+                    "requires_configuration": false
+                }
+            ]
+        },
+        {
+            "name": "BuildTaskToExecuteRector",
+            "class": "Netwerkstatt\\SilverstripeRector\\Rector\\BuildTask\\BuildTaskToExecuteRector",
+            "category": null,
+            "silverstripe_version_mentioned": null,
+            "set_versions": [
+                "6.0"
+            ],
+            "description": "Changes BuildTask run() to protected execute() with proper CLI types",
+            "file": "scripts/../src/Rector/BuildTask/BuildTaskToExecuteRector.php",
+            "configurable": false,
+            "sets": [
+                "SS_6_0"
+            ],
+            "examples": [
+                {
+                    "before": "class MyTask extends \\SilverStripe\\Dev\\BuildTask {\n    public function run($request) {\n        echo \"done\";\n    }\n}",
+                    "after": "class MyTask extends \\SilverStripe\\Dev\\BuildTask {\n    protected function execute(\\Symfony\\Component\\Console\\Input\\InputInterface $input, \\SilverStripe\\PolyExecution\\PolyOutput $output): int\n    {\n        echo \"done\";\n        return 0;\n    }\n}",
                     "requires_configuration": false
                 }
             ]
@@ -28,7 +246,7 @@
                 "6.0"
             ],
             "description": "Silverstripe 6.0: Updates Silverstripe BuildTask from v5 to v6",
-            "file": "src/Rector/Misc/BuildTaskUpdateRector.php",
+            "file": "scripts/../src/Rector/Misc/BuildTaskUpdateRector.php",
             "configurable": false,
             "sets": [
                 "SS_6_0"
@@ -42,6 +260,182 @@
             ]
         },
         {
+            "name": "ChangedDefaultParameterValue",
+            "class": "Netwerkstatt\\SilverstripeRector\\Rector\\Methods\\ChangedDefaultParameterValue",
+            "category": null,
+            "silverstripe_version_mentioned": null,
+            "set_versions": [],
+            "description": "Adds TODO upgrade comments for method calls/overrides where a parameter default value changed.",
+            "file": "scripts/../src/Rector/Methods/ChangedDefaultParameterValue.php",
+            "configurable": true,
+            "sets": [
+                "SS_6_0_ADDITIONAL",
+                "UP_TO_SS_6_0_ADDITIONAL"
+            ],
+            "examples": [
+                {
+                    "before": "$service->doThing($value);",
+                    "after": "/** @TODO SSU RECTOR UPGRADE TASK - SomeClass::doThing: Changed default value of parameter $mode in SomeClass::doThing() from null to 'strict' */\n$service->doThing($value);",
+                    "requires_configuration": false
+                }
+            ]
+        },
+        {
+            "name": "ChangedParameterType",
+            "class": "Netwerkstatt\\SilverstripeRector\\Rector\\Methods\\ChangedParameterType",
+            "category": null,
+            "silverstripe_version_mentioned": null,
+            "set_versions": [],
+            "description": "Adds TODO upgrade comments for method calls/overrides where a parameter type changed, but only if the current argument/parameter does not already match the new type.",
+            "file": "scripts/../src/Rector/Methods/ChangedParameterType.php",
+            "configurable": true,
+            "sets": [
+                "SS_6_0_ADDITIONAL",
+                "UP_TO_SS_6_0_ADDITIONAL"
+            ],
+            "examples": [
+                {
+                    "before": "use SilverStripe\\Dev\\BuildTask;\nuse Symfony\\Component\\Console\\Output\\OutputInterface;\n\nclass MyTask extends BuildTask\n{\n    // Old signature: public function run($request)\n    // New signature: public function run(HTTPRequest $request)\n    \n    public function run($request)\n    {\n        // ...\n    }\n}\n\n// This will get flagged - passing wrong type\n$task->run($_GET);\n\n// This will NOT get flagged - already passing correct type  \n$task->run($httpRequest);",
+                    "after": "use SilverStripe\\Dev\\BuildTask;\nuse Symfony\\Component\\Console\\Output\\OutputInterface;\n\nclass MyTask extends BuildTask\n{\n    // Old signature: public function run($request)\n    // New signature: public function run(HTTPRequest $request)\n    \n    // @TODO SSU RECTOR UPGRADE TASK - BuildTask::run: Changed parameter type from mixed to HTTPRequest for $request\n    public function run($request)\n    {\n        // ...\n    }\n}\n\n// @TODO SSU RECTOR UPGRADE TASK - BuildTask::run: Changed parameter type from mixed to HTTPRequest for $request\n$task->run($_GET);\n\n// This will NOT get flagged - already passing correct type  \n$task->run($httpRequest);",
+                    "requires_configuration": false
+                }
+            ]
+        },
+        {
+            "name": "ConvertArrayToInputOptionRector",
+            "class": "Netwerkstatt\\SilverstripeRector\\Rector\\Console\\ConvertArrayToInputOptionRector",
+            "category": null,
+            "silverstripe_version_mentioned": null,
+            "set_versions": [
+                "6.0"
+            ],
+            "description": "Convert array option definitions to InputOption objects in getOptions(). \n            See https://docs.silverstripe.org/en/6/developer_guides/cli/polycommand/#buildtask",
+            "file": "scripts/../src/Rector/Console/ConvertArrayToInputOptionRector.php",
+            "configurable": false,
+            "sets": [
+                "SS_6_0"
+            ],
+            "examples": [
+                {
+                    "before": "public function getOptions(): array\n{\n    return [\n        ['limit', 'l', InputOption::VALUE_OPTIONAL, 'Limit number of examples']\n    ];\n}",
+                    "after": "public function getOptions(): array\n{\n    return [\n        new \\Symfony\\Component\\Console\\Input\\InputOption('limit', 'l', InputOption::VALUE_OPTIONAL, 'Limit number of examples')\n    ];\n}",
+                    "requires_configuration": false
+                }
+            ]
+        },
+        {
+            "name": "DBCompositeWriteToManipulationSignatureRector",
+            "class": "Netwerkstatt\\SilverstripeRector\\Rector\\ORM\\DBCompositeWriteToManipulationSignatureRector",
+            "category": null,
+            "silverstripe_version_mentioned": null,
+            "set_versions": [],
+            "description": "Ensures writeToManipulation() method on classes extending DBComposite has the signature: writeToManipulation(array &$manipulation): void",
+            "file": "scripts/../src/Rector/ORM/DBCompositeWriteToManipulationSignatureRector.php",
+            "configurable": false,
+            "sets": [],
+            "examples": [
+                {
+                    "before": "class MyComposite extends \\SilverStripe\\ORM\\FieldType\\DBComposite\n{\n    public function writeToManipulation($manipulation)\n    {\n    }\n}",
+                    "after": "class MyComposite extends \\SilverStripe\\ORM\\FieldType\\DBComposite\n{\n    public function writeToManipulation(array &$manipulation): void\n    {\n    }\n}",
+                    "requires_configuration": false
+                }
+            ]
+        },
+        {
+            "name": "DBFieldAddToQuerySignatureRector",
+            "class": "Netwerkstatt\\SilverstripeRector\\Rector\\ORM\\DBFieldAddToQuerySignatureRector",
+            "category": null,
+            "silverstripe_version_mentioned": null,
+            "set_versions": [],
+            "description": "Ensures addToQuery() method on classes extending DBField has the signature: public function addToQuery(SQLSelect &$query)",
+            "file": "scripts/../src/Rector/ORM/DBFieldAddToQuerySignatureRector.php",
+            "configurable": false,
+            "sets": [],
+            "examples": [
+                {
+                    "before": "class MyField extends \\SilverStripe\\ORM\\FieldType\\DBField\n{\n    protected function addToQuery($query)\n    {\n    }\n}",
+                    "after": "class MyField extends \\SilverStripe\\ORM\\FieldType\\DBField\n{\n    public function addToQuery(\\SilverStripe\\ORM\\Queries\\SQLSelect &$query)\n    {\n    }\n}",
+                    "requires_configuration": false
+                }
+            ]
+        },
+        {
+            "name": "DBFieldScaffoldFormFieldSignatureRector",
+            "class": "Netwerkstatt\\SilverstripeRector\\Rector\\ORM\\DBFieldScaffoldFormFieldSignatureRector",
+            "category": null,
+            "silverstripe_version_mentioned": null,
+            "set_versions": [],
+            "description": "Ensures scaffoldFormField() method on classes extending DBField has the correct signature",
+            "file": "scripts/../src/Rector/ORM/DBFieldScaffoldFormFieldSignatureRector.php",
+            "configurable": false,
+            "sets": [],
+            "examples": [
+                {
+                    "before": "class MyField extends \\SilverStripe\\ORM\\FieldType\\DBField\n{\n    public function scaffoldFormField($title = null, $params = null)\n    {\n        return null;\n    }\n}",
+                    "after": "class MyField extends \\SilverStripe\\ORM\\FieldType\\DBField\n{\n    public function scaffoldFormField(?string $title = null, array $params = []): ?\\SilverStripe\\Forms\\FormField\n    {\n        return null;\n    }\n}",
+                    "requires_configuration": false
+                }
+            ]
+        },
+        {
+            "name": "DBFieldSetValueSignatureRector",
+            "class": "Netwerkstatt\\SilverstripeRector\\Rector\\ORM\\DBFieldSetValueSignatureRector",
+            "category": null,
+            "silverstripe_version_mentioned": null,
+            "set_versions": [],
+            "description": "Ensures setValue() method on classes extending DBField has the correct PHP 8 signature",
+            "file": "scripts/../src/Rector/ORM/DBFieldSetValueSignatureRector.php",
+            "configurable": false,
+            "sets": [],
+            "examples": [
+                {
+                    "before": "class MyField extends \\SilverStripe\\ORM\\FieldType\\DBField\n{\n    public function setValue($value, $record = null, $markChanged = true)\n    {\n        return $this;\n    }\n}",
+                    "after": "class MyField extends \\SilverStripe\\ORM\\FieldType\\DBField\n{\n    public function setValue(mixed $value, null|array|ModelData $record = null, bool $markChanged = true): static\n    {\n        return $this;\n    }\n}",
+                    "requires_configuration": false
+                }
+            ]
+        },
+        {
+            "name": "DBVarcharURLReturnTypeRector",
+            "class": "Netwerkstatt\\SilverstripeRector\\Rector\\ORM\\DBVarcharURLReturnTypeRector",
+            "category": null,
+            "silverstripe_version_mentioned": null,
+            "set_versions": [],
+            "description": "Changes return type of URL() methods to ?string for classes extending DBVarchar",
+            "file": "scripts/../src/Rector/ORM/DBVarcharURLReturnTypeRector.php",
+            "configurable": false,
+            "sets": [],
+            "examples": [
+                {
+                    "before": "class MyVarchar extends \\SilverStripe\\ORM\\FieldType\\DBVarchar\n{\n    public function URL()\n    {\n        return 'https://example.com';\n    }\n}",
+                    "after": "class MyVarchar extends \\SilverStripe\\ORM\\FieldType\\DBVarchar\n{\n    public function URL(): ?string\n    {\n        return 'https://example.com';\n    }\n}",
+                    "requires_configuration": false
+                }
+            ]
+        },
+        {
+            "name": "DataObjectDebugReturnTypeRector",
+            "class": "Netwerkstatt\\SilverstripeRector\\Rector\\DataObject\\DataObjectDebugReturnTypeRector",
+            "category": null,
+            "silverstripe_version_mentioned": null,
+            "set_versions": [
+                "6.0"
+            ],
+            "description": "Changes DataObject debug() method to public with string return type",
+            "file": "scripts/../src/Rector/DataObject/DataObjectDebugReturnTypeRector.php",
+            "configurable": false,
+            "sets": [
+                "SS_6_0"
+            ],
+            "examples": [
+                {
+                    "before": "class MyObject extends \\SilverStripe\\ORM\\DataObject {\n    protected function debug() {\n        return \"Debug info\";\n    }\n}",
+                    "after": "class MyObject extends \\SilverStripe\\ORM\\DataObject {\n    public function debug(): string {\n        return \"Debug info\";\n    }\n}",
+                    "requires_configuration": false
+                }
+            ]
+        },
+        {
             "name": "DataObjectGetByIdToByIDRector",
             "class": "Netwerkstatt\\SilverstripeRector\\Rector\\DataObject\\DataObjectGetByIdToByIDRector",
             "category": "Code Style",
@@ -50,7 +444,7 @@
                 "6.0"
             ],
             "description": "Code Style: Changes DataObject::get_by_id('ClassName', $id) to ClassName::get()->byID($id)",
-            "file": "src/Rector/DataObject/DataObjectGetByIdToByIDRector.php",
+            "file": "scripts/../src/Rector/DataObject/DataObjectGetByIdToByIDRector.php",
             "configurable": false,
             "sets": [
                 "CODE_STYLE",
@@ -65,6 +459,28 @@
             ]
         },
         {
+            "name": "DataObjectGetToClassGetRector",
+            "class": "Netwerkstatt\\SilverstripeRector\\Rector\\ORM\\DataObjectGetToClassGetRector",
+            "category": null,
+            "silverstripe_version_mentioned": null,
+            "set_versions": [
+                "6.0"
+            ],
+            "description": "Converts DataObject::get(SomeClass::class) to SomeClass::get()",
+            "file": "scripts/../src/Rector/ORM/DataObjectGetToClassGetRector.php",
+            "configurable": false,
+            "sets": [
+                "SS_6_0"
+            ],
+            "examples": [
+                {
+                    "before": "$steps = \\SilverStripe\\ORM\\DataObject::get(OrderStep::class);\n$more = \\SilverStripe\\ORM\\DataObject::get('My\\Custom\\Class');",
+                    "after": "$steps = OrderStep::get();\n$more = \\My\\Custom\\Class::get();",
+                    "requires_configuration": false
+                }
+            ]
+        },
+        {
             "name": "DataObjectStaticMethodsToFluentRector",
             "class": "Netwerkstatt\\SilverstripeRector\\Rector\\DataObject\\DataObjectStaticMethodsToFluentRector",
             "category": "Silverstripe",
@@ -72,16 +488,38 @@
             "set_versions": [
                 "6.1"
             ],
-            "description": "Silverstripe 6.1: Replace DataObject static methods get_by_id(), get_one(), and delete_by_id() with fluent equivalents.",
-            "file": "src/Rector/DataObject/DataObjectStaticMethodsToFluentRector.php",
+            "description": "Silverstripe 6.1: Replace DataObject static methods with fluent equivalents using Late Static Binding.",
+            "file": "scripts/../src/Rector/DataObject/DataObjectStaticMethodsToFluentRector.php",
             "configurable": false,
             "sets": [
                 "SS_6_1"
             ],
             "examples": [
                 {
-                    "before": "DataObject::get_by_id($className, $id);\nDataObject::get_one($className, $filter);\nDataObject::delete_by_id($className, $id);",
-                    "after": "DataObject::get($className)->setUseCache(true)->byID($id);\nDataObject::get($className)->setUseCache(true)->filter($filter)->first();\nDataObject::get($className)->setUseCache(true)->byID($id)->delete();",
+                    "before": "DataObject::get_by_id(MyClass::class, 1);\nDataObject::get_one(MyClass::class, ['Email' => $email]);\nDataObject::delete_by_id(MyClass::class, 1);",
+                    "after": "MyClass::get()->byID(1);\nMyClass::get()->setUseCache(true)->filter(['Email' => $email])->first();\nMyClass::get()->byID(1)->delete();",
+                    "requires_configuration": false
+                }
+            ]
+        },
+        {
+            "name": "EnsureExecuteReturnsCommandSuccessRector",
+            "class": "Netwerkstatt\\SilverstripeRector\\Rector\\BuildTask\\EnsureExecuteReturnsCommandSuccessRector",
+            "category": null,
+            "silverstripe_version_mentioned": null,
+            "set_versions": [
+                "6.0"
+            ],
+            "description": "Ensures BuildTask execute() methods always finish by returning Command::SUCCESS",
+            "file": "scripts/../src/Rector/BuildTask/EnsureExecuteReturnsCommandSuccessRector.php",
+            "configurable": false,
+            "sets": [
+                "SS_6_0"
+            ],
+            "examples": [
+                {
+                    "before": "protected function execute(InputInterface $input, PolyOutput $output): int \n{\n    $this->doSomething();\n    return true;\n}",
+                    "after": "protected function execute(InputInterface $input, PolyOutput $output): int \n{\n    $this->doSomething();\n    return \\Symfony\\Component\\Console\\Command\\Command::SUCCESS;\n}",
                     "requires_configuration": false
                 }
             ]
@@ -95,7 +533,7 @@
                 "4.0"
             ],
             "description": "Silverstripe 4.0: DataObject subclasses must have \"$table_name\" defined",
-            "file": "src/Rector/DataObject/EnsureTableNameIsSetRector.php",
+            "file": "scripts/../src/Rector/DataObject/EnsureTableNameIsSetRector.php",
             "configurable": false,
             "sets": [
                 "SS_4_0"
@@ -109,6 +547,90 @@
             ]
         },
         {
+            "name": "FactoryCreateMethodSignatureRector",
+            "class": "Netwerkstatt\\SilverstripeRector\\Rector\\Injector\\FactoryCreateMethodSignatureRector",
+            "category": null,
+            "silverstripe_version_mentioned": null,
+            "set_versions": [],
+            "description": "Ensures create() method on Injector Factories is public, has correct parameters, and returns ?object",
+            "file": "scripts/../src/Rector/Injector/FactoryCreateMethodSignatureRector.php",
+            "configurable": false,
+            "sets": [],
+            "examples": [
+                {
+                    "before": "class MyFactory implements \\SilverStripe\\Core\\Injector\\Factory\n{\n    protected function create($service, $params)\n    {\n        return new \\stdClass();\n    }\n}",
+                    "after": "class MyFactory implements \\SilverStripe\\Core\\Injector\\Factory\n{\n    public function create($service, array $params = []): ?object\n    {\n        return new \\stdClass();\n    }\n}",
+                    "requires_configuration": false
+                }
+            ]
+        },
+        {
+            "name": "FormFieldCompositeDatabaseFieldsReturnTypeRector",
+            "class": "Netwerkstatt\\SilverstripeRector\\Rector\\Forms\\FormFieldCompositeDatabaseFieldsReturnTypeRector",
+            "category": null,
+            "silverstripe_version_mentioned": null,
+            "set_versions": [
+                "6.0"
+            ],
+            "description": "Changes FormField compositeDatabaseFields() to public with array return type",
+            "file": "scripts/../src/Rector/Forms/FormFieldCompositeDatabaseFieldsReturnTypeRector.php",
+            "configurable": false,
+            "sets": [
+                "SS_6_0"
+            ],
+            "examples": [
+                {
+                    "before": "class MyField extends \\SilverStripe\\Forms\\FormField {\n    protected function compositeDatabaseFields() {\n        return ['Field1' => 'Varchar'];\n    }\n}",
+                    "after": "class MyField extends \\SilverStripe\\Forms\\FormField {\n    public function compositeDatabaseFields(): array {\n        return ['Field1' => 'Varchar'];\n    }\n}",
+                    "requires_configuration": false
+                }
+            ]
+        },
+        {
+            "name": "FormFieldValidateSignatureRector",
+            "class": "Netwerkstatt\\SilverstripeRector\\Rector\\Forms\\FormFieldValidateSignatureRector",
+            "category": null,
+            "silverstripe_version_mentioned": null,
+            "set_versions": [
+                "6.0"
+            ],
+            "description": "Migrates validate() method on FormField to return ValidationResult and use addError(). \n            See https://docs.silverstripe.org/en/6/changelogs/6.0.0/#formfield-validation",
+            "file": "scripts/../src/Rector/Forms/FormFieldValidateSignatureRector.php",
+            "configurable": false,
+            "sets": [
+                "SS_6_0"
+            ],
+            "examples": [
+                {
+                    "before": "class MyField extends \\SilverStripe\\Forms\\FormField\n{\n    public function validate($validator)\n    {\n        $valid = parent::validate($validator);\n        if (true) {\n            $validator->validationError($this->name, 'Not unique', 'validation');\n            $valid = false;\n        }\n        return $valid;\n    }\n}",
+                    "after": "class MyField extends \\SilverStripe\\Forms\\FormField\n{\n    public function validate(): \\SilverStripe\\ORM\\ValidationResult\n    {\n        $valid = parent::validate();\n        if (true) {\n            $valid->addError('Not unique', 'validation');\n        }\n        return $valid;\n    }\n}",
+                    "requires_configuration": false
+                }
+            ]
+        },
+        {
+            "name": "FormFieldValueToGetValueRector",
+            "class": "Netwerkstatt\\SilverstripeRector\\Rector\\Forms\\FormFieldValueToGetValueRector",
+            "category": null,
+            "silverstripe_version_mentioned": null,
+            "set_versions": [
+                "6.0"
+            ],
+            "description": "Renames Value() and value() methods to getValue(): mixed for classes extending FormField. \n            See https://docs.silverstripe.org/en/6/changelogs/6.0.0/#formfield-value",
+            "file": "scripts/../src/Rector/Forms/FormFieldValueToGetValueRector.php",
+            "configurable": false,
+            "sets": [
+                "SS_6_0"
+            ],
+            "examples": [
+                {
+                    "before": "class MyField extends \\SilverStripe\\Forms\\FormField\n{\n    protected function Value()\n    {\n        return 'test';\n    }\n}\n\n$field = new MyField('Test');\n$val = $field->value();",
+                    "after": "class MyField extends \\SilverStripe\\Forms\\FormField\n{\n    public function getValue(): mixed\n    {\n        return 'test';\n    }\n}\n\n$field = new MyField('Test');\n$val = $field->getValue();",
+                    "requires_configuration": false
+                }
+            ]
+        },
+        {
             "name": "FormLoadDataFromMergeStrategyRector",
             "class": "Netwerkstatt\\SilverstripeRector\\Rector\\Forms\\FormLoadDataFromMergeStrategyRector",
             "category": "Silverstripe",
@@ -117,7 +639,7 @@
                 "5.4"
             ],
             "description": "Silverstripe 5.4: Replace Form::loadDataFrom() merge strategy booleans with explicit values.",
-            "file": "src/Rector/Forms/FormLoadDataFromMergeStrategyRector.php",
+            "file": "scripts/../src/Rector/Forms/FormLoadDataFromMergeStrategyRector.php",
             "configurable": false,
             "sets": [
                 "SS_5_4"
@@ -139,7 +661,7 @@
                 "5.4"
             ],
             "description": "Silverstripe 6.0: Convert Form::validate() boolean usage to isValid().",
-            "file": "src/Rector/Forms/FormValidateToIsValidRector.php",
+            "file": "scripts/../src/Rector/Forms/FormValidateToIsValidRector.php",
             "configurable": false,
             "sets": [
                 "SS_5_4"
@@ -161,7 +683,7 @@
                 "6.2"
             ],
             "description": "Silverstripe 6.2: Replace getIDList() with sort(null)->column('ID') or column('ID')",
-            "file": "src/Rector/ORM/GetIDListToColumnIDRector.php",
+            "file": "scripts/../src/Rector/ORM/GetIDListToColumnIDRector.php",
             "configurable": false,
             "sets": [
                 "SS_6_2"
@@ -181,7 +703,7 @@
             "silverstripe_version_mentioned": null,
             "set_versions": [],
             "description": "Code Style: Translates Silverstripe ORM filter() and similar calls from string notation to array notation.",
-            "file": "src/Rector/ORM/ListFilterToArrayRector.php",
+            "file": "scripts/../src/Rector/ORM/ListFilterToArrayRector.php",
             "configurable": false,
             "sets": [
                 "CODE_STYLE"
@@ -201,7 +723,7 @@
             "silverstripe_version_mentioned": null,
             "set_versions": [],
             "description": "Code Style: Translates Silverstripe ORM sort() calls from string notation to array notation.",
-            "file": "src/Rector/ORM/ListSortToArrayRector.php",
+            "file": "scripts/../src/Rector/ORM/ListSortToArrayRector.php",
             "configurable": false,
             "sets": [
                 "CODE_STYLE"
@@ -215,6 +737,110 @@
             ]
         },
         {
+            "name": "MigrateTaskRunToPolyExecutionRector",
+            "class": "Netwerkstatt\\SilverstripeRector\\Rector\\BuildTask\\MigrateTaskRunToPolyExecutionRector",
+            "category": null,
+            "silverstripe_version_mentioned": null,
+            "set_versions": [
+                "6.0"
+            ],
+            "description": "Migrates old Task->run() syntax to PolyExecution with Input/Output objects",
+            "file": "scripts/../src/Rector/BuildTask/MigrateTaskRunToPolyExecutionRector.php",
+            "configurable": false,
+            "sets": [
+                "SS_6_0"
+            ],
+            "examples": [
+                {
+                    "before": "$task = new MyTask();\n$task->setMyParam(true);\n$task->run(null);",
+                    "after": "$task = new MyTask();\n$definition = new \\Symfony\\Component\\Console\\Input\\InputDefinition($task->getOptions());\n$input = new \\Symfony\\Component\\Console\\Input\\ArrayInput(['MyParam' => true], $definition);\n$output = \\SilverStripe\\PolyExecution\\PolyOutput::create(\\SilverStripe\\PolyExecution\\PolyOutput::FORMAT_ANSI);\n$task->run($input, $output);",
+                    "requires_configuration": false
+                }
+            ]
+        },
+        {
+            "name": "ModelDataExistsReturnTypeRector",
+            "class": "Netwerkstatt\\SilverstripeRector\\Rector\\Misc\\ModelDataExistsReturnTypeRector",
+            "category": null,
+            "silverstripe_version_mentioned": null,
+            "set_versions": [],
+            "description": "Ensures that any exists() method on classes extending ModelData is public and returns bool",
+            "file": "scripts/../src/Rector/Misc/ModelDataExistsReturnTypeRector.php",
+            "configurable": false,
+            "sets": [],
+            "examples": [
+                {
+                    "before": "class MyModel extends ModelData\n{\n    protected function exists()\n    {\n        return true;\n    }\n}",
+                    "after": "class MyModel extends ModelData\n{\n    public function exists(): bool\n    {\n        return true;\n    }\n}",
+                    "requires_configuration": false
+                }
+            ]
+        },
+        {
+            "name": "ModelDataForTemplateReturnTypeRector",
+            "class": "Netwerkstatt\\SilverstripeRector\\Rector\\ORM\\ModelDataForTemplateReturnTypeRector",
+            "category": null,
+            "silverstripe_version_mentioned": null,
+            "set_versions": [
+                "6.0"
+            ],
+            "description": "Adds strict string return type to forTemplate() on all ModelData subclasses (including DBField, DataObject, etc.)",
+            "file": "scripts/../src/Rector/ORM/ModelDataForTemplateReturnTypeRector.php",
+            "configurable": false,
+            "sets": [
+                "SS_6_0"
+            ],
+            "examples": [
+                {
+                    "before": "use SilverStripe\\ORM\\FieldType\\DBField;\n\nclass MyField extends DBField\n{\n    public function forTemplate()\n    {\n        return 'test';\n    }\n}",
+                    "after": "use SilverStripe\\ORM\\FieldType\\DBField;\n\nclass MyField extends DBField\n{\n    public function forTemplate(): string\n    {\n        return 'test';\n    }\n}",
+                    "requires_configuration": false
+                }
+            ]
+        },
+        {
+            "name": "ObsoleteMethod",
+            "class": "Netwerkstatt\\SilverstripeRector\\Rector\\Methods\\ObsoleteMethod",
+            "category": null,
+            "silverstripe_version_mentioned": null,
+            "set_versions": [],
+            "description": "Adds TODO upgrade comments for method calls/overrides of methods that have been removed.",
+            "file": "scripts/../src/Rector/Methods/ObsoleteMethod.php",
+            "configurable": true,
+            "sets": [
+                "SS_6_0_ADDITIONAL",
+                "UP_TO_SS_6_0_ADDITIONAL"
+            ],
+            "examples": [
+                {
+                    "before": "$controller->formAction();",
+                    "after": "/** @TODO SSU RECTOR UPGRADE TASK - DNADesign\\Elemental\\Controllers\\ElementalAreaController::formAction: removed without equivalent functionality to replace it */\n$controller->formAction();",
+                    "requires_configuration": false
+                }
+            ]
+        },
+        {
+            "name": "OtherMethod",
+            "class": "Netwerkstatt\\SilverstripeRector\\Rector\\Methods\\OtherMethod",
+            "category": null,
+            "silverstripe_version_mentioned": null,
+            "set_versions": [],
+            "description": "Adds TODO upgrade comments for various method, static, and trait changes.",
+            "file": "scripts/../src/Rector/Methods/OtherMethod.php",
+            "configurable": true,
+            "sets": [
+                "SS_6_0_ADDITIONAL",
+                "UP_TO_SS_6_0_ADDITIONAL"
+            ],
+            "examples": [
+                {
+                    "before": "$provider->getComposerLock();",
+                    "after": "/** @TODO SSU RECTOR UPGRADE TASK - VersionProvider::getComposerLock: has been replaced by composer-runtime-api FQCN: (SilverStripe\\Core\\Manifest\\VersionProvider) */\n$provider->getComposerLock();",
+                    "requires_configuration": false
+                }
+            ]
+        },
+        {
             "name": "ParentClassToTraitsRector",
             "class": "Netwerkstatt\\SilverstripeRector\\Rector\\Misc\\ParentClassToTraitsRector",
             "category": "Silverstripe",
@@ -223,7 +849,7 @@
                 "4.0"
             ],
             "description": "Silverstripe 4.0: Replace specific parent classes with traits and remove extends",
-            "file": "src/Rector/Misc/ParentClassToTraitsRector.php",
+            "file": "scripts/../src/Rector/Misc/ParentClassToTraitsRector.php",
             "configurable": true,
             "sets": [
                 "SS_4_0"
@@ -237,13 +863,37 @@
             ]
         },
         {
+            "name": "PolyCommandGetOptionsPublicRector",
+            "class": "Netwerkstatt\\SilverstripeRector\\Rector\\BuildTask\\PolyCommandGetOptionsPublicRector",
+            "category": null,
+            "silverstripe_version_mentioned": null,
+            "set_versions": [
+                "6.0",
+                "6.1"
+            ],
+            "description": "Changes getOptions() method visibility to public for classes extending SilverStripe\\PolyExecution\\PolyCommand. \n            See https://docs.silverstripe.org/en/6/developer_guides/cli/polycommand/#buildtask",
+            "file": "scripts/../src/Rector/BuildTask/PolyCommandGetOptionsPublicRector.php",
+            "configurable": false,
+            "sets": [
+                "SS_6_0",
+                "SS_6_1"
+            ],
+            "examples": [
+                {
+                    "before": "class MyCommand extends \\SilverStripe\\PolyExecution\\PolyCommand\n{\n    protected function getOptions()\n    {\n        return [];\n    }\n}",
+                    "after": "class MyCommand extends \\SilverStripe\\PolyExecution\\PolyCommand\n{\n    public function getOptions()\n    {\n        return [];\n    }\n}",
+                    "requires_configuration": false
+                }
+            ]
+        },
+        {
             "name": "PropertyFetchToMethodCallRector",
             "class": "Netwerkstatt\\SilverstripeRector\\Rector\\Misc\\PropertyFetchToMethodCallRector",
             "category": "Code Style",
             "silverstripe_version_mentioned": null,
             "set_versions": [],
             "description": "Code Style: Replace specific property fetches with method calls",
-            "file": "src/Rector/Misc/PropertyFetchToMethodCallRector.php",
+            "file": "scripts/../src/Rector/Misc/PropertyFetchToMethodCallRector.php",
             "configurable": true,
             "sets": [
                 "CODE_STYLE"
@@ -265,7 +915,7 @@
                 "5.1"
             ],
             "description": "Convert protected properties to private static config properties",
-            "file": "src/Rector/Misc/PropertyToConfigRector.php",
+            "file": "scripts/../src/Rector/Misc/PropertyToConfigRector.php",
             "configurable": true,
             "sets": [
                 "SS_5_1"
@@ -279,6 +929,28 @@
             ]
         },
         {
+            "name": "RemoveEmptyFilterRector",
+            "class": "Netwerkstatt\\SilverstripeRector\\Rector\\ORM\\RemoveEmptyFilterRector",
+            "category": null,
+            "silverstripe_version_mentioned": null,
+            "set_versions": [
+                "6.1"
+            ],
+            "description": "Remove empty filter() calls from DataObject::get() chains",
+            "file": "scripts/../src/Rector/ORM/RemoveEmptyFilterRector.php",
+            "configurable": false,
+            "sets": [
+                "SS_6_1"
+            ],
+            "examples": [
+                {
+                    "before": "SiteTree::get()->filter(\"\");",
+                    "after": "SiteTree::get();",
+                    "requires_configuration": false
+                }
+            ]
+        },
+        {
             "name": "RemoveSilverstripeDeprecationCommentRector",
             "class": "Netwerkstatt\\SilverstripeRector\\Rector\\Misc\\RemoveSilverstripeDeprecationCommentRector",
             "category": "Silverstripe",
@@ -287,7 +959,7 @@
                 "6.0"
             ],
             "description": "Silverstripe: Remove deprecation comments that are no longer applicable after upgrade.",
-            "file": "src/Rector/Misc/RemoveSilverstripeDeprecationCommentRector.php",
+            "file": "scripts/../src/Rector/Misc/RemoveSilverstripeDeprecationCommentRector.php",
             "configurable": true,
             "sets": [
                 "SS_6_0"
@@ -301,23 +973,132 @@
             ]
         },
         {
+            "name": "RemoveVersionedGridFieldStateRector",
+            "class": "Netwerkstatt\\SilverstripeRector\\Rector\\Deprecations\\RemoveVersionedGridFieldStateRector",
+            "category": null,
+            "silverstripe_version_mentioned": null,
+            "set_versions": [
+                "6.0"
+            ],
+            "description": "Removes addComponent() calls for deprecated VersionedGridFieldState from any context",
+            "file": "scripts/../src/Rector/Deprecations/RemoveVersionedGridFieldStateRector.php",
+            "configurable": false,
+            "sets": [
+                "SS_6_0"
+            ],
+            "examples": [
+                {
+                    "before": "return $this->config->doSomething()->addComponent(VersionedGridFieldState::class);",
+                    "after": "// VersionedGridFieldState is Deprecated, consider Using:\n// $dataColumns = $config->getComponentByType(GridFieldDataColumns::class);\n// Show the flags against a specific column (e.g. if you don't have a Title column)\n// $dataColumns->setColumnsForStatusFlag(['Name']);\nreturn $this->config->doSomething();",
+                    "requires_configuration": false
+                }
+            ]
+        },
+        {
+            "name": "RemovedParameter",
+            "class": "Netwerkstatt\\SilverstripeRector\\Rector\\Methods\\RemovedParameter",
+            "category": null,
+            "silverstripe_version_mentioned": null,
+            "set_versions": [],
+            "description": "Adds TODO upgrade comments for method calls/overrides where a parameter was removed.",
+            "file": "scripts/../src/Rector/Methods/RemovedParameter.php",
+            "configurable": true,
+            "sets": [
+                "SS_6_0_ADDITIONAL",
+                "UP_TO_SS_6_0_ADDITIONAL"
+            ],
+            "examples": [
+                {
+                    "before": "$controller->elementForm($request);",
+                    "after": "/** @TODO SSU RECTOR UPGRADE TASK - ElementalAreaController::elementForm: Removed deprecated parameter $request in ElementalAreaController::elementForm() FQCN: (DNADesign\\Elemental\\Controllers\\ElementalAreaController) */\n$controller->elementForm($request);",
+                    "requires_configuration": false
+                }
+            ]
+        },
+        {
+            "name": "RenameCurrentPageIdToCurrentRecordIdRector",
+            "class": "Netwerkstatt\\SilverstripeRector\\Rector\\CMS\\RenameCurrentPageIdToCurrentRecordIdRector",
+            "category": null,
+            "silverstripe_version_mentioned": null,
+            "set_versions": [
+                "6.0"
+            ],
+            "description": "Rename CMSPageEditController::currentPageID() to currentRecordID(), \n            See https://docs.silverstripe.org/en/6/changelogs/6.0.0/#silverstripeadmin",
+            "file": "scripts/../src/Rector/CMS/RenameCurrentPageIdToCurrentRecordIdRector.php",
+            "configurable": false,
+            "sets": [
+                "SS_6_0"
+            ],
+            "examples": [
+                {
+                    "before": "$controller->currentPageID();",
+                    "after": "$controller->currentRecordID();",
+                    "requires_configuration": false
+                }
+            ]
+        },
+        {
             "name": "RenameFieldListMethodsWithoutArrayParamRector",
             "class": "Netwerkstatt\\SilverstripeRector\\Rector\\Misc\\RenameFieldListMethodsWithoutArrayParamRector",
             "category": "Silverstripe",
             "silverstripe_version_mentioned": "5.3",
             "set_versions": [
-                "5.3"
+                "5.3",
+                "6.0"
             ],
-            "description": "Silverstripe 5.3: Renames FieldList plural methods to singular if second argument is not an array",
-            "file": "src/Rector/Misc/RenameFieldListMethodsWithoutArrayParamRector.php",
+            "description": "Silverstripe 5.3: Safely renames ->addFieldsToTab() and ->removeFieldsFromTab() to singular equivalents, or adds a TODO for unknown variables.",
+            "file": "scripts/../src/Rector/Misc/RenameFieldListMethodsWithoutArrayParamRector.php",
             "configurable": false,
             "sets": [
-                "SS_5_3"
+                "SS_5_3",
+                "SS_6_0"
             ],
             "examples": [
                 {
-                    "before": "$fields->addFieldsToTab('Root.Main', $myfield);\n$fields->removeFieldsFromTab('Root.Main', $myfield);",
-                    "after": "$fields->addFieldToTab('Root.Main', $myfield);\n$fields->removeFieldFromTab('Root.Main', $myfield);",
+                    "before": "$fields->addFieldsToTab('Root.Main', $unknownVariable);\n$fields->removeFieldsFromTab('Root.Main', 'Content');",
+                    "after": "// @TODO SSU RECTOR UPGRADE TASK - FieldList::addFieldsToTab: Mixed type detected. If this is a single field/string, change to addFieldToTab() manually.\n$fields->addFieldsToTab('Root.Main', $unknownVariable);\n$fields->removeFieldFromTab('Root.Main', 'Content');",
+                    "requires_configuration": false
+                }
+            ]
+        },
+        {
+            "name": "RenamedParameter",
+            "class": "Netwerkstatt\\SilverstripeRector\\Rector\\Methods\\RenamedParameter",
+            "category": null,
+            "silverstripe_version_mentioned": null,
+            "set_versions": [],
+            "description": "Adds TODO upgrade comments for method calls/overrides where a parameter was renamed.",
+            "file": "scripts/../src/Rector/Methods/RenamedParameter.php",
+            "configurable": true,
+            "sets": [
+                "SS_6_0_ADDITIONAL",
+                "UP_TO_SS_6_0_ADDITIONAL"
+            ],
+            "examples": [
+                {
+                    "before": "$service->run($request);",
+                    "after": "/** @TODO SSU RECTOR UPGRADE TASK - BuildTask::run: Renamed parameter $request in BuildTask::run() to $input */\n$service->run($request);",
+                    "requires_configuration": false
+                }
+            ]
+        },
+        {
+            "name": "RenamedTo",
+            "class": "Netwerkstatt\\SilverstripeRector\\Rector\\Methods\\RenamedTo",
+            "category": null,
+            "silverstripe_version_mentioned": null,
+            "set_versions": [],
+            "description": "Adds TODO upgrade comments and attempts to auto-rename method calls/overrides.",
+            "file": "scripts/../src/Rector/Methods/RenamedTo.php",
+            "configurable": true,
+            "sets": [
+                "SS_6_0_ADDITIONAL",
+                "UP_TO_SS_6_0_ADDITIONAL"
+            ],
+            "examples": [
+                {
+                    "before": "$extension->MetaTags($params);",
+                    "after": "/** @TODO SSU RECTOR UPGRADE TASK - FluentSiteTreeExtension::MetaTags: renamed to updateMetaTags() FQCN: (TractorCow\\Fluent\\Extension\\FluentSiteTreeExtension) */\n$extension->updateMetaTags($params);",
                     "requires_configuration": false
                 }
             ]
@@ -331,7 +1112,7 @@
                 "6.0"
             ],
             "description": "Silverstripe 6.0: Replace Controller::has_curr() with Controller::curr() !== null",
-            "file": "src/Rector/Control/ReplaceHasCurrWithCurrRector.php",
+            "file": "scripts/../src/Rector/Control/ReplaceHasCurrWithCurrRector.php",
             "configurable": false,
             "sets": [
                 "SS_6_0"
@@ -345,6 +1126,28 @@
             ]
         },
         {
+            "name": "ReplacePageTypeClassesRector",
+            "class": "Netwerkstatt\\SilverstripeRector\\Rector\\CMS\\ReplacePageTypeClassesRector",
+            "category": null,
+            "silverstripe_version_mentioned": null,
+            "set_versions": [
+                "6.0"
+            ],
+            "description": "Replaces deprecated SiteTree::page_type_classes() with ClassInfo and invokeWithExtensions setup within the local method scope.\n            See https://docs.silverstripe.org/en/6/changelogs/6.0.0/#silverstripecms",
+            "file": "scripts/../src/Rector/CMS/ReplacePageTypeClassesRector.php",
+            "configurable": false,
+            "sets": [
+                "SS_6_0"
+            ],
+            "examples": [
+                {
+                    "before": "class MyPage extends SiteTree {\n    public function getList() {\n        return SiteTree::page_type_classes();\n    }\n}",
+                    "after": "class MyPage extends SiteTree {\n    public function getList() {\n        $classes = \\SilverStripe\\Core\\ClassInfo::getValidSubClasses(\\SilverStripe\\CMS\\Model\\SiteTree::class);\n        \\SilverStripe\\ORM\\DataObject::singleton(\\SilverStripe\\CMS\\Model\\SiteTree::class)->invokeWithExtensions('updateAllowedSubClasses', $classes);\n        return $classes;\n    }\n}",
+                    "requires_configuration": false
+                }
+            ]
+        },
+        {
             "name": "ReplaceSilverstripeNullArgumentRector",
             "class": "Netwerkstatt\\SilverstripeRector\\Rector\\Misc\\ReplaceSilverstripeNullArgumentRector",
             "category": "Silverstripe",
@@ -353,7 +1156,7 @@
                 "5.4"
             ],
             "description": "Silverstripe 5.4: Replace deprecated null arguments with explicit defaults.",
-            "file": "src/Rector/Misc/ReplaceSilverstripeNullArgumentRector.php",
+            "file": "scripts/../src/Rector/Misc/ReplaceSilverstripeNullArgumentRector.php",
             "configurable": true,
             "sets": [
                 "SS_5_4"
@@ -367,6 +1170,48 @@
             ]
         },
         {
+            "name": "ReplacedWith",
+            "class": "Netwerkstatt\\SilverstripeRector\\Rector\\Methods\\ReplacedWith",
+            "category": null,
+            "silverstripe_version_mentioned": null,
+            "set_versions": [],
+            "description": "Adds TODO upgrade comments and attempts to auto-fix method replacements.",
+            "file": "scripts/../src/Rector/Methods/ReplacedWith.php",
+            "configurable": true,
+            "sets": [
+                "SS_6_0_ADDITIONAL",
+                "UP_TO_SS_6_0_ADDITIONAL"
+            ],
+            "examples": [
+                {
+                    "before": "$form->getCMSValidator();",
+                    "after": "/** @TODO SSU RECTOR UPGRADE TASK - SilverStripe\\UserForms\\UserForm::getCMSValidator: replaced with getCMSCompositeValidator() */\n$form->getCMSCompositeValidator();",
+                    "requires_configuration": false
+                }
+            ]
+        },
+        {
+            "name": "ReturnType",
+            "class": "Netwerkstatt\\SilverstripeRector\\Rector\\Methods\\ReturnType",
+            "category": null,
+            "silverstripe_version_mentioned": null,
+            "set_versions": [],
+            "description": "Adds TODO upgrade comments for method calls/overrides where the return type changed.",
+            "file": "scripts/../src/Rector/Methods/ReturnType.php",
+            "configurable": true,
+            "sets": [
+                "SS_6_0_ADDITIONAL",
+                "UP_TO_SS_6_0_ADDITIONAL"
+            ],
+            "examples": [
+                {
+                    "before": "$value = $item->forTemplate();",
+                    "after": "/** @TODO SSU RECTOR UPGRADE TASK - BaseElement::forTemplate: Changed return type for method BaseElement::forTemplate() from dynamic to string */\n$value = $item->forTemplate();",
+                    "requires_configuration": false
+                }
+            ]
+        },
+        {
             "name": "Silverstripe54MethodCallToStaticCallRector",
             "class": "Netwerkstatt\\SilverstripeRector\\Rector\\Forms\\Silverstripe54MethodCallToStaticCallRector",
             "category": "Silverstripe",
@@ -375,7 +1220,7 @@
                 "5.4"
             ],
             "description": "Silverstripe 5.4: Move deprecated instance calls to their static replacements.",
-            "file": "src/Rector/Forms/Silverstripe54MethodCallToStaticCallRector.php",
+            "file": "scripts/../src/Rector/Forms/Silverstripe54MethodCallToStaticCallRector.php",
             "configurable": false,
             "sets": [
                 "SS_5_4"
@@ -397,7 +1242,7 @@
                 "5.4"
             ],
             "description": "Silverstripe 5.4: Rename selected static API calls.",
-            "file": "src/Rector/Misc/Silverstripe54StaticCallRenameRector.php",
+            "file": "scripts/../src/Rector/Misc/Silverstripe54StaticCallRenameRector.php",
             "configurable": false,
             "sets": [
                 "SS_5_4"
@@ -422,7 +1267,7 @@
                 "6.1"
             ],
             "description": "Silverstripe: Add deprecation comments to classes or methods without direct substitute.",
-            "file": "src/Rector/Misc/SilverstripeDeprecationCommentRector.php",
+            "file": "scripts/../src/Rector/Misc/SilverstripeDeprecationCommentRector.php",
             "configurable": true,
             "sets": [
                 "SS_4_13",
@@ -447,7 +1292,7 @@
                 "4.0"
             ],
             "description": "Silverstripe 4.0: Replace $this->stat('foo') with static::config()->get('foo')",
-            "file": "src/Rector/Config/StatToConfigGetRector.php",
+            "file": "scripts/../src/Rector/Config/StatToConfigGetRector.php",
             "configurable": false,
             "sets": [
                 "SS_4_0"
@@ -469,7 +1314,7 @@
                 "5.2"
             ],
             "description": "Convert static method calls to config properties",
-            "file": "src/Rector/Misc/StaticCallToConfigRector.php",
+            "file": "scripts/../src/Rector/Misc/StaticCallToConfigRector.php",
             "configurable": true,
             "sets": [
                 "SS_5_2"
@@ -483,13 +1328,35 @@
             ]
         },
         {
+            "name": "UpdateControllerRenderSignatureRector",
+            "class": "Netwerkstatt\\SilverstripeRector\\Rector\\Control\\UpdateControllerRenderSignatureRector",
+            "category": null,
+            "silverstripe_version_mentioned": null,
+            "set_versions": [
+                "6.0"
+            ],
+            "description": "Updates render() method signature in Controller subclasses to use $params = null and DBHTMLText return type.",
+            "file": "scripts/../src/Rector/Control/UpdateControllerRenderSignatureRector.php",
+            "configurable": false,
+            "sets": [
+                "SS_6_0"
+            ],
+            "examples": [
+                {
+                    "before": "class MyController extends \\SilverStripe\\Control\\Controller {\n    public function render($context = null) {\n        return null;\n    }\n}",
+                    "after": "class MyController extends \\SilverStripe\\Control\\Controller {\n    public function render($params = null): \\SilverStripe\\ORM\\FieldType\\DBHTMLText {\n        return null;\n    }\n}",
+                    "requires_configuration": false
+                }
+            ]
+        },
+        {
             "name": "UseCreateRector",
             "class": "Netwerkstatt\\SilverstripeRector\\Rector\\Injector\\UseCreateRector",
             "category": "Code Style",
             "silverstripe_version_mentioned": null,
             "set_versions": [],
             "description": "Code Style: Change new Object to static call for classes that use Injectable trait",
-            "file": "src/Rector/Injector/UseCreateRector.php",
+            "file": "scripts/../src/Rector/Injector/UseCreateRector.php",
             "configurable": false,
             "sets": [
                 "CODE_STYLE"
@@ -498,6 +1365,48 @@
                 {
                     "before": "class SomeClass\n{\n    public function run()\n    {\n        new InjectableClass($name);\n    }\n}",
                     "after": "class SomeClass\n{\n    public function run()\n    {\n        InjectableClass::create($name);\n    }\n}",
+                    "requires_configuration": false
+                }
+            ]
+        },
+        {
+            "name": "UseInstead",
+            "class": "Netwerkstatt\\SilverstripeRector\\Rector\\Methods\\UseInstead",
+            "category": null,
+            "silverstripe_version_mentioned": null,
+            "set_versions": [],
+            "description": "Adds TODO upgrade comments and attempts to auto-fix methods that should use an alternative instead.",
+            "file": "scripts/../src/Rector/Methods/UseInstead.php",
+            "configurable": true,
+            "sets": [
+                "SS_6_0_ADDITIONAL",
+                "UP_TO_SS_6_0_ADDITIONAL"
+            ],
+            "examples": [
+                {
+                    "before": "$value = $service->oldMethod($arg);",
+                    "after": "/** @TODO SSU RECTOR UPGRADE TASK - SomeClass::oldMethod: use newMethod() instead. */\n$value = $service->newMethod($arg);",
+                    "requires_configuration": false
+                }
+            ]
+        },
+        {
+            "name": "Visibility",
+            "class": "Netwerkstatt\\SilverstripeRector\\Rector\\Methods\\Visibility",
+            "category": null,
+            "silverstripe_version_mentioned": null,
+            "set_versions": [],
+            "description": "Adds TODO upgrade comments for method calls/overrides where the method visibility changed.",
+            "file": "scripts/../src/Rector/Methods/Visibility.php",
+            "configurable": true,
+            "sets": [
+                "SS_6_0_ADDITIONAL",
+                "UP_TO_SS_6_0_ADDITIONAL"
+            ],
+            "examples": [
+                {
+                    "before": "$leftAndMain->jsonError($message, 400);",
+                    "after": "/** @TODO SSU RECTOR UPGRADE TASK - LeftAndMain::jsonError: Changed visibility for method LeftAndMain::jsonError() from public to protected */\n$leftAndMain->jsonError($message, 400);",
                     "requires_configuration": false
                 }
             ]
@@ -721,10 +1630,33 @@
             "version": "6.0",
             "includes": [],
             "rules": [
+                "Netwerkstatt\\SilverstripeRector\\Rector\\BuildTask\\BuildTaskDescriptionPropertyRector",
+                "Netwerkstatt\\SilverstripeRector\\Rector\\BuildTask\\BuildTaskIsEnabledPropertyRector",
+                "Netwerkstatt\\SilverstripeRector\\Rector\\BuildTask\\BuildTaskSegmentToCommandNameRector",
+                "Netwerkstatt\\SilverstripeRector\\Rector\\BuildTask\\BuildTaskTitlePropertyRector",
+                "Netwerkstatt\\SilverstripeRector\\Rector\\BuildTask\\BuildTaskToExecuteRector",
+                "Netwerkstatt\\SilverstripeRector\\Rector\\BuildTask\\EnsureExecuteReturnsCommandSuccessRector",
+                "Netwerkstatt\\SilverstripeRector\\Rector\\BuildTask\\MigrateTaskRunToPolyExecutionRector",
+                "Netwerkstatt\\SilverstripeRector\\Rector\\BuildTask\\PolyCommandGetOptionsPublicRector",
+                "Netwerkstatt\\SilverstripeRector\\Rector\\CMS\\RenameCurrentPageIdToCurrentRecordIdRector",
+                "Netwerkstatt\\SilverstripeRector\\Rector\\CMS\\ReplacePageTypeClassesRector",
+                "Netwerkstatt\\SilverstripeRector\\Rector\\Console\\ConvertArrayToInputOptionRector",
+                "Netwerkstatt\\SilverstripeRector\\Rector\\Control\\AddParentConstructToControllerRector",
                 "Netwerkstatt\\SilverstripeRector\\Rector\\Control\\ReplaceHasCurrWithCurrRector",
+                "Netwerkstatt\\SilverstripeRector\\Rector\\Control\\UpdateControllerRenderSignatureRector",
+                "Netwerkstatt\\SilverstripeRector\\Rector\\DataObject\\DataObjectDebugReturnTypeRector",
                 "Netwerkstatt\\SilverstripeRector\\Rector\\DataObject\\DataObjectGetByIdToByIDRector",
+                "Netwerkstatt\\SilverstripeRector\\Rector\\Deprecations\\RemoveVersionedGridFieldStateRector",
+                "Netwerkstatt\\SilverstripeRector\\Rector\\Forms\\FormFieldCompositeDatabaseFieldsReturnTypeRector",
+                "Netwerkstatt\\SilverstripeRector\\Rector\\Forms\\FormFieldValidateSignatureRector",
+                "Netwerkstatt\\SilverstripeRector\\Rector\\Forms\\FormFieldValueToGetValueRector",
                 "Netwerkstatt\\SilverstripeRector\\Rector\\Misc\\BuildTaskUpdateRector",
                 "Netwerkstatt\\SilverstripeRector\\Rector\\Misc\\RemoveSilverstripeDeprecationCommentRector",
+                "Netwerkstatt\\SilverstripeRector\\Rector\\Misc\\RenameFieldListMethodsWithoutArrayParamRector",
+                "Netwerkstatt\\SilverstripeRector\\Rector\\ORM\\AddUnionReturnTypeToPrepValueForDBRector",
+                "Netwerkstatt\\SilverstripeRector\\Rector\\ORM\\AddVoidReturnTypeToSaveIntoRector",
+                "Netwerkstatt\\SilverstripeRector\\Rector\\ORM\\DataObjectGetToClassGetRector",
+                "Netwerkstatt\\SilverstripeRector\\Rector\\ORM\\ModelDataForTemplateReturnTypeRector",
                 "Rector\\Renaming\\Rector\\ClassConstFetch\\RenameClassConstFetchRector",
                 "Rector\\Renaming\\Rector\\MethodCall\\RenameMethodRector",
                 "Rector\\Renaming\\Rector\\Name\\RenameClassRector",
@@ -734,13 +1666,48 @@
             "effective_version_sets": []
         },
         {
+            "name": "SS_6_0_ADDITIONAL",
+            "type": "versioned",
+            "version": "6.0",
+            "includes": [],
+            "rules": [
+                "Netwerkstatt\\SilverstripeRector\\Rector\\Methods\\AddNewParameter",
+                "Netwerkstatt\\SilverstripeRector\\Rector\\Methods\\ChangedDefaultParameterValue",
+                "Netwerkstatt\\SilverstripeRector\\Rector\\Methods\\ChangedParameterType",
+                "Netwerkstatt\\SilverstripeRector\\Rector\\Methods\\ObsoleteMethod",
+                "Netwerkstatt\\SilverstripeRector\\Rector\\Methods\\OtherMethod",
+                "Netwerkstatt\\SilverstripeRector\\Rector\\Methods\\RemovedParameter",
+                "Netwerkstatt\\SilverstripeRector\\Rector\\Methods\\RenamedParameter",
+                "Netwerkstatt\\SilverstripeRector\\Rector\\Methods\\RenamedTo",
+                "Netwerkstatt\\SilverstripeRector\\Rector\\Methods\\ReplacedWith",
+                "Netwerkstatt\\SilverstripeRector\\Rector\\Methods\\ReturnType",
+                "Netwerkstatt\\SilverstripeRector\\Rector\\Methods\\UseInstead",
+                "Netwerkstatt\\SilverstripeRector\\Rector\\Methods\\Visibility"
+            ],
+            "config_file": "src/Set/../../config/silverstripe-6-0-additional-run-once.php",
+            "effective_version_sets": []
+        },
+        {
+            "name": "SS_6_0_PAGE_CMS_FIELDS",
+            "type": "versioned",
+            "version": "6.0",
+            "includes": [],
+            "rules": [
+                "Netwerkstatt\\SilverstripeRector\\Rector\\CMS\\AddScaffoldCmsFieldsSettingsRector"
+            ],
+            "config_file": "src/Set/../../config/silverstripe-6-0-page-cms-fields-run-once.php",
+            "effective_version_sets": []
+        },
+        {
             "name": "SS_6_1",
             "type": "versioned",
             "version": "6.1",
             "includes": [],
             "rules": [
+                "Netwerkstatt\\SilverstripeRector\\Rector\\BuildTask\\PolyCommandGetOptionsPublicRector",
                 "Netwerkstatt\\SilverstripeRector\\Rector\\DataObject\\DataObjectStaticMethodsToFluentRector",
-                "Netwerkstatt\\SilverstripeRector\\Rector\\Misc\\SilverstripeDeprecationCommentRector"
+                "Netwerkstatt\\SilverstripeRector\\Rector\\Misc\\SilverstripeDeprecationCommentRector",
+                "Netwerkstatt\\SilverstripeRector\\Rector\\ORM\\RemoveEmptyFilterRector"
             ],
             "config_file": "src/Set/../../config/silverstripe-6-1.php",
             "effective_version_sets": []
@@ -1221,6 +2188,39 @@
                 "SS_5_4",
                 "SS_6_0"
             ]
+        },
+        {
+            "name": "UP_TO_SS_6_0_ADDITIONAL",
+            "type": "cumulative",
+            "version": "6.0",
+            "includes": [],
+            "rules": [
+                "Netwerkstatt\\SilverstripeRector\\Rector\\Methods\\AddNewParameter",
+                "Netwerkstatt\\SilverstripeRector\\Rector\\Methods\\ChangedDefaultParameterValue",
+                "Netwerkstatt\\SilverstripeRector\\Rector\\Methods\\ChangedParameterType",
+                "Netwerkstatt\\SilverstripeRector\\Rector\\Methods\\ObsoleteMethod",
+                "Netwerkstatt\\SilverstripeRector\\Rector\\Methods\\OtherMethod",
+                "Netwerkstatt\\SilverstripeRector\\Rector\\Methods\\RemovedParameter",
+                "Netwerkstatt\\SilverstripeRector\\Rector\\Methods\\RenamedParameter",
+                "Netwerkstatt\\SilverstripeRector\\Rector\\Methods\\RenamedTo",
+                "Netwerkstatt\\SilverstripeRector\\Rector\\Methods\\ReplacedWith",
+                "Netwerkstatt\\SilverstripeRector\\Rector\\Methods\\ReturnType",
+                "Netwerkstatt\\SilverstripeRector\\Rector\\Methods\\UseInstead",
+                "Netwerkstatt\\SilverstripeRector\\Rector\\Methods\\Visibility"
+            ],
+            "config_file": "src/Set/../../config/silverstripe-6-0-additional-run-once.php",
+            "effective_version_sets": []
+        },
+        {
+            "name": "UP_TO_SS_6_0_PAGE_CMS_FIELDS",
+            "type": "cumulative",
+            "version": "6.0",
+            "includes": [],
+            "rules": [
+                "Netwerkstatt\\SilverstripeRector\\Rector\\CMS\\AddScaffoldCmsFieldsSettingsRector"
+            ],
+            "config_file": "src/Set/../../config/silverstripe-6-0-page-cms-fields-run-once.php",
+            "effective_version_sets": []
         },
         {
             "name": "UP_TO_SS_6_1",

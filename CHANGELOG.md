@@ -5,6 +5,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Fixed
+- Repaired `ObsoleteMethodChanges` and `ChangedParameterTypeChanges` change lists (invalid PHP), so the
+  `SS_6_0_ADDITIONAL` / `UP_TO_SS_6_0_ADDITIONAL` sets load again.
+- `SilverstripeLevelSetList::UP_TO_SS_6_0_ADDITIONAL` and `UP_TO_SS_6_0_PAGE_CMS_FIELDS` pointed to non-existing files.
+- Fork rectors that defined `getDefinition()` instead of `getRuleDefinition()` are now picked up by the docs generator.
+- `AddParentConstructToControllerRector` test fixture matches the rule's actual behaviour.
+- `RenameFieldListMethodsWithoutArrayParamRector` no longer relies on a private `reflectionProvider` of its parent.
+
+### Changed
+- **Breaking:** minimum PHP version is now 8.3 (was `^7.4 | ^8`); CI, DDEV, PHPStan and `rector.php` follow.
+  The code base was modernised with Rector's PHP 8.3 level set (constructor promotion, `readonly`, `str_*`).
+- All rectors implement `DocumentedRuleInterface` and use `Rector\RuleDoc\*` instead of `Symplify\RuleDocGenerator\*`.
+- `MethodHelper` trait provides default `extractNewMethodName()` / `extractStrictNewMethodName()` hooks.
+- `phpcs` reports long lines as warnings only.
+
+### Added
+- `SetListIntegrityTest` makes sure every constant of `SilverstripeSetList` and `SilverstripeLevelSetList` points to
+  a config that exists and loads.
+
 ## [1.4] - 2026-11-06
 
 ### Added
