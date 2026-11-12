@@ -3,7 +3,9 @@
 namespace Netwerkstatt\SilverstripeRector\Rector\Injector;
 
 use PhpParser\Node;
+use PhpParser\Node\Expr\MethodCall;
 use PhpParser\Node\Expr\New_;
+use PhpParser\Node\Expr\StaticCall;
 use PhpParser\Node\Stmt\Class_;
 use PHPStan\Type\ObjectType;
 use PHPStan\Reflection\ReflectionProvider;
@@ -54,16 +56,47 @@ CODE_SAMPLE
      */
     public function getNodeTypes(): array
     {
-        return [New_::class];
+        return [New_::class, MethodCall::class];
     }
 
     /**
-     * @param New_ $node
+     * @param New_|MethodCall $node
      */
     public function refactor(Node $node): ?Node
     {
-        $traits = [];
-        $class = $node->class;
+        if ($node instanceof MethodCall) {
+            return $this->refactorMethodCallOnNew($node);
+        }
+
+        return $this->createStaticCall($node);
+    }
+
+    /**
+     * `(new Foo())->bar()`: Rector's PHP 8.4 NewMethodCallWithoutParenthesesRector blanks the opening
+     * parenthesis in the old token stream. If only the inner `new` were replaced, the printer would keep the
+     * closing parenthesis and produce `Foo::create())->bar()`. Returning a new MethodCall makes the printer
+     * print the whole call from scratch instead.
+     */
+    private function refactorMethodCallOnNew(MethodCall $methodCall): ?MethodCall
+    {
+        if (!$methodCall->var instanceof New_) {
+            return null;
+        }
+
+        $staticCall = $this->createStaticCall($methodCall->var);
+        if (!$staticCall instanceof StaticCall) {
+            return null;
+        }
+
+        $newMethodCall = new MethodCall($staticCall, $methodCall->name, $methodCall->args);
+        $newMethodCall->setAttribute('comments', $methodCall->getComments());
+
+        return $newMethodCall;
+    }
+
+    private function createStaticCall(New_ $new): ?StaticCall
+    {
+        $class = $new->class;
         if (!method_exists($class, 'toString')) {
             return null; //we have something like "new $foo"
         }
@@ -79,6 +112,6 @@ CODE_SAMPLE
             return null;
         }
 
-        return $this->nodeFactory->createStaticCall($node->class, 'create', $node->args);
+        return $this->nodeFactory->createStaticCall($new->class, 'create', $new->args);
     }
 }

@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Fixed
+- `UseCreateRector` produced invalid PHP (`Foo::create(...))->bar()`) for `(new Foo(...))->bar()` when combined with
+  Rector's PHP 8.4 `NewMethodCallWithoutParenthesesRector`.
 - Repaired `ObsoleteMethodChanges` and `ChangedParameterTypeChanges` change lists (invalid PHP), so the
   `SS_6_0_ADDITIONAL` / `UP_TO_SS_6_0_ADDITIONAL` sets load again.
 - `SilverstripeLevelSetList::UP_TO_SS_6_0_ADDITIONAL` and `UP_TO_SS_6_0_PAGE_CMS_FIELDS` pointed to non-existing files.
